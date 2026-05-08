@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>The Season</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="The Season">
+  <meta name="theme-color" content="#000000">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -196,6 +201,14 @@
   </style>
 </head>
 <body>
+
+<!-- iOS install prompt -->
+<div id="install-prompt" style="display:none;position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:800;background:rgba(20,20,20,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:14px 20px;color:#fff;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;letter-spacing:0.05em;text-align:center;white-space:nowrap;">
+  <span style="opacity:0.6;">For fullscreen, tap</span>
+  <svg style="vertical-align:middle;margin:0 5px;" width="16" height="16" viewBox="0 0 50 50" fill="none"><rect x="8" y="8" width="34" height="34" rx="6" stroke="white" stroke-width="3" fill="none"/><line x1="25" y1="2" x2="25" y2="24" stroke="white" stroke-width="3" stroke-linecap="round"/><polyline points="17,10 25,2 33,10" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+  <span style="opacity:0.6;">then</span> <strong>Add to Home Screen</strong>
+  <button onclick="document.getElementById('install-prompt').style.display='none';localStorage.setItem('install-dismissed','1');" style="background:none;border:none;color:rgba(255,255,255,0.35);font-size:18px;cursor:pointer;padding:0 0 0 12px;vertical-align:middle;line-height:1;">×</button>
+</div>
 
 <!-- Rotate prompt (portrait mobile only) -->
 <div id="rotate-prompt">
@@ -671,6 +684,16 @@
   });
 
   checkOrientation();
+
+  // Show "Add to Home Screen" nudge on iOS Safari (not already installed as PWA)
+  const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  const dismissed = localStorage.getItem('install-dismissed');
+  if (isIOS && !isStandalone && !dismissed) {
+    setTimeout(() => {
+      document.getElementById('install-prompt').style.display = 'block';
+    }, 2500);
+  }
 
 })();
 </script>
