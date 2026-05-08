@@ -95,7 +95,7 @@
       inset: 0;
       background: rgba(0,0,0,0.15);
       transition: background 0.4s ease;
-      z-index: 3;
+      z-index: 2;
     }
 
     .panel:hover::after { background: rgba(0,0,0,0); }
@@ -112,13 +112,13 @@
     }
 
     /* YouTube iframe — oversized & centered to cover the 4:5 panel */
-    .yt-frame {
+    .panel iframe {
       position: absolute;
       top: 0;
       left: 50%;
       transform: translateX(-50%);
       height: 100%;
-      width: 222%;   /* covers 4:5 panel with 16:9 video: (16/9)÷(4/5) ≈ 2.22 */
+      width: 222%;
       border: none;
       pointer-events: none;
       z-index: 0;
@@ -129,18 +129,26 @@
       position: absolute;
       inset: 0;
       z-index: 1;
-      transition: opacity 0.4s ease;
     }
 
-    .panel:hover .panel-tint { opacity: 0.75; }
+    /* Bottom gradient so labels always read against any video */
+    .panel-gradient {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 220px;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+      z-index: 10;
+      pointer-events: none;
+    }
 
-    /* Company label — bottom-left */
+    /* Company label — always on top of everything */
     .panel-label {
       position: absolute;
       bottom: 36px;
       left: 36px;
-      z-index: 4;
+      z-index: 20;
       color: #fff;
+      pointer-events: none;
     }
 
     .panel-label .name {
@@ -516,9 +524,9 @@
     const stored = getStoredVideos();
     const ytId = extractYouTubeId(stored[p.id]);
     if (ytId) {
-      // Mount div for YT IFrame API — queued until API is ready
+      // Mount div for YT IFrame API — no transform so it doesn't create a stacking context
       const mountDiv = document.createElement('div');
-      mountDiv.style.cssText = 'position:absolute;top:0;left:50%;transform:translateX(-50%);height:100%;width:222%;z-index:0;background:#000;';
+      mountDiv.style.cssText = 'position:absolute;inset:0;z-index:0;background:#000;overflow:hidden;';
       el.appendChild(mountDiv);
       pendingYTPlayers.push({ mountDiv, videoId: ytId, panel: el, animFn: ANIM_FNS[p.anim] });
     } else if (p.video) {
@@ -538,6 +546,11 @@
     tint.className = 'panel-tint';
     tint.style.background = p.tint;
     el.appendChild(tint);
+
+    // Bottom gradient so labels always read
+    const gradient = document.createElement('div');
+    gradient.className = 'panel-gradient';
+    el.appendChild(gradient);
 
     // Label
     const label = document.createElement('div');
