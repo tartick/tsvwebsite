@@ -223,6 +223,7 @@
 </div>
 
 <script>
+(async () => {
   // ─────────────────────────────────────────────────────────────
   //  Panel definitions
   //  video: set to a local file path when you have real footage
@@ -454,9 +455,21 @@
   // ─────────────────────────────────────────────────────────────
   //  YouTube helpers
   // ─────────────────────────────────────────────────────────────
+  // Videos loaded from server; falls back to localStorage for local dev
+  let _storedVideos = null;
+
+  async function loadVideos() {
+    try {
+      const res = await fetch('/api/videos');
+      if (res.ok) { _storedVideos = await res.json(); return; }
+    } catch (_) {}
+    // Fallback: localStorage (works on file:// / local dev)
+    try { _storedVideos = JSON.parse(localStorage.getItem('tsv_videos') || '{}'); }
+    catch (_) { _storedVideos = {}; }
+  }
+
   function getStoredVideos() {
-    try { return JSON.parse(localStorage.getItem('tsv_videos') || '{}'); }
-    catch { return {}; }
+    return _storedVideos || {};
   }
 
   function extractYouTubeId(input) {
@@ -575,6 +588,9 @@
     }
   }
 
+  // Load video config from server, then build panels
+  await loadVideos();
+
   [...PANELS, ...PANELS].forEach(p => track.appendChild(createPanel(p)));
 
   // Load YT IFrame API if there are queued players and we're on HTTP
@@ -655,6 +671,8 @@
   });
 
   checkOrientation();
+
+})();
 </script>
 
 </body>

@@ -304,8 +304,14 @@
     return m ? m[1] : null;
   }
 
-  function loadFields() {
-    const stored = getStored();
+  async function loadFields() {
+    // Fetch live values from server when on HTTP, fall back to localStorage
+    let stored = getStored();
+    try {
+      const res = await fetch('/api/videos');
+      if (res.ok) stored = await res.json();
+    } catch (_) {}
+
     const container = document.getElementById('fields');
     container.innerHTML = '';
 
@@ -371,16 +377,40 @@
   }
 
   // ── Save ──────────────────────────────────────────────────────
-  document.getElementById('btn-save').addEventListener('click', () => {
-    const data = {};
+  document.getElementById('btn-save').addEventListener('click', async () => {
+    const btn = document.getElementById('btn-save');
+    btn.textContent = 'Saving…';
+    btn.disabled = true;
+
+    const videos = {};
     COMPANIES.forEach(c => {
       const val = document.getElementById(`yt-${c.id}`).value.trim();
-      if (val) data[c.id] = val;
+      if (val) videos[c.id] = val;
     });
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    const msg = document.getElementById('save-msg');
-    msg.classList.add('visible');
-    setTimeout(() => msg.classList.remove('visible'), 3000);
+
+    try {
+      const res = await fetch('/api/videos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: PASSWORD, videos }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Unknown error');
+
+      const msg = document.getElementById('save-msg');
+      msg.textContent = 'Saved — visible to all visitors immediately';
+      msg.classList.add('visible');
+      setTimeout(() => msg.classList.remove('visible'), 4000);
+    } catch (e) {
+      const msg = document.getElementById('save-msg');
+      msg.style.color = '#a44';
+      msg.textContent = `Error: ${e.message}`;
+      msg.classList.add('visible');
+      setTimeout(() => { msg.classList.remove('visible'); msg.style.color = ''; }, 5000);
+    } finally {
+      btn.textContent = 'Save';
+      btn.disabled = false;
+    }
   });
 
   document.getElementById('btn-preview').addEventListener('click', () => {
