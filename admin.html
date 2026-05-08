@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TSV Admin</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 560px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .logo img {
+      width: 140px;
+      filter: brightness(0) invert(1);
+      opacity: 0.9;
+    }
+
+    .logo .wordmark {
+      font-size: 18px;
+      font-weight: 200;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    /* ── Login ── */
+    #login-view h2 {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* ── Admin panel ── */
+    #admin-view { display: none; }
+
+    #admin-view h2 {
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .field {
+      margin-bottom: 28px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .field .company-name {
+      font-size: 15px;
+      font-weight: 300;
+      color: #ccc;
+      margin-bottom: 8px;
+    }
+
+    .field .dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-size: 14px;
+      font-family: inherit;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+      border-color: #555;
+    }
+
+    input[type="text"]::placeholder { color: #3a3a3a; }
+
+    .preview-thumb {
+      margin-top: 10px;
+      height: 4px;
+      border-radius: 2px;
+      background: #1e1e1e;
+      overflow: hidden;
+    }
+
+    .preview-thumb .bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    .status {
+      font-size: 11px;
+      color: #3a3a3a;
+      margin-top: 6px;
+      min-height: 16px;
+      transition: color 0.3s;
+    }
+
+    .status.ok  { color: #4a9; }
+    .status.err { color: #a44; }
+
+    .actions {
+      margin-top: 40px;
+      display: flex;
+      gap: 12px;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover { opacity: 0.8; }
+
+    #btn-save {
+      background: #fff;
+      color: #000;
+    }
+
+    #btn-preview, #btn-login {
+      background: #1e1e1e;
+      color: #aaa;
+      border: 1px solid #2a2a2a;
+    }
+
+    #btn-login { flex: none; width: 100%; }
+
+    .save-msg {
+      margin-top: 16px;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-align: center;
+      color: #4a9;
+      min-height: 18px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .save-msg.visible { opacity: 1; }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #1e1e1e;
+      margin: 36px 0;
+    }
+
+    .logout {
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #333;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .logout:hover { color: #666; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="logo">
+    <img
+      src="https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1"
+      alt="The Season"
+      onerror="this.style.display='none'; document.querySelector('.wordmark').style.display='block';"
+    >
+    <div class="wordmark" style="display:none;">The Season</div>
+  </div>
+
+  <!-- Login -->
+  <div id="login-view">
+    <h2>Admin Access</h2>
+    <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password">
+    <div class="actions" style="margin-top:16px;">
+      <button id="btn-login">Enter</button>
+    </div>
+    <div class="status" id="login-status"></div>
+  </div>
+
+  <!-- Admin panel -->
+  <div id="admin-view">
+    <h2>Video Backgrounds</h2>
+    <p style="font-size:12px;color:#444;text-align:center;margin-bottom:32px;line-height:1.6;">
+      Paste a YouTube URL or video ID for each company.<br>Changes go live immediately on the homepage.
+    </p>
+
+    <div id="fields"></div>
+
+    <div class="actions">
+      <button id="btn-save">Save</button>
+      <button id="btn-preview">View Site</button>
+    </div>
+    <div class="save-msg" id="save-msg">Saved — reload the homepage to see changes</div>
+
+    <hr class="divider">
+    <div class="logout" id="btn-logout">Log out</div>
+  </div>
+
+</div>
+
+<script>
+  const PASSWORD = 'tsv2026';
+  const STORAGE_KEY = 'tsv_videos';
+
+  const COMPANIES = [
+    { id: 'producing', name: 'Producing',        color: '#888' },
+    { id: '11oclock',  name: '11 O\'Clock Studio', color: '#c89010' },
+    { id: 'relay',     name: 'Relay',             color: '#6014b0' },
+    { id: 'flyer',     name: 'Flyer',             color: '#147830' },
+  ];
+
+  // ── Auth ──────────────────────────────────────────────────────
+  const loginView  = document.getElementById('login-view');
+  const adminView  = document.getElementById('admin-view');
+  const pwInput    = document.getElementById('pw-input');
+  const loginStatus = document.getElementById('login-status');
+
+  function tryLogin() {
+    if (pwInput.value === PASSWORD) {
+      loginView.style.display = 'none';
+      adminView.style.display = 'block';
+      loginStatus.textContent = '';
+      loadFields();
+    } else {
+      loginStatus.textContent = 'Incorrect password';
+      loginStatus.className = 'status err';
+      pwInput.value = '';
+      pwInput.focus();
+    }
+  }
+
+  document.getElementById('btn-login').addEventListener('click', tryLogin);
+  pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+  document.getElementById('btn-logout').addEventListener('click', () => {
+    adminView.style.display = 'none';
+    loginView.style.display = 'block';
+    pwInput.value = '';
+    loginStatus.textContent = '';
+  });
+
+  // ── Field builder ─────────────────────────────────────────────
+  function getStored() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    catch { return {}; }
+  }
+
+  function extractYouTubeId(input) {
+    if (!input) return null;
+    input = input.trim();
+    if (/^[a-zA-Z0-9_-]{11}$/.test(input)) return input;
+    const m = input.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    return m ? m[1] : null;
+  }
+
+  function loadFields() {
+    const stored = getStored();
+    const container = document.getElementById('fields');
+    container.innerHTML = '';
+
+    COMPANIES.forEach(c => {
+      const field = document.createElement('div');
+      field.className = 'field';
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'company-name';
+      nameEl.innerHTML = `<span class="dot" style="background:${c.color}"></span>${c.name}`;
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.id = `yt-${c.id}`;
+      input.placeholder = 'https://www.youtube.com/watch?v=…';
+      input.value = stored[c.id] || '';
+
+      const thumb = document.createElement('div');
+      thumb.className = 'preview-thumb';
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.style.background = c.color;
+      thumb.appendChild(bar);
+
+      const status = document.createElement('div');
+      status.className = 'status';
+      status.id = `status-${c.id}`;
+
+      // Validate on input
+      input.addEventListener('input', () => {
+        const id = extractYouTubeId(input.value);
+        if (!input.value.trim()) {
+          bar.style.width = '0%';
+          status.textContent = '';
+          status.className = 'status';
+        } else if (id) {
+          bar.style.width = '100%';
+          status.textContent = `✓ Video ID: ${id}`;
+          status.className = 'status ok';
+        } else {
+          bar.style.width = '30%';
+          status.textContent = 'Could not parse YouTube URL';
+          status.className = 'status err';
+        }
+      });
+
+      // Init bar state
+      if (stored[c.id]) {
+        const id = extractYouTubeId(stored[c.id]);
+        if (id) {
+          bar.style.width = '100%';
+          status.textContent = `✓ Video ID: ${id}`;
+          status.className = 'status ok';
+        }
+      }
+
+      field.appendChild(nameEl);
+      field.appendChild(input);
+      field.appendChild(thumb);
+      field.appendChild(status);
+      container.appendChild(field);
+    });
+  }
+
+  // ── Save ──────────────────────────────────────────────────────
+  document.getElementById('btn-save').addEventListener('click', () => {
+    const data = {};
+    COMPANIES.forEach(c => {
+      const val = document.getElementById(`yt-${c.id}`).value.trim();
+      if (val) data[c.id] = val;
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    const msg = document.getElementById('save-msg');
+    msg.classList.add('visible');
+    setTimeout(() => msg.classList.remove('visible'), 3000);
+  });
+
+  document.getElementById('btn-preview').addEventListener('click', () => {
+    window.open('index.html', '_blank');
+  });
+</script>
+
+</body>
+</html>
