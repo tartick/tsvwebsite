@@ -56,7 +56,7 @@
     /* Hover scrim */
     .panel::after {
       content: ''; position: absolute; inset: 0;
-      background: rgba(0,0,0,0.15); transition: background 0.4s ease; z-index: 2;
+      background: rgba(0,0,0,0.15); transition: background 0.4s ease; z-index: 3;
     }
     .panel:hover::after { background: rgba(0,0,0,0); }
 
@@ -65,11 +65,17 @@
     .panel canvas {
       position: absolute; inset: 0;
       width: 100%; height: 100%; object-fit: cover; z-index: 0;
-      pointer-events: none; /* prevent iOS native player controls */
+      pointer-events: none;
+    }
+
+    /* Transparent touch blocker — sits above video, eats all iOS media-control taps */
+    .video-cover {
+      position: absolute; inset: 0; z-index: 1;
+      pointer-events: auto; background: transparent;
     }
 
     /* Color tint */
-    .panel-tint { position: absolute; inset: 0; z-index: 1; }
+    .panel-tint { position: absolute; inset: 0; z-index: 2; }
 
     /* Bottom gradient — ensures labels always read */
     .panel-gradient {
@@ -236,7 +242,14 @@
       vid.setAttribute('disablepictureinpicture', '');
       vid.setAttribute('x-webkit-airplay', 'deny');
       vid.setAttribute('webkit-playsinline', '');
+      vid.setAttribute('controlsList', 'nodownload nofullscreen noremoteplayback');
       el.appendChild(vid);
+      vid.play().catch(() => {});
+
+      // Transparent overlay intercepts all touch events before iOS can show media controls
+      const cover = document.createElement('div');
+      cover.className = 'video-cover';
+      el.appendChild(cover);
     } else {
       const cvs = document.createElement('canvas');
       cvs.width = 800; cvs.height = 1000;
