@@ -611,37 +611,38 @@
   }
 
   // ─────────────────────────────────────────────────────────────
-  //  Animation
+  //  Animation — JS RAF loop, no CSS reset glitch
   //  Panel width = height × PANEL_RATIO  (4:5 → 0.8 × vh)
   //  Total loop distance = PANELS.length × panel width
   //  Speed = viewportWidth / SECS_PER_VIEWPORT
   // ─────────────────────────────────────────────────────────────
+  let animOffset = 0;
+  let animLastTime = null;
+  let animId = null;
+  let animSpeed = 0;
+  let animTotal = 0;
+
   function startAnimation() {
     const vh = window.innerHeight;
     const vw = window.innerWidth;
-    const panelWidth = vh * PANEL_RATIO;
-    const totalPx = PANELS.length * panelWidth;
-    const speedPxPerSec = vw / SECS_PER_VIEWPORT;
-    const duration = totalPx / speedPxPerSec;
+    animTotal = PANELS.length * vh * PANEL_RATIO;
+    animSpeed = vw / SECS_PER_VIEWPORT;
 
-    track.style.animation = 'none';
-    track.style.transform = 'translateX(0)';
-    void track.offsetWidth;
+    // Cancel previous loop if running
+    if (animId) cancelAnimationFrame(animId);
+    animLastTime = null;
 
-    let styleTag = document.getElementById('anim-style');
-    if (!styleTag) {
-      styleTag = document.createElement('style');
-      styleTag.id = 'anim-style';
-      document.head.appendChild(styleTag);
-    }
-    styleTag.textContent = `
-      @keyframes scroll {
-        from { transform: translateX(0); }
-        to   { transform: translateX(-${totalPx.toFixed(2)}px); }
+    function tick(ts) {
+      if (animLastTime !== null) {
+        const dt = (ts - animLastTime) / 1000;
+        animOffset = (animOffset + animSpeed * dt) % animTotal;
       }
-    `;
+      animLastTime = ts;
+      track.style.transform = `translateX(-${animOffset.toFixed(2)}px)`;
+      animId = requestAnimationFrame(tick);
+    }
 
-    track.style.animation = `scroll ${duration.toFixed(2)}s linear infinite`;
+    animId = requestAnimationFrame(tick);
   }
 
   startAnimation();
