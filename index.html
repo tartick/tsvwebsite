@@ -113,6 +113,26 @@
       letter-spacing: 0.55em; text-transform: uppercase; color: #fff;
       text-shadow: 0 0 40px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.6);
     }
+    #logo a.contact {
+      display: inline-block; margin-top: clamp(16px, 2.2vh, 28px);
+      pointer-events: auto;
+      padding: 9px 22px;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 2px;
+      font-size: clamp(9px, 0.85vw, 11px);
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      background: rgba(0,0,0,0.18);
+      transition: color 0.25s, border-color 0.25s, background 0.25s;
+    }
+    #logo a.contact:hover {
+      color: #fff;
+      border-color: rgba(255,255,255,0.7);
+      background: rgba(0,0,0,0.35);
+    }
   </style>
 </head>
 <body>
@@ -136,6 +156,7 @@
       onerror="this.style.display='none'; document.getElementById('wordmark').style.display='block';"
     >
     <div id="wordmark" class="wordmark" style="display:none;">The Season</div>
+    <a class="contact" href="mailto:hi@theseason.nyc">Contact</a>
   </div>
 </div>
 
