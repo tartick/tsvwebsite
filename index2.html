@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>The Season</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      background: #000;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    /* ── Scene ─────────────────────────────────────────────── */
+    #scene { position: fixed; inset: 0; overflow: hidden; }
+
+    /* ── Track — horizontal (default) ─────────────────────── */
+    #track {
+      display: flex; position: absolute; top: 0; left: 0; height: 100%;
+      will-change: transform;
+    }
+
+    /* ── Track — vertical (mobile portrait) ───────────────── */
+    #track.vertical {
+      flex-direction: column;
+      width: 100%; height: auto;
+    }
+
+    /* ── Panels ────────────────────────────────────────────── */
+    .panel {
+      position: relative; height: 100%; aspect-ratio: 4 / 5;
+      flex-shrink: 0; cursor: pointer; overflow: hidden;
+      user-select: none; isolation: isolate;
+    }
+
+    #track.vertical .panel {
+      width: 100%; height: auto;
+    }
+
+    /* Separator — vertical line in horizontal mode */
+    .panel + .panel::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 1px; height: auto; background: rgba(255,255,255,0.12); z-index: 5;
+    }
+
+    /* Separator — horizontal line in vertical mode */
+    #track.vertical .panel + .panel::before {
+      left: 0; right: 0; top: 0; bottom: auto;
+      width: 100%; height: 1px;
+    }
+
+    /* Hover scrim */
+    .panel::after {
+      content: ''; position: absolute; inset: 0;
+      background: rgba(0,0,0,0.15); transition: background 0.4s ease; z-index: 3;
+    }
+    .panel:hover::after { background: rgba(0,0,0,0); }
+
+    /* Video / canvas background */
+    .panel video,
+    .panel canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%; object-fit: cover; z-index: 0;
+      pointer-events: none;
+      filter: grayscale(100%);
+    }
+
+    /* Transparent touch blocker */
+    .video-cover {
+      position: absolute; inset: 0; z-index: 1;
+      pointer-events: auto; background: transparent;
+    }
+
+    /* Color tint */
+    .panel-tint { position: absolute; inset: 0; z-index: 2; }
+
+    /* Bottom gradient */
+    .panel-gradient {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 220px;
+      background: linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 100%);
+      z-index: 10; pointer-events: none;
+    }
+
+    /* Company label */
+    .panel-label {
+      position: absolute; bottom: 36px; left: 36px;
+      z-index: 20; color: #fff; pointer-events: none;
+    }
+    .panel-label .name {
+      font-size: clamp(13px, 1.4vh, 20px); font-weight: 300;
+      letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.92;
+    }
+    .panel-label .role {
+      margin-top: 5px; font-size: clamp(10px, 1vh, 13px); font-weight: 300;
+      letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.42;
+    }
+
+    /* In vertical mode, scale label to vw instead of vh */
+    #track.vertical .panel-label .name {
+      font-size: clamp(13px, 4vw, 22px);
+    }
+    #track.vertical .panel-label .role {
+      font-size: clamp(10px, 2.8vw, 15px);
+    }
+
+    /* ── Logo ──────────────────────────────────────────────── */
+    #logo {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 100; pointer-events: none; text-align: center;
+    }
+    #logo img {
+      display: block; width: clamp(100px, 14vw, 220px);
+      filter: brightness(0) invert(1) drop-shadow(0 2px 32px rgba(0,0,0,0.7));
+    }
+    #logo .wordmark {
+      font-size: clamp(16px, 2.4vw, 38px); font-weight: 200;
+      letter-spacing: 0.55em; text-transform: uppercase; color: #fff;
+      text-shadow: 0 0 40px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    /* ── Contact button ────────────────────────────────────── */
+    #contact-btn {
+      position: fixed; top: 24px; right: 28px;
+      z-index: 200;
+      padding: 9px 22px;
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 2px;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      background: rgba(0,0,0,0.18);
+      transition: color 0.25s, border-color 0.25s, background 0.25s;
+    }
+    #contact-btn:hover {
+      color: #fff;
+      border-color: rgba(255,255,255,0.7);
+      background: rgba(0,0,0,0.35);
+    }
+  </style>
+</head>
+<body>
+
+<div id="scene">
+  <div id="track"></div>
+  <div id="logo">
+    <img
+      src="https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1"
+      alt="The Season"
+      onerror="this.style.display='none'; document.getElementById('wordmark').style.display='block';"
+    >
+    <div id="wordmark" class="wordmark" style="display:none;">The Season</div>
+  </div>
+</div>
+
+<a id="contact-btn" href="mailto:hi@theseason.nyc">Contact</a>
+
+<script>
+(async () => {
+
+  const PANELS = [
+    { id: 'producing', name: 'Producing',         role: 'Theater and Live Events',        tint: 'rgba(0,0,0,0.40)',        anim: 'bokeh',    href: 'mailto:mikeandsteven@theseason.nyc' },
+    { id: '11oclock',  name: '11 O\'Clock Studio', role: 'Key art & branding',              tint: 'rgba(225,145,10,0.38)',   anim: 'ink',      href: 'https://11oclock.com'               },
+    { id: 'relay',     name: 'Relay',              role: 'Influencer Marketing',             tint: 'rgba(95,18,175,0.38)',    anim: 'network',  href: 'https://relayinfluence.com'         },
+    { id: 'flyer',     name: 'Flyer',              role: 'Creative production',              tint: 'rgba(18,125,55,0.35)',    anim: 'streaks',  href: 'https://flyerweb.com'               },
+  ];
+
+  const SECS_PER_VIEWPORT = 35;
+  const PANEL_RATIO = 4 / 5;
+
+  // ─────────────────────────────────────────────────────────────
+  //  Canvas animations (fallback)
+  // ─────────────────────────────────────────────────────────────
+  function animBokeh(canvas) {
+    const ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height;
+    ctx.fillStyle = '#03030a'; ctx.fillRect(0, 0, W, H);
+    const stars = Array.from({ length: 120 }, () => ({ x: Math.random()*W, y: Math.random()*H, r: 0.5+Math.random()*2.5, vy: 0.08+Math.random()*0.25, a: 0.4+Math.random()*0.6 }));
+    const orbs  = Array.from({ length: 6  }, () => ({ x: Math.random()*W, y: Math.random()*H, r: 80+Math.random()*160, vx: (Math.random()-0.5)*0.15, vy: (Math.random()-0.5)*0.15, a: 0.06+Math.random()*0.08 }));
+    (function draw() {
+      ctx.fillStyle='rgba(3,3,10,0.15)'; ctx.fillRect(0,0,W,H);
+      orbs.forEach(o=>{o.x+=o.vx;o.y+=o.vy;if(o.x<-o.r)o.x=W+o.r;if(o.x>W+o.r)o.x=-o.r;if(o.y<-o.r)o.y=H+o.r;if(o.y>H+o.r)o.y=-o.r;const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);g.addColorStop(0,`rgba(160,160,255,${o.a})`);g.addColorStop(1,'transparent');ctx.beginPath();ctx.arc(o.x,o.y,o.r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();});
+      stars.forEach(s=>{s.y+=s.vy;if(s.y>H+2){s.y=-2;s.x=Math.random()*W;}ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(220,220,255,${s.a})`;ctx.fill();});
+      requestAnimationFrame(draw);
+    })();
+  }
+
+  function animInk(canvas) {
+    const ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height;
+    const cx=W*0.5, cy=H*0.38;
+    const rays = Array.from({length:10},(_,i)=>({angle:(i/10)*Math.PI*2, speed:0.0004+Math.random()*0.0003, len:300+Math.random()*300, width:30+Math.random()*60, a:0.06+Math.random()*0.10}));
+    (function draw() {
+      ctx.fillStyle='rgba(8,5,0,0.30)'; ctx.fillRect(0,0,W,H);
+      rays.forEach(r=>{r.angle+=r.speed;const g=ctx.createLinearGradient(cx,cy,cx+Math.cos(r.angle)*r.len,cy+Math.sin(r.angle)*r.len);g.addColorStop(0,`rgba(255,200,40,${r.a*3})`);g.addColorStop(0.4,`rgba(220,150,10,${r.a})`);g.addColorStop(1,'transparent');ctx.save();ctx.translate(cx,cy);ctx.rotate(r.angle);ctx.beginPath();ctx.moveTo(0,-r.width/2);ctx.lineTo(r.len,-r.width);ctx.lineTo(r.len,r.width);ctx.lineTo(0,r.width/2);ctx.closePath();ctx.fillStyle=g;ctx.fill();ctx.restore();});
+      const gc=ctx.createRadialGradient(cx,cy,0,cx,cy,120);gc.addColorStop(0,'rgba(255,220,80,0.35)');gc.addColorStop(1,'transparent');ctx.beginPath();ctx.arc(cx,cy,120,0,Math.PI*2);ctx.fillStyle=gc;ctx.fill();
+      requestAnimationFrame(draw);
+    })();
+  }
+
+  function animNetwork(canvas) {
+    const ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height;
+    ctx.fillStyle='#050010'; ctx.fillRect(0,0,W,H);
+    const nodes = Array.from({length:30},()=>({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-0.5)*0.8, vy:(Math.random()-0.5)*0.8, r:2+Math.random()*4, pulse:Math.random()*Math.PI*2}));
+    const DIST=180;
+    (function draw() {
+      ctx.fillStyle='rgba(5,0,16,0.20)'; ctx.fillRect(0,0,W,H);
+      nodes.forEach(n=>{n.x+=n.vx;n.y+=n.vy;n.pulse+=0.04;if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;});
+      for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<DIST){const s=1-d/DIST;ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.strokeStyle=`rgba(200,130,255,${s*0.7})`;ctx.lineWidth=s*2;ctx.stroke();}}
+      nodes.forEach(n=>{const p=0.6+0.4*Math.sin(n.pulse);const gr=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*4);gr.addColorStop(0,`rgba(220,160,255,${p})`);gr.addColorStop(1,'transparent');ctx.beginPath();ctx.arc(n.x,n.y,n.r*4,0,Math.PI*2);ctx.fillStyle=gr;ctx.fill();ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle=`rgba(240,200,255,${p})`;ctx.fill();});
+      requestAnimationFrame(draw);
+    })();
+  }
+
+  function animStreaks(canvas) {
+    const ctx = canvas.getContext('2d'), W = canvas.width, H = canvas.height;
+    ctx.fillStyle='#010c04'; ctx.fillRect(0,0,W,H);
+    const streaks = Array.from({length:30},()=>({x:Math.random()*W, y:Math.random()*H, len:60+Math.random()*200, speed:4+Math.random()*8, width:0.5+Math.random()*2, a:0.5+Math.random()*0.5}));
+    (function draw() {
+      ctx.fillStyle='rgba(1,12,4,0.25)'; ctx.fillRect(0,0,W,H);
+      streaks.forEach(s=>{s.x+=s.speed;if(s.x>W+s.len){s.x=-s.len;s.y=Math.random()*H;}const g=ctx.createLinearGradient(s.x-s.len,s.y,s.x,s.y);g.addColorStop(0,'transparent');g.addColorStop(0.7,`rgba(60,200,100,${s.a*0.4})`);g.addColorStop(1,`rgba(120,255,160,${s.a})`);ctx.beginPath();ctx.moveTo(s.x-s.len,s.y);ctx.lineTo(s.x,s.y);ctx.strokeStyle=g;ctx.lineWidth=s.width;ctx.stroke();});
+      requestAnimationFrame(draw);
+    })();
+  }
+
+  const ANIM_FNS = { bokeh: animBokeh, ink: animInk, network: animNetwork, streaks: animStreaks };
+
+  // ─────────────────────────────────────────────────────────────
+  //  Check which asset files actually exist
+  // ─────────────────────────────────────────────────────────────
+  async function assetExists(url) {
+    try {
+      const r = await fetch(url, { method: 'HEAD' });
+      return r.ok;
+    } catch { return false; }
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  //  Build panels (doubled for seamless loop)
+  // ─────────────────────────────────────────────────────────────
+  const track = document.getElementById('track');
+
+  function createPanel(p, hasVideo) {
+    const el = document.createElement('div');
+    el.className = 'panel';
+    el.dataset.id = p.id;
+    el.setAttribute('role', 'button');
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('aria-label', `${p.name} — ${p.role}`);
+
+    if (hasVideo) {
+      const vid = document.createElement('video');
+      vid.src = `/assets/${p.id}.mp4`;
+      vid.autoplay = true; vid.muted = true; vid.loop = true; vid.playsInline = true;
+      vid.setAttribute('disablepictureinpicture', '');
+      vid.setAttribute('x-webkit-airplay', 'deny');
+      vid.setAttribute('webkit-playsinline', '');
+      vid.setAttribute('controlsList', 'nodownload nofullscreen noremoteplayback');
+      el.appendChild(vid);
+      vid.play().catch(() => {});
+
+      const cover = document.createElement('div');
+      cover.className = 'video-cover';
+      el.appendChild(cover);
+    } else {
+      const cvs = document.createElement('canvas');
+      cvs.width = 800; cvs.height = 1000;
+      el.appendChild(cvs);
+      requestAnimationFrame(() => ANIM_FNS[p.anim](cvs));
+    }
+
+    const tint = document.createElement('div');
+    tint.className = 'panel-tint';
+    tint.style.background = p.tint;
+    el.appendChild(tint);
+
+    const gradient = document.createElement('div');
+    gradient.className = 'panel-gradient';
+    el.appendChild(gradient);
+
+    const label = document.createElement('div');
+    label.className = 'panel-label';
+    label.innerHTML = `<div class="name">${p.name}</div><div class="role">${p.role}</div>`;
+    el.appendChild(label);
+
+    el.addEventListener('click', () => {
+      if (p.href && !p.href.startsWith('#')) window.open(p.href, '_blank');
+    });
+    el.addEventListener('keydown', e => { if (e.key === 'Enter' && p.href && !p.href.startsWith('#')) window.open(p.href, '_blank'); });
+
+    return el;
+  }
+
+  const videoExists = await Promise.all(
+    PANELS.map(p => assetExists(`/assets/${p.id}.mp4`))
+  );
+
+  [...PANELS, ...PANELS].forEach((p, i) => {
+    track.appendChild(createPanel(p, videoExists[i % PANELS.length]));
+  });
+
+  // ─────────────────────────────────────────────────────────────
+  //  Layout mode detection
+  // ─────────────────────────────────────────────────────────────
+  function isVertical() {
+    return window.innerHeight > window.innerWidth &&
+      (window.innerWidth < 1024 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  //  RAF scroll loop
+  // ─────────────────────────────────────────────────────────────
+  let animOffset = 0, animLastTime = null, animId = null;
+  let currentMode = null;
+
+  function startAnimation() {
+    const vertical = isVertical();
+
+    // Reset offset when switching modes
+    if (currentMode !== null && currentMode !== vertical) animOffset = 0;
+    currentMode = vertical;
+
+    track.classList.toggle('vertical', vertical);
+
+    if (animId) cancelAnimationFrame(animId);
+    animLastTime = null;
+
+    if (vertical) {
+      const panelH = window.innerWidth / PANEL_RATIO;
+      const totalPx = PANELS.length * panelH;
+      const speed   = window.innerHeight / SECS_PER_VIEWPORT;
+
+      (function tick(ts) {
+        if (animLastTime !== null) {
+          animOffset = (animOffset + speed * (ts - animLastTime) / 1000) % totalPx;
+        }
+        animLastTime = ts;
+        track.style.transform = `translateY(-${animOffset.toFixed(2)}px)`;
+        animId = requestAnimationFrame(tick);
+      })(performance.now());
+    } else {
+      const panelW  = window.innerHeight * PANEL_RATIO;
+      const totalPx = PANELS.length * panelW;
+      const speed   = window.innerWidth / SECS_PER_VIEWPORT;
+
+      (function tick(ts) {
+        if (animLastTime !== null) {
+          animOffset = (animOffset + speed * (ts - animLastTime) / 1000) % totalPx;
+        }
+        animLastTime = ts;
+        track.style.transform = `translateX(-${animOffset.toFixed(2)}px)`;
+        animId = requestAnimationFrame(tick);
+      })(performance.now());
+    }
+  }
+
+  startAnimation();
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(startAnimation, 150);
+  });
+  window.addEventListener('orientationchange', () => setTimeout(startAnimation, 300));
+
+})();
+</script>
+
+</body>
+</html>
