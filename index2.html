@@ -205,6 +205,14 @@
       text-shadow: none;
     }
     body.expanded #menu-btn:hover { color: #fff; }
+
+    /* ── Fade overlay ──────────────────────────────────────── */
+    #fade {
+      position: fixed; inset: 0; background: #000;
+      z-index: 400; pointer-events: none;
+      opacity: 0; transition: opacity 0.18s ease;
+    }
+    #fade.visible { opacity: 1; }
   </style>
 </head>
 <body>
@@ -223,6 +231,7 @@
   </div>
 </div>
 
+<div id="fade"></div>
 <button id="menu-btn">The Season</button>
 
 <script>
@@ -415,22 +424,34 @@
   //  Menu toggle — scroll ↔ expanded grid
   // ─────────────────────────────────────────────────────────────
   const menuBtn = document.getElementById('menu-btn');
+  const fade    = document.getElementById('fade');
   let expanded = false;
+
+  function fadeThrough(fn) {
+    fade.classList.add('visible');
+    setTimeout(() => {
+      fn();
+      requestAnimationFrame(() => requestAnimationFrame(() => fade.classList.remove('visible')));
+    }, 180);
+  }
 
   menuBtn.addEventListener('click', () => {
     expanded = !expanded;
 
     if (expanded) {
-      if (animId) { cancelAnimationFrame(animId); animId = null; }
-      track.style.transform = 'none';
-      // Keep vertical class so mobile CSS knows which layout to apply
-      track.classList.toggle('vertical', isVertical());
-      document.body.classList.add('expanded');
-      menuBtn.textContent = 'Close';
+      fadeThrough(() => {
+        if (animId) { cancelAnimationFrame(animId); animId = null; }
+        track.style.transform = 'none';
+        track.classList.toggle('vertical', isVertical());
+        document.body.classList.add('expanded');
+        menuBtn.textContent = 'Close';
+      });
     } else {
-      document.body.classList.remove('expanded');
-      menuBtn.textContent = 'The Season';
-      startAnimation();
+      fadeThrough(() => {
+        document.body.classList.remove('expanded');
+        menuBtn.textContent = 'The Season';
+        startAnimation();
+      });
     }
   });
 
