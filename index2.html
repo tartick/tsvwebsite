@@ -180,8 +180,6 @@
       aspect-ratio: 800 / 240;
       overflow: hidden;
       margin: 0 auto;
-      /* drop-shadow on the container composites after the clip — prevents Chrome ghosting */
-      filter: drop-shadow(0 2px 40px rgba(0,0,0,0.8));
     }
     @media (max-width: 768px) {
       .logo-icon { width: clamp(260px, 72vw, 340px); }
@@ -200,12 +198,17 @@
     #menu-btn {
       position: fixed; top: 20px; right: 28px;
       z-index: 200;
-      background: none; border: none; padding: 8px 0 8px 16px;
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 2px;
+      padding: 8px 14px;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       cursor: pointer;
-      touch-action: manipulation; /* prevents 300ms ghost tap on iOS */
-      transition: opacity 0.25s;
+      touch-action: manipulation;
+      transition: opacity 0.25s, border-color 0.25s;
     }
-    #menu-btn:hover { opacity: 0.7; }
+    #menu-btn:hover { opacity: 0.85; border-color: rgba(255,255,255,0.65); }
 
     /* Wordmark crop: bottom 196px of 800px-wide image → aspect 800/196 */
     #menu-btn .wm-img {
