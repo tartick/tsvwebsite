@@ -180,13 +180,15 @@
       aspect-ratio: 800 / 240;
       overflow: hidden;
       margin: 0 auto;
+      /* drop-shadow on the container composites after the clip — prevents Chrome ghosting */
+      filter: drop-shadow(0 2px 40px rgba(0,0,0,0.8));
     }
     @media (max-width: 768px) {
       .logo-icon { width: clamp(260px, 72vw, 340px); }
     }
     .logo-icon img {
       width: 100%; display: block;
-      filter: brightness(0) invert(1) drop-shadow(0 2px 40px rgba(0,0,0,0.8));
+      filter: brightness(0) invert(1);
     }
     #logo .wordmark {
       font-size: clamp(16px, 2.4vw, 38px); font-weight: 200;
