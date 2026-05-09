@@ -92,6 +92,14 @@
     /* No separator pseudo-element in expanded (gap handles it) */
     body.expanded .panel + .panel::before { display: none; }
 
+    /* Stronger dim in expanded mode — unhovered panels sit back */
+    body.expanded .panel::after {
+      background: rgba(0,0,0,0.55);
+    }
+    body.expanded .panel:hover::after {
+      background: rgba(0,0,0,0);
+    }
+
     /* Hover scrim */
     .panel::after {
       content: ''; position: absolute; inset: 0;
