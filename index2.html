@@ -181,6 +181,9 @@
       overflow: hidden;
       margin: 0 auto;
     }
+    @media (max-width: 768px) {
+      .logo-icon { width: clamp(260px, 72vw, 340px); }
+    }
     .logo-icon img {
       width: 100%; display: block;
       filter: brightness(0) invert(1) drop-shadow(0 2px 40px rgba(0,0,0,0.8));
@@ -195,8 +198,9 @@
     #menu-btn {
       position: fixed; top: 20px; right: 28px;
       z-index: 200;
-      background: none; border: none; padding: 0;
+      background: none; border: none; padding: 8px 0 8px 16px;
       cursor: pointer;
+      touch-action: manipulation; /* prevents 300ms ghost tap on iOS */
       transition: opacity 0.25s;
     }
     #menu-btn:hover { opacity: 0.7; }
@@ -468,6 +472,9 @@
     } else {
       fadeThrough(() => {
         document.body.classList.remove('expanded');
+        // Block panel taps briefly to absorb iOS ghost click after close
+        track.style.pointerEvents = 'none';
+        setTimeout(() => { track.style.pointerEvents = ''; }, 400);
         startAnimation();
       });
     }
