@@ -154,18 +154,25 @@
       opacity: 0.55;
     }
 
-    /* ── Logo ──────────────────────────────────────────────── */
+    /* ── Logo — icon mark only ─────────────────────────────── */
     #logo {
       position: fixed; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       z-index: 100; pointer-events: none; text-align: center;
       transition: opacity 0.35s ease;
     }
-    /* Hide logo in expanded mode — panels fill the space */
     body.expanded #logo { opacity: 0; }
 
-    #logo img {
-      display: block; width: clamp(100px, 14vw, 220px);
+    /* Crop wrapper: image is 800×436; mark fills top ~55% of height.
+       aspect-ratio 10/2.9 ≈ shows top 51% → just the mark. */
+    .logo-icon {
+      width: clamp(70px, 8vw, 120px);
+      aspect-ratio: 10 / 2.9;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    .logo-icon img {
+      width: 100%; display: block;
       filter: brightness(0) invert(1) drop-shadow(0 2px 32px rgba(0,0,0,0.7));
     }
     #logo .wordmark {
@@ -174,32 +181,30 @@
       text-shadow: 0 0 40px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.6);
     }
 
-    /* ── Menu button ───────────────────────────────────────── */
+    /* ── Wordmark button (top-right) ───────────────────────── */
     #menu-btn {
-      position: fixed; top: 24px; right: 28px;
+      position: fixed; top: 20px; right: 28px;
       z-index: 200;
-      padding: 9px 22px;
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 2px;
+      background: none; border: none; padding: 8px 0;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 11px;
-      letter-spacing: 0.25em; text-transform: uppercase;
-      color: rgba(255,255,255,0.75);
-      background: rgba(0,0,0,0.18);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+      font-size: clamp(11px, 1.1vw, 15px);
+      font-weight: 200;
+      letter-spacing: 0.45em; text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
       cursor: pointer;
-      transition: color 0.25s, border-color 0.25s, background 0.25s;
+      text-shadow: 0 0 24px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.7);
+      transition: color 0.25s, opacity 0.25s;
     }
-    #menu-btn:hover {
-      color: #fff;
-      border-color: rgba(255,255,255,0.7);
-      background: rgba(0,0,0,0.35);
-    }
+    #menu-btn:hover { color: #fff; }
+
+    /* In expanded mode, show "Close" in smaller label style */
     body.expanded #menu-btn {
-      border-color: rgba(255,255,255,0.6);
-      color: #fff;
+      font-size: 11px;
+      letter-spacing: 0.28em;
+      color: rgba(255,255,255,0.7);
+      text-shadow: none;
     }
+    body.expanded #menu-btn:hover { color: #fff; }
   </style>
 </head>
 <body>
@@ -207,16 +212,18 @@
 <div id="scene">
   <div id="track"></div>
   <div id="logo">
-    <img
-      src="https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1"
-      alt="The Season"
-      onerror="this.style.display='none'; document.getElementById('wordmark').style.display='block';"
-    >
+    <div class="logo-icon">
+      <img
+        src="https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1"
+        alt="The Season"
+        onerror="this.parentElement.style.display='none'; document.getElementById('wordmark').style.display='block';"
+      >
+    </div>
     <div id="wordmark" class="wordmark" style="display:none;">The Season</div>
   </div>
 </div>
 
-<button id="menu-btn">Menu</button>
+<button id="menu-btn">The Season</button>
 
 <script>
 (async () => {
@@ -228,7 +235,8 @@
     { id: 'flyer',     name: 'Flyer',              role: 'Creative production',       tint: 'rgba(18,125,55,0.35)',    anim: 'streaks', href: 'https://flyerweb.com'               },
   ];
 
-  const SECS_PER_VIEWPORT = 35;
+  const SECS_PER_VIEWPORT          = 35;   // horizontal
+  const SECS_PER_VIEWPORT_VERTICAL = 17.5; // vertical (2× faster)
   const PANEL_RATIO = 4 / 5;
 
   // ─────────────────────────────────────────────────────────────
@@ -383,7 +391,7 @@
     if (vertical) {
       const panelH  = window.innerWidth / PANEL_RATIO;
       const totalPx = PANELS.length * panelH;
-      const speed   = window.innerHeight / SECS_PER_VIEWPORT;
+      const speed   = window.innerHeight / SECS_PER_VIEWPORT_VERTICAL;
       (function tick(ts) {
         if (animLastTime !== null) animOffset = (animOffset + speed * (ts - animLastTime) / 1000) % totalPx;
         animLastTime = ts;
@@ -421,7 +429,7 @@
       menuBtn.textContent = 'Close';
     } else {
       document.body.classList.remove('expanded');
-      menuBtn.textContent = 'Menu';
+      menuBtn.textContent = 'The Season';
       startAnimation();
     }
   });
