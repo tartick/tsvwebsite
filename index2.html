@@ -163,17 +163,19 @@
     }
     body.expanded #logo { opacity: 0; }
 
-    /* Crop wrapper: image is 800×436; mark fills top ~55% of height.
-       aspect-ratio 10/2.9 ≈ shows top 51% → just the mark. */
+    /* Image is 800×436. Mark = top 240px, wordmark text = bottom 196px.
+       Crop wrapper uses aspect-ratio derived from those pixel counts. */
+
+    /* Center icon — top 240px of 800px-wide image → aspect 800/240 = 10/3 */
     .logo-icon {
-      width: clamp(70px, 8vw, 120px);
-      aspect-ratio: 10 / 2.9;
+      width: clamp(200px, 26vw, 420px);
+      aspect-ratio: 800 / 240;
       overflow: hidden;
       margin: 0 auto;
     }
     .logo-icon img {
       width: 100%; display: block;
-      filter: brightness(0) invert(1) drop-shadow(0 2px 32px rgba(0,0,0,0.7));
+      filter: brightness(0) invert(1) drop-shadow(0 2px 40px rgba(0,0,0,0.8));
     }
     #logo .wordmark {
       font-size: clamp(16px, 2.4vw, 38px); font-weight: 200;
@@ -181,30 +183,37 @@
       text-shadow: 0 0 40px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.6);
     }
 
-    /* ── Wordmark button (top-right) ───────────────────────── */
+    /* ── Wordmark button (top-right) — uses image typography ── */
     #menu-btn {
       position: fixed; top: 20px; right: 28px;
       z-index: 200;
-      background: none; border: none; padding: 8px 0;
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: clamp(11px, 1.1vw, 15px);
-      font-weight: 200;
-      letter-spacing: 0.45em; text-transform: uppercase;
-      color: rgba(255,255,255,0.85);
+      background: none; border: none; padding: 0;
       cursor: pointer;
-      text-shadow: 0 0 24px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.7);
-      transition: color 0.25s, opacity 0.25s;
+      transition: opacity 0.25s;
     }
-    #menu-btn:hover { color: #fff; }
+    #menu-btn:hover { opacity: 0.7; }
 
-    /* In expanded mode, show "Close" in smaller label style */
-    body.expanded #menu-btn {
-      font-size: 11px;
-      letter-spacing: 0.28em;
-      color: rgba(255,255,255,0.7);
-      text-shadow: none;
+    /* Wordmark crop: bottom 196px of 800px-wide image → aspect 800/196 */
+    #menu-btn .wm-img {
+      display: block;
+      width: clamp(80px, 9vw, 150px);
+      aspect-ratio: 800 / 196;
+      background: url('https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1') no-repeat;
+      background-size: 100% auto;
+      background-position: bottom center;
+      filter: brightness(0) invert(1) drop-shadow(0 1px 12px rgba(0,0,0,0.9));
     }
-    body.expanded #menu-btn:hover { color: #fff; }
+
+    /* Close label shown when expanded */
+    #menu-btn .wm-close {
+      display: none;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
+    }
+    body.expanded #menu-btn .wm-img   { display: none; }
+    body.expanded #menu-btn .wm-close { display: block; }
+    body.expanded #menu-btn:hover .wm-close { color: #fff; }
 
     /* ── Fade overlay ──────────────────────────────────────── */
     #fade {
@@ -232,7 +241,10 @@
 </div>
 
 <div id="fade"></div>
-<button id="menu-btn">The Season</button>
+<button id="menu-btn">
+  <span class="wm-img"></span>
+  <span class="wm-close">Close</span>
+</button>
 
 <script>
 (async () => {
@@ -444,12 +456,10 @@
         track.style.transform = 'none';
         track.classList.toggle('vertical', isVertical());
         document.body.classList.add('expanded');
-        menuBtn.textContent = 'Close';
       });
     } else {
       fadeThrough(() => {
         document.body.classList.remove('expanded');
-        menuBtn.textContent = 'The Season';
         startAnimation();
       });
     }
