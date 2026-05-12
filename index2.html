@@ -237,11 +237,18 @@
     /* Mobile: button sits below the center logo mark */
     @media (max-width: 768px) {
       #menu-btn {
-        top: calc(50% + 58px);
+        top: calc(50% + 74px);
         right: auto;
         left: 50%;
         transform: translateX(-50%);
         white-space: nowrap;
+        padding: 14px 22px 22px;
+      }
+      #menu-btn .wm-img {
+        width: clamp(110px, 36vw, 180px);
+      }
+      body.expanded #menu-btn {
+        padding: 14px 22px;
       }
     }
 
