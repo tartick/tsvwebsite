@@ -183,6 +183,15 @@
     }
     @media (max-width: 768px) {
       .logo-icon { width: clamp(260px, 72vw, 340px); }
+
+      /* Move button below the centered logo on mobile */
+      #menu-btn {
+        top: calc(50% + 58px);
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+      }
     }
     .logo-icon img {
       width: 100%; display: block;
