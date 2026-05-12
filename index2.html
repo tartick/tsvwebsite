@@ -183,15 +183,6 @@
     }
     @media (max-width: 768px) {
       .logo-icon { width: clamp(260px, 72vw, 340px); }
-
-      /* Move button below the centered logo on mobile */
-      #menu-btn {
-        top: calc(50% + 58px);
-        right: auto;
-        left: 50%;
-        transform: translateX(-50%);
-        white-space: nowrap;
-      }
     }
     .logo-icon img {
       width: 100%; display: block;
@@ -242,6 +233,17 @@
     body.expanded #menu-btn .wm-close { display: block; }
     body.expanded #menu-btn:hover .wm-close { color: #fff; }
     body.expanded #menu-btn { padding: 12px 16px; }
+
+    /* Mobile: button sits below the center logo mark */
+    @media (max-width: 768px) {
+      #menu-btn {
+        top: calc(50% + 58px);
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+      }
+    }
 
     /* ── Fade overlay ──────────────────────────────────────── */
     #fade {
