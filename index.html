@@ -201,7 +201,8 @@
       z-index: 200;
       padding: 1.5px;
       background: rgba(255,255,255,0.6);
-      clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px);
+      /* Rectangular step-notch: 12×12px square cut from top-left corner */
+      clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px, 12px 12px);
       cursor: pointer;
       transition: opacity 0.25s;
     }
