@@ -201,8 +201,10 @@
       z-index: 200;
       padding: 1.5px;
       background: #fff;
-      /* Rectangular step-notch: 12×12px square cut from top-left corner */
-      clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px, 12px 12px);
+      /* Diagonal notch at top-left corner */
+      clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px);
+      /* isolation here so destination-out punches through to the video, not just the fill */
+      isolation: isolate;
       cursor: pointer;
       transition: opacity 0.25s;
     }
@@ -210,7 +212,6 @@
     #menu-btn {
       display: flex; align-items: center; justify-content: center;
       background: #fff;
-      isolation: isolate;
       border: none;
       padding: 12px 16px 20px;
       cursor: pointer;
@@ -218,7 +219,7 @@
     }
 
     /* Wordmark crop: bottom 196px of 800px-wide image → aspect 800/196 */
-    /* destination-out knocks the letter shapes out of the white button */
+    /* destination-out knocks letter shapes out of white, revealing video behind */
     #menu-btn .wm-img {
       display: block;
       width: clamp(80px, 9vw, 150px);
