@@ -200,16 +200,17 @@
       position: fixed; top: 20px; right: 28px;
       z-index: 200;
       padding: 1.5px;
-      background: rgba(255,255,255,0.6);
+      background: #fff;
       /* Rectangular step-notch: 12×12px square cut from top-left corner */
       clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px, 12px 12px);
       cursor: pointer;
       transition: opacity 0.25s;
     }
-    #menu-btn-wrap:hover { opacity: 0.8; }
+    #menu-btn-wrap:hover { opacity: 0.75; }
     #menu-btn {
       display: flex; align-items: center; justify-content: center;
-      background: rgba(0,0,0,0.28);
+      background: #fff;
+      isolation: isolate;
       border: none;
       padding: 12px 16px 20px;
       cursor: pointer;
@@ -217,6 +218,7 @@
     }
 
     /* Wordmark crop: bottom 196px of 800px-wide image → aspect 800/196 */
+    /* destination-out knocks the letter shapes out of the white button */
     #menu-btn .wm-img {
       display: block;
       width: clamp(80px, 9vw, 150px);
@@ -224,19 +226,20 @@
       background: url('https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1') no-repeat;
       background-size: 100% auto;
       background-position: bottom center;
-      filter: brightness(0) invert(1) drop-shadow(0 1px 12px rgba(0,0,0,0.9));
+      filter: brightness(0);
+      mix-blend-mode: destination-out;
     }
 
-    /* Close label shown when expanded */
+    /* Close label shown when expanded — also knocked out of white */
     #menu-btn .wm-close {
       display: none;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
+      color: #000;
+      mix-blend-mode: destination-out;
     }
     body.expanded #menu-btn .wm-img   { display: none; }
     body.expanded #menu-btn .wm-close { display: block; }
-    body.expanded #menu-btn:hover .wm-close { color: #fff; }
     body.expanded #menu-btn { padding: 12px 16px; }
 
     /* Mobile: button sits below the center logo mark */
