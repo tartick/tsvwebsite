@@ -14,43 +14,90 @@
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
 
-    /* ── Rotate prompt ─────────────────────────────────────── */
-    #rotate-prompt {
-      display: none;
-      position: fixed; inset: 0;
-      background: #000; z-index: 900;
-      flex-direction: column; align-items: center; justify-content: center;
-      color: #fff; gap: 28px; text-align: center; padding: 40px;
-    }
-    #rotate-prompt svg { animation: wobble 2.2s ease-in-out infinite; opacity: 0.85; }
-    #rotate-prompt p { font-size: 13px; letter-spacing: 0.25em; text-transform: uppercase; opacity: 0.55; }
-    @keyframes wobble {
-      0%   { transform: rotate(0deg); }
-      40%  { transform: rotate(90deg); }
-      60%  { transform: rotate(90deg); }
-      100% { transform: rotate(0deg); }
-    }
-
     /* ── Scene ─────────────────────────────────────────────── */
     #scene { position: fixed; inset: 0; overflow: hidden; }
 
-    /* ── Track ─────────────────────────────────────────────── */
+    /* ── Track — horizontal (default) ─────────────────────── */
     #track {
       display: flex; position: absolute; top: 0; left: 0; height: 100%;
       will-change: transform;
+      transition: opacity 0.35s ease;
     }
 
-    /* ── Panels ────────────────────────────────────────────── */
+    /* ── Track — vertical (mobile portrait, scroll mode) ──── */
+    #track.vertical {
+      flex-direction: column;
+      width: 100%; height: auto;
+    }
+
+    /* ══ EXPANDED STATE ════════════════════════════════════════ */
+
+    /* Desktop: 2×2 grid */
+    body.expanded #track {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      width: 100%; height: 100%;
+      transform: none !important;
+      gap: 1px;
+      background: rgba(255,255,255,0.10);
+    }
+
+    /* Mobile portrait: 4 stacked rows */
+    body.expanded #track.vertical {
+      display: flex !important;
+      flex-direction: column;
+      height: 100% !important;
+      transform: none !important;
+      gap: 1px;
+      background: rgba(255,255,255,0.10);
+    }
+
+    /* Hide duplicate panels in expanded mode */
+    body.expanded .panel:nth-child(n+5) {
+      display: none;
+    }
+
+    /* Panels fill their cell in expanded mode */
+    body.expanded .panel {
+      width: 100% !important;
+      height: 100% !important;
+      aspect-ratio: unset !important;
+      flex: 1;
+    }
+
+    /* ── Panels (scroll mode) ───────────────────────────────── */
     .panel {
       position: relative; height: 100%; aspect-ratio: 4 / 5;
       flex-shrink: 0; cursor: pointer; overflow: hidden;
       user-select: none; isolation: isolate;
     }
 
-    /* Separator */
+    #track.vertical .panel {
+      width: 100%; height: auto;
+    }
+
+    /* Separator — vertical line in horizontal scroll mode */
     .panel + .panel::before {
       content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-      width: 1px; background: rgba(255,255,255,0.12); z-index: 5;
+      width: 1px; height: auto; background: rgba(255,255,255,0.12); z-index: 5;
+    }
+
+    /* Separator — horizontal line in vertical scroll mode */
+    #track.vertical .panel + .panel::before {
+      left: 0; right: 0; top: 0; bottom: auto;
+      width: 100%; height: 1px;
+    }
+
+    /* No separator pseudo-element in expanded (gap handles it) */
+    body.expanded .panel + .panel::before { display: none; }
+
+    /* Stronger dim in expanded mode — unhovered panels sit back */
+    body.expanded .panel::after {
+      background: rgba(0,0,0,0.55);
+    }
+    body.expanded .panel:hover::after {
+      background: rgba(0,0,0,0);
     }
 
     /* Hover scrim */
@@ -60,7 +107,7 @@
     }
     .panel:hover::after { background: rgba(0,0,0,0); }
 
-    /* Video / canvas background */
+    /* Video / canvas */
     .panel video,
     .panel canvas {
       position: absolute; inset: 0;
@@ -69,26 +116,24 @@
       filter: grayscale(100%);
     }
 
-    /* Transparent touch blocker — sits above video, eats all iOS media-control taps */
     .video-cover {
       position: absolute; inset: 0; z-index: 1;
       pointer-events: auto; background: transparent;
     }
 
-    /* Color tint */
     .panel-tint { position: absolute; inset: 0; z-index: 2; }
 
-    /* Bottom gradient — ensures labels always read */
     .panel-gradient {
       position: absolute; bottom: 0; left: 0; right: 0; height: 220px;
-      background: linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 100%);
+      background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
       z-index: 10; pointer-events: none;
     }
 
-    /* Company label */
+    /* ── Labels ────────────────────────────────────────────── */
     .panel-label {
       position: absolute; bottom: 36px; left: 36px;
       z-index: 20; color: #fff; pointer-events: none;
+      transition: all 0.35s ease;
     }
     .panel-label .name {
       font-size: clamp(13px, 1.4vh, 20px); font-weight: 300;
@@ -99,86 +144,171 @@
       letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.42;
     }
 
-    /* ── Logo ──────────────────────────────────────────────── */
+    /* Vertical scroll mode label sizing */
+    #track.vertical .panel-label .name { font-size: clamp(13px, 4vw, 22px); }
+    #track.vertical .panel-label .role  { font-size: clamp(10px, 2.8vw, 15px); }
+
+    /* Expanded mode — larger labels for both desktop and mobile */
+    body.expanded .panel-label {
+      bottom: clamp(24px, 4vh, 48px);
+      left: clamp(24px, 3vw, 48px);
+    }
+    body.expanded .panel-label .name {
+      font-size: clamp(16px, 2.2vw, 38px);
+    }
+    body.expanded .panel-label .role {
+      font-size: clamp(11px, 1.1vw, 18px);
+      margin-top: 8px;
+      opacity: 0.55;
+    }
+
+    /* ── Logo — icon mark only ─────────────────────────────── */
     #logo {
       position: fixed; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       z-index: 100; pointer-events: none; text-align: center;
+      transition: opacity 0.35s ease;
     }
-    #logo img {
-      display: block; width: clamp(100px, 14vw, 220px);
-      filter: brightness(0) invert(1) drop-shadow(0 2px 32px rgba(0,0,0,0.7));
+    body.expanded #logo { opacity: 0; }
+
+    /* Image is 800×436. Mark = top 240px, wordmark text = bottom 196px.
+       Crop wrapper uses aspect-ratio derived from those pixel counts. */
+
+    /* Center icon — top 240px of 800px-wide image → aspect 800/240 = 10/3 */
+    .logo-icon {
+      width: clamp(200px, 26vw, 420px);
+      aspect-ratio: 800 / 240;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    @media (max-width: 768px) {
+      .logo-icon { width: clamp(260px, 72vw, 340px); }
+    }
+    .logo-icon img {
+      width: 100%; display: block;
+      filter: brightness(0) invert(1);
     }
     #logo .wordmark {
       font-size: clamp(16px, 2.4vw, 38px); font-weight: 200;
       letter-spacing: 0.55em; text-transform: uppercase; color: #fff;
       text-shadow: 0 0 40px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.6);
     }
-    #contact-btn {
-      position: fixed; top: 24px; right: 28px;
+
+    /* ── Wordmark button (top-right) — uses image typography ── */
+    #menu-btn {
+      position: fixed; top: 20px; right: 28px;
       z-index: 200;
-      padding: 9px 22px;
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.28);
+      border: 1.5px solid rgba(255,255,255,0.6);
+      border-radius: 0;
+      padding: 12px 16px 20px;
+      cursor: pointer;
+      touch-action: manipulation;
+      /* Step-notch on top-right corner — echoes the pillar profile in the logo mark */
+      clip-path: polygon(0 0, calc(100% - 12px) 0, calc(100% - 12px) 12px, 100% 12px, 100% 100%, 0 100%);
+      transition: opacity 0.25s;
+    }
+    #menu-btn:hover { opacity: 0.8; }
+
+    /* Wordmark crop: bottom 196px of 800px-wide image → aspect 800/196 */
+    #menu-btn .wm-img {
+      display: block;
+      width: clamp(80px, 9vw, 150px);
+      aspect-ratio: 800 / 196;
+      background: url('https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1') no-repeat;
+      background-size: 100% auto;
+      background-position: bottom center;
+      filter: brightness(0) invert(1) drop-shadow(0 1px 12px rgba(0,0,0,0.9));
+    }
+
+    /* Close label shown when expanded */
+    #menu-btn .wm-close {
+      display: none;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 11px;
-      letter-spacing: 0.25em; text-transform: uppercase;
-      color: rgba(255,255,255,0.75);
-      text-decoration: none;
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      background: rgba(0,0,0,0.18);
-      transition: color 0.25s, border-color 0.25s, background 0.25s;
+      font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(255,255,255,0.7);
     }
-    #contact-btn:hover {
-      color: #fff;
-      border-color: rgba(255,255,255,0.7);
-      background: rgba(0,0,0,0.35);
+    body.expanded #menu-btn .wm-img   { display: none; }
+    body.expanded #menu-btn .wm-close { display: block; }
+    body.expanded #menu-btn:hover .wm-close { color: #fff; }
+    body.expanded #menu-btn { padding: 12px 16px; }
+
+    /* Mobile: button sits below the center logo mark */
+    @media (max-width: 768px) {
+      #menu-btn {
+        top: calc(50% + 74px);
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        padding: 14px 22px 22px;
+      }
+      #menu-btn .wm-img {
+        width: clamp(110px, 36vw, 180px);
+      }
+
+      /* In expanded mode: move Close to upper-right */
+      body.expanded #menu-btn {
+        top: 20px;
+        right: 20px;
+        left: auto;
+        transform: none;
+        padding: 14px 22px;
+      }
+
+      /* No passive dim on mobile expanded — go dark on tap instead */
+      body.expanded .panel::after {
+        background: rgba(0,0,0,0);
+      }
+      body.expanded .panel:active::after {
+        background: rgba(0,0,0,0.55);
+      }
     }
+
+    /* ── Fade overlay ──────────────────────────────────────── */
+    #fade {
+      position: fixed; inset: 0; background: #000;
+      z-index: 400; pointer-events: none;
+      opacity: 0; transition: opacity 0.18s ease;
+    }
+    #fade.visible { opacity: 1; }
   </style>
 </head>
 <body>
 
-<div id="rotate-prompt">
-  <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-    <rect x="10" y="4" width="28" height="48" rx="5" stroke="white" stroke-width="2" fill="none"/>
-    <circle cx="24" cy="46" r="2" fill="white"/>
-    <path d="M38 16 C48 16, 52 24, 48 32" stroke="white" stroke-width="2" stroke-linecap="round" fill="none"/>
-    <polyline points="48,26 48,32 42,32" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  </svg>
-  <p>Rotate to landscape</p>
-</div>
-
 <div id="scene">
   <div id="track"></div>
   <div id="logo">
-    <img
-      src="https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1"
-      alt="The Season"
-      onerror="this.style.display='none'; document.getElementById('wordmark').style.display='block';"
-    >
+    <div class="logo-icon">
+      <img
+        src="https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1"
+        alt="The Season"
+        onerror="this.parentElement.style.display='none'; document.getElementById('wordmark').style.display='block';"
+      >
+    </div>
     <div id="wordmark" class="wordmark" style="display:none;">The Season</div>
   </div>
 </div>
 
-<a id="contact-btn" href="mailto:hi@theseason.nyc">Contact</a>
+<div id="fade"></div>
+<button id="menu-btn">
+  <span class="wm-img"></span>
+  <span class="wm-close">Close</span>
+</button>
 
 <script>
 (async () => {
 
-  // ─────────────────────────────────────────────────────────────
-  //  Panel definitions
-  //  Drop {id}.mp4 into /assets/ and push — video loads automatically.
-  //  Canvas animation runs as fallback until then.
-  // ─────────────────────────────────────────────────────────────
   const PANELS = [
-    { id: 'producing', name: 'The Season',         role: 'Producing and Marketing Direction', tint: 'rgba(0,0,0,0.40)',        anim: 'bokeh',    href: 'mailto:mikeandsteven@theseason.nyc' },
-    { id: '11oclock',  name: '11 O\'Clock Studio', role: 'Key art & branding',              tint: 'rgba(225,145,10,0.38)',   anim: 'ink',      href: 'https://11oclock.com'               },
-    { id: 'relay',     name: 'Relay',              role: 'Influencer Marketing',             tint: 'rgba(95,18,175,0.38)',    anim: 'network',  href: 'https://relayinfluence.com'         },
-    { id: 'flyer',     name: 'Flyer',              role: 'Creative production',              tint: 'rgba(72,132,243,0.45)',   anim: 'streaks',  href: 'https://flyerweb.com'               },
+    { id: 'producing', name: 'The Season',         role: 'Producing and Marketing Direction', tint: 'rgba(0,0,0,0.40)',        anim: 'bokeh',   href: 'mailto:mikeandsteven@theseason.nyc' },
+    { id: '11oclock',  name: '11 O\'Clock Studio', role: 'Key art & branding',       tint: 'rgba(225,145,10,0.38)',   anim: 'ink',     href: 'https://11oclock.com'               },
+    { id: 'relay',     name: 'Relay',              role: 'Influencer Marketing',      tint: 'rgba(95,18,175,0.38)',    anim: 'network', href: 'https://relayinfluence.com'         },
+    { id: 'flyer',     name: 'Flyer',              role: 'Creative production',       tint: 'rgba(72,132,243,0.45)',   anim: 'streaks', href: 'https://flyerweb.com'               },
   ];
 
-  const SECS_PER_VIEWPORT = 35;
+  const SECS_PER_VIEWPORT          = 35;   // horizontal
+  const SECS_PER_VIEWPORT_VERTICAL = 17.5; // vertical (2× faster)
   const PANEL_RATIO = 4 / 5;
 
   // ─────────────────────────────────────────────────────────────
@@ -237,17 +367,15 @@
   const ANIM_FNS = { bokeh: animBokeh, ink: animInk, network: animNetwork, streaks: animStreaks };
 
   // ─────────────────────────────────────────────────────────────
-  //  Check which asset files actually exist
+  //  Asset check
   // ─────────────────────────────────────────────────────────────
   async function assetExists(url) {
-    try {
-      const r = await fetch(url, { method: 'HEAD' });
-      return r.ok;
-    } catch { return false; }
+    try { const r = await fetch(url, { method: 'HEAD' }); return r.ok; }
+    catch { return false; }
   }
 
   // ─────────────────────────────────────────────────────────────
-  //  Build panels (doubled for seamless loop)
+  //  Build panels (doubled for seamless scroll loop)
   // ─────────────────────────────────────────────────────────────
   const track = document.getElementById('track');
 
@@ -269,8 +397,6 @@
       vid.setAttribute('controlsList', 'nodownload nofullscreen noremoteplayback');
       el.appendChild(vid);
       vid.play().catch(() => {});
-
-      // Transparent overlay intercepts all touch events before iOS can show media controls
       const cover = document.createElement('div');
       cover.className = 'video-cover';
       el.appendChild(cover);
@@ -298,65 +424,115 @@
     el.addEventListener('click', () => {
       if (p.href && !p.href.startsWith('#')) window.open(p.href, '_blank');
     });
-    el.addEventListener('keydown', e => { if (e.key === 'Enter' && p.href && !p.href.startsWith('#')) window.open(p.href, '_blank'); });
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && p.href && !p.href.startsWith('#')) window.open(p.href, '_blank');
+    });
 
     return el;
   }
 
-  // Check which videos exist, then build all panels
-  const videoExists = await Promise.all(
-    PANELS.map(p => assetExists(`/assets/${p.id}.mp4`))
-  );
+  const videoExists = await Promise.all(PANELS.map(p => assetExists(`/assets/${p.id}.mp4`)));
 
   [...PANELS, ...PANELS].forEach((p, i) => {
-    const has = videoExists[i % PANELS.length];
-    track.appendChild(createPanel(p, has));
+    track.appendChild(createPanel(p, videoExists[i % PANELS.length]));
   });
 
   // ─────────────────────────────────────────────────────────────
-  //  RAF scroll loop — no CSS reset glitch
+  //  Layout mode
+  // ─────────────────────────────────────────────────────────────
+  function isVertical() {
+    return window.innerHeight > window.innerWidth &&
+      (window.innerWidth < 1024 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  //  RAF scroll animation
   // ─────────────────────────────────────────────────────────────
   let animOffset = 0, animLastTime = null, animId = null;
+  let currentMode = null;
 
   function startAnimation() {
-    const panelWidth = window.innerHeight * PANEL_RATIO;
-    const totalPx    = PANELS.length * panelWidth;
-    const speed      = window.innerWidth / SECS_PER_VIEWPORT;
+    const vertical = isVertical();
+    if (currentMode !== null && currentMode !== vertical) animOffset = 0;
+    currentMode = vertical;
+    track.classList.toggle('vertical', vertical);
 
     if (animId) cancelAnimationFrame(animId);
     animLastTime = null;
 
-    (function tick(ts) {
-      if (animLastTime !== null) {
-        animOffset = (animOffset + speed * (ts - animLastTime) / 1000) % totalPx;
-      }
-      animLastTime = ts;
-      track.style.transform = `translateX(-${animOffset.toFixed(2)}px)`;
-      animId = requestAnimationFrame(tick);
-    })(performance.now());
+    if (vertical) {
+      const panelH  = window.innerWidth / PANEL_RATIO;
+      const totalPx = PANELS.length * panelH;
+      const speed   = window.innerHeight / SECS_PER_VIEWPORT_VERTICAL;
+      (function tick(ts) {
+        if (animLastTime !== null) animOffset = (animOffset + speed * (ts - animLastTime) / 1000) % totalPx;
+        animLastTime = ts;
+        track.style.transform = `translateY(-${animOffset.toFixed(2)}px)`;
+        animId = requestAnimationFrame(tick);
+      })(performance.now());
+    } else {
+      const panelW  = window.innerHeight * PANEL_RATIO;
+      const totalPx = PANELS.length * panelW;
+      const speed   = window.innerWidth / SECS_PER_VIEWPORT;
+      (function tick(ts) {
+        if (animLastTime !== null) animOffset = (animOffset + speed * (ts - animLastTime) / 1000) % totalPx;
+        animLastTime = ts;
+        track.style.transform = `translateX(-${animOffset.toFixed(2)}px)`;
+        animId = requestAnimationFrame(tick);
+      })(performance.now());
+    }
   }
+
+  // ─────────────────────────────────────────────────────────────
+  //  Menu toggle — scroll ↔ expanded grid
+  // ─────────────────────────────────────────────────────────────
+  const menuBtn = document.getElementById('menu-btn');
+  const fade    = document.getElementById('fade');
+  let expanded = false;
+
+  function fadeThrough(fn) {
+    fade.classList.add('visible');
+    setTimeout(() => {
+      fn();
+      requestAnimationFrame(() => requestAnimationFrame(() => fade.classList.remove('visible')));
+    }, 180);
+  }
+
+  menuBtn.addEventListener('click', () => {
+    expanded = !expanded;
+
+    if (expanded) {
+      fadeThrough(() => {
+        if (animId) { cancelAnimationFrame(animId); animId = null; }
+        track.style.transform = 'none';
+        track.classList.toggle('vertical', isVertical());
+        document.body.classList.add('expanded');
+      });
+    } else {
+      fadeThrough(() => {
+        document.body.classList.remove('expanded');
+        // Block panel taps briefly to absorb iOS ghost click after close
+        track.style.pointerEvents = 'none';
+        setTimeout(() => { track.style.pointerEvents = ''; }, 400);
+        startAnimation();
+      });
+    }
+  });
 
   startAnimation();
 
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => { startAnimation(); checkOrientation(); }, 150);
+    resizeTimer = setTimeout(() => {
+      if (!expanded) startAnimation();
+      else track.classList.toggle('vertical', isVertical());
+    }, 150);
   });
-
-  // ─────────────────────────────────────────────────────────────
-  //  Mobile orientation guard
-  // ─────────────────────────────────────────────────────────────
-  const rotatePrompt = document.getElementById('rotate-prompt');
-
-  function checkOrientation() {
-    const portrait = window.innerHeight > window.innerWidth;
-    const mobile   = window.innerWidth < 1024 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    rotatePrompt.style.display = (mobile && portrait) ? 'flex' : 'none';
-  }
-
-  window.addEventListener('orientationchange', () => setTimeout(() => { startAnimation(); checkOrientation(); }, 300));
-  checkOrientation();
+  window.addEventListener('orientationchange', () => setTimeout(() => {
+    if (!expanded) startAnimation();
+    else track.classList.toggle('vertical', isVertical());
+  }, 300));
 
 })();
 </script>
