@@ -20,32 +20,41 @@
 
     body { min-height: 100vh; overflow-x: hidden; }
 
-    /* ── Spinning background logo ─────────────────────────── */
-    .bg-logo {
-      position: fixed;
-      top: 50%; left: 50%;
-      width: clamp(480px, 72vmin, 1000px);
-      transform: translate(-50%, -50%);
-      opacity: 0.055;
-      filter: brightness(0) invert(1);
-      animation: slowspin 90s linear infinite;
+    /* ── Brand stripe texture (graphic element B from brand guide) ── */
+    /* Four-line groups referencing the Season icon's horizontal bars  */
+    .bg-stripes {
+      position: fixed; inset: 0;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.058) 0px,
+        rgba(255,255,255,0.058) 1px,
+        transparent 1px,
+        transparent 3px,
+        rgba(255,255,255,0.038) 3px,
+        rgba(255,255,255,0.038) 4px,
+        transparent 4px,
+        transparent 6px,
+        rgba(255,255,255,0.022) 6px,
+        rgba(255,255,255,0.022) 7px,
+        transparent 7px,
+        transparent 9px,
+        rgba(255,255,255,0.012) 9px,
+        rgba(255,255,255,0.012) 10px,
+        transparent 10px,
+        transparent 46px
+      );
       pointer-events: none;
       z-index: 0;
-      will-change: transform;
-    }
-    @keyframes slowspin {
-      from { transform: translate(-50%, -50%) rotate(0deg); }
-      to   { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
-    /* Soft radial light source — creates the "lit from center" effect */
+    /* Soft radial vignette — keeps center content clear, fades stripes at edge */
     .bg-glow {
       position: fixed; inset: 0;
       background:
-        radial-gradient(ellipse 55% 55% at 50% 48%,
-          rgba(255,255,255,0.038) 0%,
-          rgba(255,255,255,0.010) 40%,
-          transparent 70%);
+        radial-gradient(ellipse 70% 70% at 50% 46%,
+          rgba(11,11,11,0.72) 0%,
+          rgba(11,11,11,0.30) 50%,
+          transparent 100%);
       pointer-events: none;
       z-index: 0;
     }
@@ -158,13 +167,7 @@
 </head>
 <body>
 
-<!-- Spinning logo background -->
-<img
-  class="bg-logo"
-  src="https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1"
-  alt=""
-  aria-hidden="true"
->
+<div class="bg-stripes" aria-hidden="true"></div>
 <div class="bg-glow"></div>
 
 <!-- Navigation -->
