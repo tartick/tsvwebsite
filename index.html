@@ -194,9 +194,9 @@
       text-shadow: 0 0 40px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.6);
     }
 
-    /* ── Wordmark button (top-right) ── */
+    /* ── Wordmark button (top-left) ── */
     #menu-btn-wrap {
-      position: fixed; top: 20px; right: 28px;
+      position: fixed; top: 20px; left: 28px;
       z-index: 200;
       cursor: pointer;
       transition: opacity 0.25s;
@@ -233,7 +233,25 @@
     body.expanded #menu-btn .wm-close { display: block; }
     body.expanded #menu-btn { padding: 10px 16px; }
 
-    /* Mobile: button sits below the center logo mark */
+    /* ── Contact button (top-right) ── */
+    #contact-btn {
+      position: fixed; top: 20px; right: 28px;
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent;
+      border: 4px solid #fff;
+      padding: 10px 20px;
+      text-decoration: none;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: #fff;
+      white-space: nowrap;
+      transition: opacity 0.25s;
+      touch-action: manipulation;
+    }
+    #contact-btn:hover { opacity: 0.75; }
+
+    /* Mobile: menu button sits below the center logo mark */
     @media (max-width: 768px) {
       #menu-btn-wrap {
         top: calc(50% + 74px);
@@ -242,6 +260,7 @@
         transform: translateX(-50%);
         white-space: nowrap;
       }
+      #contact-btn { display: none; }
       #menu-btn {
         padding: 12px 22px 20px;
       }
@@ -249,11 +268,10 @@
         width: clamp(110px, 36vw, 180px);
       }
 
-      /* In expanded mode: move Close to upper-right */
+      /* In expanded mode: move Close to upper-left */
       body.expanded #menu-btn-wrap {
         top: 20px;
-        right: 20px;
-        left: auto;
+        left: 20px;
         transform: none;
       }
       body.expanded #menu-btn {
@@ -301,6 +319,7 @@
     <span class="wm-close">Close</span>
   </button>
 </div>
+<a id="contact-btn" href="mailto:hi@theseason.nyc">Contact</a>
 
 <script>
 (async () => {
