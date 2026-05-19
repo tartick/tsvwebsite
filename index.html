@@ -169,7 +169,9 @@
       z-index: 100; pointer-events: none; text-align: center;
       transition: opacity 0.35s ease;
     }
-    body.expanded #logo { opacity: 0; }
+    body.expanded #logo { opacity: 0; pointer-events: none; }
+    /* Logo icon is clickable to trigger expand */
+    .logo-icon { cursor: pointer; pointer-events: auto; }
 
     /* Image is 800×436. Mark = top 240px, wordmark text = bottom 196px.
        Crop wrapper uses aspect-ratio derived from those pixel counts. */
@@ -194,12 +196,17 @@
       text-shadow: 0 0 40px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.6);
     }
 
-    /* ── Wordmark button (top-left) ── */
+    /* ── Wordmark button — centered below logo mark ── */
     #menu-btn-wrap {
-      position: fixed; top: 20px; left: 28px;
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, 75px); /* sits just below the logo icon */
       z-index: 200;
       cursor: pointer;
       transition: opacity 0.25s;
+    }
+    body.expanded #menu-btn-wrap {
+      top: 20px; left: 28px;
+      transform: none;
     }
     #menu-btn-wrap:hover { opacity: 0.75; }
     #menu-btn {
@@ -235,15 +242,15 @@
 
     /* ── Contact button (top-right) ── */
     #contact-btn {
-      position: fixed; top: 20px; right: 28px;
+      position: fixed; top: 24px; right: 28px;
       z-index: 200;
       display: flex; align-items: center; justify-content: center;
       background: transparent;
       border: none;
-      padding: 10px 0;
+      padding: 0;
       text-decoration: none;
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+      font-size: clamp(13px, 1.4vh, 20px); letter-spacing: 0.3em; text-transform: uppercase;
       color: #fff;
       white-space: nowrap;
       transition: opacity 0.25s;
@@ -251,31 +258,10 @@
     }
     #contact-btn:hover { opacity: 0.75; }
 
-    /* Mobile: menu button sits below the center logo mark */
     @media (max-width: 768px) {
-      #menu-btn-wrap {
-        top: calc(50% + 74px);
-        right: auto;
-        left: 50%;
-        transform: translateX(-50%);
-        white-space: nowrap;
-      }
       #contact-btn { display: none; }
-      #menu-btn {
-        padding: 12px 22px 20px;
-      }
       #menu-btn .wm-img {
         width: clamp(110px, 36vw, 180px);
-      }
-
-      /* In expanded mode: move Close to upper-left */
-      body.expanded #menu-btn-wrap {
-        top: 20px;
-        left: 20px;
-        transform: none;
-      }
-      body.expanded #menu-btn {
-        padding: 14px 22px;
       }
 
       /* No passive dim on mobile expanded — go dark on tap instead */
@@ -510,8 +496,9 @@
   // ─────────────────────────────────────────────────────────────
   //  Menu toggle — scroll ↔ expanded grid
   // ─────────────────────────────────────────────────────────────
-  const menuBtn = document.getElementById('menu-btn');
-  const fade    = document.getElementById('fade');
+  const menuBtn  = document.getElementById('menu-btn');
+  const logoIcon = document.querySelector('.logo-icon');
+  const fade     = document.getElementById('fade');
   let expanded = false;
 
   function fadeThrough(fn) {
@@ -522,9 +509,8 @@
     }, 180);
   }
 
-  menuBtn.addEventListener('click', () => {
+  function toggleExpand() {
     expanded = !expanded;
-
     if (expanded) {
       fadeThrough(() => {
         if (animId) { cancelAnimationFrame(animId); animId = null; }
@@ -535,13 +521,15 @@
     } else {
       fadeThrough(() => {
         document.body.classList.remove('expanded');
-        // Block panel taps briefly to absorb iOS ghost click after close
         track.style.pointerEvents = 'none';
         setTimeout(() => { track.style.pointerEvents = ''; }, 400);
         startAnimation();
       });
     }
-  });
+  }
+
+  menuBtn.addEventListener('click', toggleExpand);
+  logoIcon.addEventListener('click', toggleExpand);
 
   startAnimation();
 
