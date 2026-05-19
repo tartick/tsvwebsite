@@ -435,11 +435,17 @@
     label.innerHTML = `<div class="name">${p.name}</div><div class="role">${p.role}</div>`;
     el.appendChild(label);
 
-    el.addEventListener('click', () => {
-      if (p.href && !p.href.startsWith('#')) window.open(p.href, '_blank');
-    });
+    function navigate() {
+      if (!p.href || p.href.startsWith('#')) return;
+      if (p.href.startsWith('http')) {
+        window.open(p.href, '_blank');
+      } else {
+        window.location.href = p.href;
+      }
+    }
+    el.addEventListener('click', navigate);
     el.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && p.href && !p.href.startsWith('#')) window.open(p.href, '_blank');
+      if (e.key === 'Enter') navigate();
     });
 
     return el;
