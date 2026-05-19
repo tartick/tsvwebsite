@@ -93,7 +93,58 @@
 
     /* ── About ────────────────────────────────────────────── */
     .about {
-      margin-bottom: 130px;
+      margin-bottom: 72px;
+    }
+
+    /* ── Sister companies ─────────────────────────────────── */
+    .companies {
+      margin-bottom: 100px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 52px;
+    }
+    .companies-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px 40px;
+    }
+    .company {
+      text-decoration: none;
+      color: #fff;
+      transition: opacity 0.22s;
+      display: flex;
+      flex-direction: column;
+    }
+    .company:hover { opacity: 0.5; }
+    .company-logo {
+      height: 34px;
+      width: auto;
+      max-width: 160px;
+      display: block;
+      margin-bottom: 20px;
+      filter: brightness(0) invert(1);
+      opacity: 0.88;
+      object-fit: contain;
+      object-position: left center;
+    }
+    .company-name {
+      font-size: clamp(12px, 1.2vw, 16px);
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.90);
+      margin-bottom: 7px;
+    }
+    .company-role {
+      font-size: clamp(10px, 0.9vw, 12px);
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(253,185,19,0.65);
+    }
+
+    @media (max-width: 768px) {
+      .companies-grid { grid-template-columns: 1fr; gap: 44px; }
+      .company-logo { height: 30px; }
     }
     .about-text {
       font-size: clamp(24px, 3.2vw, 52px);
@@ -184,6 +235,38 @@
     <p class="about-text">
       <span class="s1">The Season is a creative theater collective. </span><span class="s2">We make shows, and design marketing that celebrates them. </span><span class="s3">Our design and marketing services are available for your production. </span><span class="s4"><a href="mailto:hi@theseason.nyc" class="about-link">Let's make something together.</a></span>
     </p>
+  </section>
+
+  <!-- Sister companies -->
+  <section class="companies">
+    <p class="section-eyebrow">Our Companies</p>
+    <div class="companies-grid">
+
+      <a class="company" href="https://11oclock.com" target="_blank" rel="noopener">
+        <img class="company-logo"
+          src="https://11oclockstudio.com/wp-content/uploads/elementor/thumbs/Clock-min-r9j6a5t5zi253lzejmf0hknkyej585n8r50dbtb86a.png"
+          alt="11 O'Clock Studio">
+        <div class="company-name">11 O'Clock Studio</div>
+        <div class="company-role">Key art & branding</div>
+      </a>
+
+      <a class="company" href="https://relayinfluence.com" target="_blank" rel="noopener">
+        <img class="company-logo"
+          src="https://i0.wp.com/relayinfluence.com/wp-content/uploads/2024/02/cropped-TheSeason_Relay_TemporaryLogo_Final.png?fit=800%2C296&ssl=1"
+          alt="Relay">
+        <div class="company-name">Relay</div>
+        <div class="company-role">Influencer Marketing</div>
+      </a>
+
+      <a class="company" href="https://flyerweb.com" target="_blank" rel="noopener">
+        <img class="company-logo"
+          src="https://i0.wp.com/flyerweb.com/wp-content/uploads/2026/02/Flyer-Logo-Spaced.png?fit=360%2C360&ssl=1"
+          alt="Flyer">
+        <div class="company-name">Flyer</div>
+        <div class="company-role">Creative production</div>
+      </a>
+
+    </div>
   </section>
 
   <!-- Projects -->
