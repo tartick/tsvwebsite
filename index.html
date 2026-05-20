@@ -277,6 +277,12 @@
       }
     }
 
+    /* ── Mobile mode — stacked menu only, no logo / no toggle ── */
+    body.mobile-mode #logo,
+    body.mobile-mode #menu-btn-wrap {
+      display: none !important;
+    }
+
     /* ── Fade overlay ──────────────────────────────────────── */
     #fade {
       position: fixed; inset: 0; background: #000;
@@ -465,6 +471,11 @@
       (window.innerWidth < 1024 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
   }
 
+  function isMobile() {
+    return window.innerWidth < 1024 ||
+      /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
   // ─────────────────────────────────────────────────────────────
   //  RAF scroll animation
   // ─────────────────────────────────────────────────────────────
@@ -541,20 +552,39 @@
   menuBtn.addEventListener('click', toggleExpand);
   logoIcon.addEventListener('click', toggleExpand);
 
-  startAnimation();
+  function applyLayout() {
+    const mobile = isMobile();
+
+    if (mobile) {
+      // Mobile: force stacked menu view, no scroll, hide logo + button
+      if (animId) { cancelAnimationFrame(animId); animId = null; }
+      track.style.transform = 'none';
+      track.classList.add('vertical');
+      document.body.classList.add('expanded', 'mobile-mode');
+      expanded = true;
+    } else if (document.body.classList.contains('mobile-mode')) {
+      // Transitioning out of mobile (window resized to desktop)
+      document.body.classList.remove('mobile-mode', 'expanded');
+      track.classList.remove('vertical');
+      expanded = false;
+      startAnimation();
+    } else if (expanded) {
+      // Desktop, user-toggled expanded — just refresh layout
+      track.classList.toggle('vertical', isVertical());
+    } else {
+      // Desktop, scrolling carousel — restart with new dimensions
+      startAnimation();
+    }
+  }
+
+  applyLayout();
 
   let resizeTimer;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      if (!expanded) startAnimation();
-      else track.classList.toggle('vertical', isVertical());
-    }, 150);
+    resizeTimer = setTimeout(applyLayout, 150);
   });
-  window.addEventListener('orientationchange', () => setTimeout(() => {
-    if (!expanded) startAnimation();
-    else track.classList.toggle('vertical', isVertical());
-  }, 300));
+  window.addEventListener('orientationchange', () => setTimeout(applyLayout, 300));
 
 })();
 </script>
