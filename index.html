@@ -178,18 +178,13 @@
     /* Logo icon is clickable to trigger expand */
     .logo-icon { cursor: pointer; pointer-events: auto; }
 
-    /* Image is 800×436. Mark = top 240px, wordmark text = bottom 196px.
-       Crop wrapper uses aspect-ratio derived from those pixel counts. */
-
-    /* Center icon — top 240px of 800px-wide image → aspect 800/240 = 10/3 */
+    /* Center icon — local asset, natural ~square aspect */
     .logo-icon {
-      width: clamp(200px, 26vw, 420px);
-      aspect-ratio: 800 / 240;
-      overflow: hidden;
+      width: clamp(80px, 11vw, 170px);
       margin: 0 auto;
     }
     @media (max-width: 768px) {
-      .logo-icon { width: clamp(260px, 72vw, 340px); }
+      .logo-icon { width: clamp(96px, 24vw, 130px); }
     }
     .logo-icon img {
       width: 100%; display: block;
@@ -223,14 +218,12 @@
       touch-action: manipulation;
     }
 
-    /* Wordmark crop: bottom 196px of 800px-wide image → aspect 800/196 */
+    /* Wordmark — local asset */
     #menu-btn .wm-img {
       display: block;
       width: clamp(80px, 9vw, 150px);
-      aspect-ratio: 800 / 196;
-      background: url('https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1') no-repeat;
-      background-size: 100% auto;
-      background-position: bottom center;
+      aspect-ratio: 715 / 157;
+      background: url('/assets/theseason-wordmark.png') no-repeat center / contain;
       filter: brightness(0) invert(1);
     }
 
@@ -299,7 +292,7 @@
   <div id="logo">
     <div class="logo-icon">
       <img
-        src="https://i0.wp.com/theseason.nyc/wp-content/uploads/2026/03/width_800-1.png?w=800&ssl=1"
+        src="/assets/theseason-icon.png"
         alt="The Season"
         onerror="this.parentElement.style.display='none'; document.getElementById('wordmark').style.display='block';"
       >
