@@ -206,10 +206,13 @@
       text-shadow: 0 0 40px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.6);
     }
 
-    /* ── Wordmark button — centered below logo mark ── */
+    /* ── Wordmark button — sits just below the logo icon ── */
+    /* Offset = half the icon's height + breathing room, scales w/ icon clamp */
     #menu-btn-wrap {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, 56px); /* sits just below the logo icon */
+      position: fixed;
+      top: calc(50% + clamp(48px, 5.5vw + 8px, 100px));
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 200;
       cursor: pointer;
       transition: opacity 0.25s;
