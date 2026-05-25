@@ -66,8 +66,8 @@
     }
     .companies-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 48px 40px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 48px 32px;
       justify-items: center;
     }
     .company {
@@ -102,8 +102,11 @@
       text-align: center;
     }
 
-    @media (max-width: 768px) {
-      .companies-grid { grid-template-columns: 1fr; gap: 44px; }
+    @media (max-width: 900px) {
+      .companies-grid { grid-template-columns: repeat(2, 1fr); gap: 44px 24px; }
+    }
+    @media (max-width: 520px) {
+      .companies-grid { grid-template-columns: 1fr; gap: 40px; }
       .company-logo { height: 30px; }
     }
     .about-text {
@@ -196,6 +199,11 @@
   <section class="companies">
     <p class="section-eyebrow">Our Companies</p>
     <div class="companies-grid">
+
+      <a class="company" href="mailto:hi@theseason.nyc">
+        <img class="company-logo" src="/assets/theseason-logo.png" alt="The Season">
+        <div class="company-role">Producing & Marketing Direction</div>
+      </a>
 
       <a class="company" href="https://11oclock.com" target="_blank" rel="noopener">
         <img class="company-logo" src="/assets/11oclock-logo.png" alt="11 O'Clock Studio">
