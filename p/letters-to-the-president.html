@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
   <!-- Google Analytics 4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-1BF3Y4QWCS"></script>
@@ -27,9 +27,11 @@
       --black:  #000;
       --ink:    #0a0a0a;
       --paper:  #FFFFFF;
-      --hair:   rgba(0,0,0,0.12);
+      --hair:   rgba(0,0,0,0.10);
+      --hair2:  rgba(0,0,0,0.18);
       --muted:  rgba(0,0,0,0.55);
       --soft:   rgba(0,0,0,0.72);
+      --tint:   #fafaf8;
     }
 
     html, body {
@@ -41,11 +43,33 @@
       line-height: 1.55;
     }
 
-    /* ── Password gate ────────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════
+       Eyebrow — black uppercase w/ yellow underline accent
+       ════════════════════════════════════════════════════════ */
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink);
+      font-weight: 700;
+      padding-bottom: 5px;
+      border-bottom: 2px solid var(--yellow);
+    }
+    .eyebrow--dark {
+      color: var(--yellow);
+      border-bottom: none;
+      font-weight: 600;
+      letter-spacing: 0.38em;
+      padding-bottom: 0;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       Password gate
+       ════════════════════════════════════════════════════════ */
     .gate {
       position: fixed; inset: 0;
-      background: var(--black);
-      color: #fff;
+      background: var(--black); color: #fff;
       z-index: 9999;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
@@ -54,30 +78,28 @@
     }
     .gate.hidden { opacity: 0; pointer-events: none; }
     .gate-icon {
-      width: 80px; height: 80px;
-      margin-bottom: 36px;
+      width: 64px; height: 64px;
+      margin-bottom: 28px;
       filter: brightness(0) invert(1);
       opacity: 0.92;
     }
     .gate-eyebrow {
       font-size: 11px; letter-spacing: 0.38em; text-transform: uppercase;
-      color: var(--yellow);
-      margin-bottom: 14px;
+      color: var(--yellow); font-weight: 600;
+      margin-bottom: 12px;
     }
     .gate-title {
-      font-size: 28px; font-weight: 600;
+      font-size: 26px; font-weight: 600;
       letter-spacing: -0.01em;
       margin-bottom: 8px;
     }
     .gate-sub {
-      font-size: 14px; color: rgba(255,255,255,0.55);
-      margin-bottom: 36px;
+      font-size: 13px; color: rgba(255,255,255,0.55);
+      margin-bottom: 28px;
       text-align: center; max-width: 360px;
+      line-height: 1.5;
     }
-    .gate-form {
-      display: flex; gap: 8px;
-      width: 100%; max-width: 380px;
-    }
+    .gate-form { display: flex; gap: 8px; width: 100%; max-width: 380px; }
     .gate-input {
       flex: 1;
       background: transparent;
@@ -92,12 +114,11 @@
     .gate-input:focus { border-color: var(--yellow); }
     .gate-input::placeholder { color: rgba(255,255,255,0.30); }
     .gate-submit {
-      background: var(--yellow);
-      color: var(--black);
+      background: var(--yellow); color: var(--black);
       border: none;
       padding: 0 22px;
       font-family: inherit;
-      font-size: 11px; font-weight: 600;
+      font-size: 11px; font-weight: 700;
       letter-spacing: 0.28em; text-transform: uppercase;
       cursor: pointer;
       transition: opacity 0.2s;
@@ -109,7 +130,9 @@
     }
     .gate-err.visible { opacity: 1; }
 
-    /* ── Top action bar ───────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════
+       Top action bar
+       ════════════════════════════════════════════════════════ */
     .topbar {
       position: sticky; top: 0; z-index: 100;
       background: var(--paper);
@@ -118,217 +141,279 @@
     .topbar-inner {
       max-width: 920px;
       margin: 0 auto;
-      padding: 22px 48px;
+      padding: 18px 48px;
       display: flex; align-items: center; justify-content: space-between;
       gap: 16px;
     }
-    .topbar-mark {
-      display: flex; align-items: center; gap: 14px;
-      text-decoration: none; color: inherit;
-    }
-    .topbar-mark img {
-      width: 32px; height: 32px;
-    }
-    .topbar-mark-text {
-      font-size: 10px; letter-spacing: 0.32em;
-      text-transform: uppercase; color: var(--muted);
-    }
-    .actions {
-      display: flex; gap: 10px;
-    }
+    .topbar-mark { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+    .topbar-mark img { width: 28px; height: 28px; }
+    .topbar-mark-text { font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--muted); }
+    .actions { display: flex; gap: 8px; }
     .btn {
-      background: var(--black);
-      color: #fff;
+      background: var(--black); color: #fff;
       border: 1px solid var(--black);
-      padding: 12px 18px;
+      padding: 11px 18px;
       font-family: inherit;
-      font-size: 10px; font-weight: 600;
+      font-size: 10px; font-weight: 700;
       letter-spacing: 0.28em; text-transform: uppercase;
-      cursor: pointer;
-      text-decoration: none;
+      cursor: pointer; text-decoration: none;
       display: inline-flex; align-items: center; gap: 8px;
       transition: background 0.2s, color 0.2s;
     }
     .btn:hover { background: var(--yellow); color: var(--black); border-color: var(--yellow); }
-    .btn--ghost {
-      background: transparent; color: var(--ink);
-    }
+    .btn--ghost { background: transparent; color: var(--ink); }
     .btn--ghost:hover { background: var(--black); color: #fff; border-color: var(--black); }
-    .btn svg { width: 12px; height: 12px; }
+    .btn svg { width: 11px; height: 11px; }
 
-    /* ── Layout ──────────────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════
+       Layout
+       ════════════════════════════════════════════════════════ */
     main {
       max-width: 920px;
       margin: 0 auto;
-      padding: 96px 48px 120px;
+      padding: 56px 48px 80px;
     }
 
-    /* ── Hero ────────────────────────────────────────────── */
-    .hero {
-      margin-bottom: 96px;
-      padding-bottom: 64px;
-      border-bottom: 1px solid var(--hair);
-    }
-    .eyebrow {
-      font-size: 11px; letter-spacing: 0.38em; text-transform: uppercase;
-      color: var(--yellow);
-      font-weight: 600;
-      margin-bottom: 20px;
-    }
+    /* ════════════════════════════════════════════════════════
+       Hero
+       ════════════════════════════════════════════════════════ */
+    .hero { margin-bottom: 44px; }
+    .hero .eyebrow { margin-bottom: 22px; }
     .hero-title {
-      font-size: clamp(40px, 6.4vw, 88px);
+      font-size: clamp(36px, 5.4vw, 72px);
       font-weight: 600;
-      line-height: 1.05;
+      line-height: 1.04;
       letter-spacing: -0.02em;
-      margin-bottom: 28px;
+      margin-bottom: 18px;
     }
     .hero-title em {
       font-style: italic;
       font-weight: 400;
     }
     .hero-meta {
-      font-size: 13px; letter-spacing: 0.18em;
+      font-size: 12px; letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--muted);
     }
 
-    /* ── Intro narrative ─────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════
+       Intro (tight)
+       ════════════════════════════════════════════════════════ */
     .intro {
-      margin-bottom: 96px;
+      margin-bottom: 48px;
       max-width: 760px;
+      padding-top: 36px;
+      border-top: 1px solid var(--hair);
     }
     .intro p {
-      font-size: clamp(18px, 1.8vw, 22px);
-      line-height: 1.55;
+      font-size: clamp(18px, 1.6vw, 22px);
+      line-height: 1.5;
       color: var(--soft);
-      margin-bottom: 20px;
     }
-    .intro p:last-child { margin-bottom: 0; }
-    .intro strong {
-      color: var(--ink);
-      font-weight: 600;
+    .intro strong { color: var(--ink); font-weight: 600; }
+
+    /* ════════════════════════════════════════════════════════
+       The Season Collective
+       ════════════════════════════════════════════════════════ */
+    .collective {
+      margin-bottom: 64px;
+      padding: 28px 32px 32px;
+      border: 1px solid var(--hair);
+      background: var(--tint);
+    }
+    .collective-head {
+      display: flex; align-items: baseline; gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+    .collective-tagline {
+      font-size: 13px; color: var(--soft);
+      letter-spacing: 0.01em;
+      line-height: 1.5;
+    }
+    .collective-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 28px;
+      align-items: center;
+    }
+    .collective-item {
+      position: relative;
+      text-decoration: none;
+      color: inherit;
+      display: flex; align-items: center; justify-content: center;
+      padding: 18px 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .collective-item:hover { transform: translateY(-2px); }
+    .collective-logo {
+      height: 26px;
+      max-width: 100%;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.78;
+      transition: opacity 0.2s;
+    }
+    .collective-item:hover .collective-logo { opacity: 1; }
+    .collective-tooltip {
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      background: var(--black);
+      color: #fff;
+      padding: 12px 14px;
+      width: 220px;
+      font-size: 12px; line-height: 1.45;
+      text-align: left;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 10;
+      border-left: 2px solid var(--yellow);
+    }
+    .collective-tooltip strong {
+      display: block;
+      font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+    .collective-item:hover .collective-tooltip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
 
-    /* ── Service section ─────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════
+       Service section
+       ════════════════════════════════════════════════════════ */
     .service {
-      margin-bottom: 96px;
-      padding-top: 56px;
+      margin-bottom: 64px;
+      padding-top: 40px;
       border-top: 1px solid var(--hair);
     }
     .service-head {
-      display: flex; align-items: baseline; justify-content: space-between;
-      margin-bottom: 36px;
-      gap: 24px; flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
     }
-    .service-num {
-      font-size: 11px; letter-spacing: 0.38em;
-      text-transform: uppercase;
-      color: var(--yellow); font-weight: 600;
-    }
-    .service-delivered {
-      font-size: 10px; letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--muted);
+    .service-co-logo {
+      height: 22px;
+      width: auto;
+      opacity: 0.85;
     }
     .service-title {
-      font-size: clamp(32px, 4.2vw, 56px);
+      font-size: clamp(28px, 3.6vw, 48px);
       font-weight: 600;
       line-height: 1.08;
       letter-spacing: -0.018em;
-      margin-bottom: 28px;
+      margin-bottom: 18px;
       max-width: 800px;
     }
-    .service-company-logo {
-      height: 24px;
-      width: auto;
-      margin-bottom: 28px;
-      opacity: 0.78;
-    }
     .service-blurb {
-      font-size: 17px; line-height: 1.6;
+      font-size: 16px; line-height: 1.6;
       color: var(--soft);
       max-width: 720px;
-      margin-bottom: 40px;
+      margin-bottom: 32px;
     }
 
-    /* Deliverables */
+    /* ── Deliverables — elevated ──────────────────────────── */
     .deliverables {
       list-style: none;
-      margin-bottom: 48px;
-      max-width: 760px;
+      margin-bottom: 36px;
+      max-width: 800px;
+      background: var(--tint);
+      padding: 8px 24px;
+      border-left: 3px solid var(--yellow);
     }
     .deliverables li {
       position: relative;
-      padding: 18px 0 18px 28px;
-      border-top: 1px solid var(--hair);
-      font-size: 15px;
-      line-height: 1.5;
+      padding: 16px 0 16px 24px;
+      border-bottom: 1px solid var(--hair);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.45;
+      color: var(--ink);
     }
-    .deliverables li:last-child { border-bottom: 1px solid var(--hair); }
+    .deliverables li:last-child { border-bottom: none; }
     .deliverables li::before {
       content: '';
-      position: absolute; left: 0; top: 26px;
-      width: 12px; height: 1px;
+      position: absolute;
+      left: 0; top: 22px;
+      width: 9px; height: 9px;
       background: var(--yellow);
     }
 
-    /* Reference work card */
-    .reference {
-      margin-bottom: 48px;
-      padding: 24px;
-      background: #f7f7f7;
-      border-left: 3px solid var(--yellow);
+    /* ── References — supports 1, 2, or 3 ─────────────────── */
+    .references {
       display: grid;
-      grid-template-columns: 120px 1fr;
-      gap: 24px;
-      align-items: center;
+      gap: 14px;
+      margin-bottom: 36px;
     }
+    .references.refs-1 { grid-template-columns: 1fr; }
+    .references.refs-2 { grid-template-columns: repeat(2, 1fr); }
+    .references.refs-3 { grid-template-columns: repeat(3, 1fr); }
+
+    .reference {
+      display: block;
+      text-decoration: none;
+      color: var(--ink);
+      background: var(--tint);
+      padding: 14px;
+      border-top: 2px solid var(--yellow);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .reference:hover { background: #f3f3ee; transform: translateY(-2px); }
     .reference-thumb {
       width: 100%;
-      aspect-ratio: 1 / 1;
+      aspect-ratio: 16 / 10;
       background: #111;
       color: var(--yellow);
       display: flex; align-items: center; justify-content: center;
-      font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
-      opacity: 0.9;
-    }
-    .reference-content {
-      display: flex; flex-direction: column; gap: 6px;
-    }
-    .reference-label {
-      font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
-      color: var(--muted); font-weight: 600;
-    }
-    .reference-title {
-      font-size: 18px; font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-    .reference-desc {
-      font-size: 14px; color: var(--soft); line-height: 1.5;
-    }
-    .reference-link {
-      font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
-      color: var(--ink); text-decoration: none;
-      border-bottom: 1px solid var(--yellow);
-      padding-bottom: 2px;
-      align-self: flex-start;
-      margin-top: 4px;
+      font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase;
+      margin-bottom: 12px;
       font-weight: 600;
     }
-    .reference-link:hover { color: var(--muted); }
+    .reference-label {
+      font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .reference-title {
+      font-size: 14px; font-weight: 600;
+      line-height: 1.3;
+      letter-spacing: -0.005em;
+    }
 
-    /* Rate */
+    /* Single-ref variant: horizontal layout */
+    .references.refs-1 .reference {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 18px;
+      align-items: center;
+      padding: 16px;
+    }
+    .references.refs-1 .reference-thumb { aspect-ratio: 4 / 3; margin-bottom: 0; }
+    .references.refs-1 .reference-title { font-size: 16px; margin-bottom: 4px; }
+    .references.refs-1 .reference-desc {
+      font-size: 13px; color: var(--soft);
+      line-height: 1.5;
+    }
+
+    /* ── Rate ─────────────────────────────────────────────── */
     .rate {
       display: flex; align-items: baseline; gap: 16px;
-      padding: 22px 0;
+      padding: 18px 0 4px;
       border-top: 2px solid var(--ink);
     }
     .rate-label {
       font-size: 11px; letter-spacing: 0.32em;
-      text-transform: uppercase; font-weight: 600;
+      text-transform: uppercase; font-weight: 700;
     }
     .rate-amount {
-      font-size: clamp(28px, 3.6vw, 44px);
+      font-size: clamp(26px, 3.2vw, 40px);
       font-weight: 700;
       letter-spacing: -0.01em;
       margin-left: auto;
@@ -341,68 +426,61 @@
       font-size: 0.7em;
     }
 
-    /* ── Terms ────────────────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════
+       Terms
+       ════════════════════════════════════════════════════════ */
     .terms {
-      margin-bottom: 96px;
-      padding-top: 56px;
+      margin-bottom: 56px;
+      padding-top: 40px;
       border-top: 1px solid var(--hair);
     }
-    .terms-title {
-      font-size: clamp(24px, 3vw, 36px);
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      margin-bottom: 28px;
-    }
+    .terms .eyebrow { margin-bottom: 22px; }
     .terms-list {
       list-style: none;
       max-width: 720px;
     }
     .terms-list li {
       position: relative;
-      padding: 14px 0 14px 28px;
-      font-size: 15px;
+      padding: 12px 0 12px 22px;
+      font-size: 14px;
       color: var(--soft);
       line-height: 1.55;
     }
     .terms-list li::before {
       content: '';
-      position: absolute; left: 0; top: 22px;
-      width: 12px; height: 1px;
+      position: absolute;
+      left: 0; top: 20px;
+      width: 8px; height: 1px;
       background: var(--ink);
     }
 
-    /* ── Investment summary ──────────────────────────────── */
+    /* ════════════════════════════════════════════════════════
+       Investment summary
+       ════════════════════════════════════════════════════════ */
     .investment {
-      margin-bottom: 96px;
-      padding-top: 56px;
+      margin-bottom: 56px;
+      padding-top: 40px;
       border-top: 1px solid var(--hair);
     }
+    .investment .eyebrow { margin-bottom: 22px; }
     .investment-table {
       width: 100%; border-collapse: collapse;
       max-width: 760px;
     }
-    .investment-table th,
     .investment-table td {
       text-align: left;
-      padding: 18px 0;
+      padding: 14px 0;
       border-bottom: 1px solid var(--hair);
       font-size: 15px;
     }
-    .investment-table th {
-      font-size: 10px; letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 600;
-    }
-    .investment-table td:last-child,
-    .investment-table th:last-child {
+    .investment-table td:last-child {
       text-align: right;
       font-weight: 600;
     }
     .investment-table tr.total td {
       border-top: 2px solid var(--ink);
       border-bottom: none;
-      padding-top: 22px;
+      padding-top: 18px;
       font-size: 18px;
       font-weight: 700;
     }
@@ -412,132 +490,266 @@
       font-size: 13px;
     }
 
-    /* ── CTA close ───────────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════
+       CTA — two-button
+       ════════════════════════════════════════════════════════ */
     .cta {
       background: var(--black);
       color: #fff;
-      padding: 64px 56px;
-      margin-top: 32px;
+      padding: 48px 48px 52px;
+      margin-top: 24px;
     }
-    .cta-eyebrow {
-      font-size: 11px; letter-spacing: 0.38em; text-transform: uppercase;
-      color: var(--yellow); font-weight: 600;
-      margin-bottom: 20px;
-    }
+    .cta .eyebrow { margin-bottom: 18px; }
     .cta-title {
-      font-size: clamp(28px, 3.6vw, 44px);
+      font-size: clamp(24px, 3vw, 36px);
       font-weight: 600;
       line-height: 1.15;
       letter-spacing: -0.015em;
       margin-bottom: 32px;
-      max-width: 560px;
+      max-width: 620px;
     }
-    .cta-link {
-      display: inline-block;
+    .cta-actions {
+      display: flex; gap: 12px; flex-wrap: wrap;
+    }
+    .btn-cta {
+      font-family: inherit;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      padding: 16px 28px;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, color 0.2s, opacity 0.2s;
+    }
+    .btn-cta--primary {
+      background: var(--yellow);
+      color: var(--black);
+    }
+    .btn-cta--primary:hover { opacity: 0.85; }
+    .btn-cta--ghost {
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.28);
+    }
+    .btn-cta--ghost:hover {
+      border-color: var(--yellow);
       color: var(--yellow);
-      font-size: 14px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      font-weight: 600;
-      text-decoration: none;
-      border-bottom: 1px solid var(--yellow);
-      padding-bottom: 4px;
-      transition: opacity 0.2s;
     }
-    .cta-link:hover { opacity: 0.7; }
 
-    /* ── Footer ──────────────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════
+       Footer
+       ════════════════════════════════════════════════════════ */
     footer {
       max-width: 920px;
-      margin: 64px auto 0;
-      padding: 32px 48px 64px;
+      margin: 56px auto 0;
+      padding: 24px 48px 56px;
       border-top: 1px solid var(--hair);
       display: flex; align-items: center; justify-content: space-between;
       gap: 16px; flex-wrap: wrap;
     }
-    footer img { width: 28px; height: 28px; opacity: 0.7; }
+    footer img { width: 24px; height: 24px; opacity: 0.7; }
     footer .meta {
       font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
       color: var(--muted);
     }
 
-    /* ── Mobile ──────────────────────────────────────────── */
+    /* ════════════════════════════════════════════════════════
+       Modal — used for Questions form + confirmations
+       ════════════════════════════════════════════════════════ */
+    .modal {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal.open { opacity: 1; pointer-events: auto; }
+    .modal-card {
+      background: var(--paper);
+      max-width: 460px;
+      width: 100%;
+      padding: 40px 36px 32px;
+      position: relative;
+      transform: translateY(8px);
+      transition: transform 0.2s ease;
+    }
+    .modal.open .modal-card { transform: translateY(0); }
+    .modal-close {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: transparent; border: none;
+      font-size: 22px; line-height: 1;
+      color: var(--muted);
+      cursor: pointer;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--ink); }
+    .modal-eyebrow {
+      display: inline-block;
+      font-size: 10px; letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink); font-weight: 700;
+      padding-bottom: 4px;
+      border-bottom: 2px solid var(--yellow);
+      margin-bottom: 16px;
+    }
+    .modal-title {
+      font-size: 22px; font-weight: 600;
+      letter-spacing: -0.015em;
+      margin-bottom: 8px;
+    }
+    .modal-sub {
+      font-size: 14px; color: var(--soft);
+      line-height: 1.55;
+      margin-bottom: 22px;
+    }
+    .modal-form {
+      display: flex; flex-direction: column; gap: 10px;
+      margin-bottom: 24px;
+    }
+    .modal-textarea {
+      font-family: inherit;
+      font-size: 14px; line-height: 1.5;
+      padding: 14px;
+      min-height: 110px;
+      border: 1px solid var(--hair2);
+      background: var(--tint);
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .modal-textarea:focus { border-color: var(--yellow); }
+    .modal-submit {
+      align-self: flex-start;
+      background: var(--ink); color: #fff;
+      border: none;
+      font-family: inherit;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      padding: 13px 22px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal-submit:hover { background: var(--yellow); color: var(--ink); }
+    .modal-contacts {
+      border-top: 1px solid var(--hair);
+      padding-top: 20px;
+    }
+    .modal-contacts-label {
+      font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--muted); font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .modal-contact {
+      display: flex; align-items: baseline; justify-content: space-between;
+      padding: 8px 0;
+    }
+    .modal-contact-name {
+      font-size: 14px; font-weight: 600;
+    }
+    .modal-contact-phone {
+      font-size: 14px;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--yellow);
+      padding-bottom: 1px;
+      letter-spacing: 0.02em;
+    }
+    .modal-contact-phone:hover { opacity: 0.7; }
+
+    /* ════════════════════════════════════════════════════════
+       Mobile
+       ════════════════════════════════════════════════════════ */
     @media (max-width: 720px) {
-      .topbar-inner { padding: 18px 24px; flex-direction: column; align-items: stretch; gap: 14px; }
-      .actions { justify-content: stretch; }
-      .actions .btn { flex: 1; justify-content: center; padding: 12px 8px; }
-      main { padding: 64px 24px 80px; }
-      .hero { margin-bottom: 64px; padding-bottom: 48px; }
-      .intro, .service, .terms, .investment { margin-bottom: 64px; }
-      .service, .terms, .investment { padding-top: 40px; }
-      .reference { grid-template-columns: 80px 1fr; padding: 18px; gap: 16px; }
-      .cta { padding: 48px 32px; }
-      footer { padding: 24px; }
+      .topbar-inner { padding: 14px 22px; }
+      .topbar-mark-text { display: none; }
+      main { padding: 40px 22px 64px; }
+      .hero { margin-bottom: 32px; }
+      .intro { margin-bottom: 36px; padding-top: 24px; }
+      .intro p { font-size: 18px; }
+      .collective { padding: 22px 22px 24px; margin-bottom: 48px; }
+      .collective-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .collective-tooltip {
+        position: static;
+        opacity: 1; pointer-events: auto;
+        transform: none;
+        width: auto; margin-top: 8px;
+        font-size: 11px;
+        text-align: center;
+      }
+      .collective-item { flex-direction: column; padding: 12px 4px; }
+      .service { margin-bottom: 48px; padding-top: 32px; }
+      .service-head { margin-bottom: 18px; }
+      .deliverables { padding: 6px 18px; }
+      .references.refs-2, .references.refs-3 { grid-template-columns: 1fr; }
+      .references.refs-1 .reference { grid-template-columns: 100px 1fr; gap: 14px; }
+      .cta { padding: 36px 22px; }
+      .cta-actions { flex-direction: column; }
+      .btn-cta { width: 100%; }
+      footer { padding: 22px; }
+      .modal-card { padding: 32px 24px 24px; }
     }
 
     /* ════════════════════════════════════════════════════════
-       PRINT — proposal mode (default print)
+       PRINT — default = proposal
        ════════════════════════════════════════════════════════ */
     @media print {
-      .gate, .topbar, footer .meta:last-child { display: none !important; }
-      :root { --hair: rgba(0,0,0,0.18); }
+      .gate, .topbar, .modal, footer .meta:last-child { display: none !important; }
       html, body { background: #fff; color: #000; }
-      main {
-        max-width: none;
-        padding: 0;
-        margin: 0;
-      }
-      .hero { margin-bottom: 32px; padding-bottom: 24px; }
-      .hero-title { font-size: 48px; }
-      .intro { margin-bottom: 32px; }
-      .intro p { font-size: 14px; line-height: 1.5; }
-      .service { margin-bottom: 36px; padding-top: 24px; page-break-inside: avoid; }
-      .service-title { font-size: 28px; }
-      .service-blurb { font-size: 12px; }
-      .deliverables li { padding: 8px 0 8px 24px; font-size: 11px; }
-      .deliverables li::before { top: 14px; }
-      .reference { display: none; }   /* refs aren't relevant in print */
-      .rate-amount { font-size: 24px; }
-      .terms, .investment { margin-bottom: 32px; padding-top: 24px; page-break-inside: avoid; }
-      .terms-title, .investment-table th { font-size: 18px; }
-      .terms-list li { font-size: 11px; padding: 6px 0 6px 24px; }
-      .terms-list li::before { top: 14px; }
-      .investment-table th, .investment-table td { padding: 10px 0; font-size: 12px; }
+      main { max-width: none; padding: 0; margin: 0; }
+      .eyebrow { border-bottom-width: 1.5px; }
+      .hero { margin-bottom: 24px; }
+      .hero-title { font-size: 40px; }
+      .intro { margin-bottom: 24px; padding-top: 18px; }
+      .intro p { font-size: 13px; line-height: 1.45; }
+      .collective { margin-bottom: 28px; padding: 18px 22px; page-break-inside: avoid; }
+      .collective-tooltip { display: none; }
+      .collective-logo { height: 20px; }
+      .service { margin-bottom: 32px; padding-top: 20px; page-break-inside: avoid; }
+      .service-title { font-size: 26px; }
+      .service-blurb { font-size: 12px; margin-bottom: 18px; }
+      .deliverables { padding: 4px 18px; margin-bottom: 18px; }
+      .deliverables li { padding: 9px 0 9px 22px; font-size: 11.5px; }
+      .deliverables li::before { top: 14px; width: 7px; height: 7px; }
+      .references { display: none; }
+      .rate-amount { font-size: 22px; }
+      .terms, .investment { margin-bottom: 28px; padding-top: 20px; page-break-inside: avoid; }
+      .terms-list li { font-size: 11px; padding: 6px 0 6px 22px; }
+      .terms-list li::before { top: 13px; }
+      .investment-table td { padding: 9px 0; font-size: 12px; }
       .investment-table tr.total td { font-size: 14px; }
-      .cta {
-        background: #000; color: #fff;
-        padding: 32px;
-        page-break-inside: avoid;
-      }
-      .cta-title { font-size: 24px; }
+      .cta { background: #000; color: #fff; padding: 28px 32px; page-break-inside: avoid; }
+      .cta-title { font-size: 22px; }
+      .cta-actions { display: none; }
       footer { display: none; }
       a { color: inherit; text-decoration: none; }
-
-      @page { margin: 0.6in; size: letter; }
+      @page { margin: 0.55in; size: letter; }
     }
 
-    /* ════════════════════════════════════════════════════════
-       PRINT — rate card mode (triggered by body class)
-       ════════════════════════════════════════════════════════ */
+    /* PRINT — rate card mode */
     @media print {
       body.print-ratecard .intro,
+      body.print-ratecard .collective,
       body.print-ratecard .service-blurb,
       body.print-ratecard .deliverables,
-      body.print-ratecard .reference,
+      body.print-ratecard .references,
       body.print-ratecard .terms,
       body.print-ratecard .cta { display: none !important; }
-      body.print-ratecard .service { padding-top: 14px; margin-bottom: 14px; }
-      body.print-ratecard .service-title { font-size: 18px; margin-bottom: 8px; }
-      body.print-ratecard .hero { margin-bottom: 24px; padding-bottom: 16px; }
-      body.print-ratecard .hero-title { font-size: 36px; }
-      body.print-ratecard .service-company-logo { display: none; }
+      body.print-ratecard .service { padding-top: 14px; margin-bottom: 12px; }
+      body.print-ratecard .service-title { font-size: 18px; margin-bottom: 6px; }
+      body.print-ratecard .service-co-logo { height: 16px; }
+      body.print-ratecard .hero { margin-bottom: 22px; }
+      body.print-ratecard .hero-title { font-size: 30px; }
     }
   </style>
 </head>
 <body>
 
 <!-- ════════════════════════════════════════════════════════
-     Password gate (sha256: 'preview')
+     Password gate (sha256 of "preview" → see PASSWORD_HASH)
      ════════════════════════════════════════════════════════ -->
 <div class="gate" id="gate">
   <img src="/assets/theseason-icon.png" class="gate-icon" alt="The Season">
@@ -577,24 +789,62 @@
 
   <!-- Hero -->
   <section class="hero">
-    <p class="eyebrow">Proposal Prepared For</p>
-    <h1 class="hero-title">Letters to <br><em>the President</em></h1>
+    <span class="eyebrow">Proposal Prepared For</span>
+    <h1 class="hero-title">Letters to <em>the President</em></h1>
     <p class="hero-meta">By The Season · June 2026</p>
   </section>
 
-  <!-- Intro narrative -->
+  <!-- Intro — tight, warm, project-specific -->
   <section class="intro">
-    <p><strong>Letters to the President</strong> deserves a brand worth talking about — a visual identity that signals the urgency and craft of the work itself, and a rollout that primes audiences before a single ticket goes on sale.</p>
-    <p>We've built a focused two-part engagement to deliver exactly that: a striking visual identity from <strong>Eleven O'Clock Studio</strong>, paired with rollout-ready creative production from <strong>Flyer</strong> to power your announcement and the runway to launch.</p>
+    <p>We've been following <strong>Letters to the President</strong> with real interest — the urgency of the piece and the rigor of the team behind it is exactly the kind of work we want our name on. Here's a focused two-part engagement built to give this show the visual identity and rollout it deserves.</p>
   </section>
 
-  <!-- Service 01 — Logo & Key Art -->
+  <!-- The Season Collective -->
+  <section class="collective">
+    <div class="collective-head">
+      <span class="eyebrow">The Season Collective</span>
+      <p class="collective-tagline">Four marketing companies under one roof. À la carte services to help shows sell themselves.</p>
+    </div>
+    <div class="collective-grid">
+      <a class="collective-item" href="https://theseason.nyc/theseason" target="_blank" rel="noopener" aria-label="The Season">
+        <div class="collective-tooltip">
+          <strong>The Season</strong>
+          Producing &amp; marketing direction. The umbrella behind it all — strategy, partnerships, long-lead campaign architecture.
+        </div>
+        <img class="collective-logo" src="/assets/theseason-logo.png" alt="The Season">
+      </a>
+      <a class="collective-item" href="https://11oclock.com" target="_blank" rel="noopener" aria-label="11 O'Clock Studio">
+        <div class="collective-tooltip">
+          <strong>11 O'Clock Studio</strong>
+          Key art &amp; branding. Identity systems, posters, and campaign visuals that turn a show into a brand.
+        </div>
+        <img class="collective-logo" src="/assets/11oclock-logo.png" alt="11 O'Clock Studio">
+      </a>
+      <a class="collective-item" href="https://relayinfluence.com" target="_blank" rel="noopener" aria-label="Relay">
+        <div class="collective-tooltip">
+          <strong>Relay</strong>
+          Influencer marketing. Connecting digital creators with theater to put your show in front of the right rooms.
+        </div>
+        <img class="collective-logo" src="/assets/relay-logo.png" alt="Relay">
+      </a>
+      <a class="collective-item" href="https://flyerweb.com" target="_blank" rel="noopener" aria-label="Flyer">
+        <div class="collective-tooltip">
+          <strong>Flyer</strong>
+          Creative production. Social, video, web, merch — the rollout assets that take a brand from approved to in-market.
+        </div>
+        <img class="collective-logo" src="/assets/flyer-logo.png" alt="Flyer">
+      </a>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       Service 01 — Logo & Key Art (3 references demo)
+       ════════════════════════════════════════════════════════ -->
   <section class="service">
     <div class="service-head">
-      <span class="service-num">01 — Brand Identity</span>
-      <span class="service-delivered">Delivered by 11 O'Clock Studio</span>
+      <span class="eyebrow">01 — Brand Identity</span>
+      <img class="service-co-logo" src="/assets/11oclock-logo.png" alt="11 O'Clock Studio">
     </div>
-    <img class="service-company-logo" src="/assets/11oclock-logo.png" alt="11 O'Clock Studio">
     <h2 class="service-title">Logo &amp; Key Art</h2>
     <p class="service-blurb">A complete visual identity, from primary mark to full key art system. Three rounds of concept and design presentations to build the campaign in collaboration with you, ending with a final approved direction and a style guide ready for production handoff.</p>
 
@@ -605,14 +855,22 @@
       <li>Full ownership and unlimited usage rights</li>
     </ul>
 
-    <div class="reference">
-      <div class="reference-thumb">Recent Work</div>
-      <div class="reference-content">
-        <span class="reference-label">Reference</span>
-        <span class="reference-title">CATS: The Jellicle Ball</span>
-        <span class="reference-desc">Brand identity and campaign key art for the off-Broadway smash hit.</span>
-        <a class="reference-link" href="https://catsthejellicleball.com" target="_blank" rel="noopener">View Project →</a>
-      </div>
+    <div class="references refs-3">
+      <a class="reference" href="https://catsthejellicleball.com" target="_blank" rel="noopener">
+        <div class="reference-thumb">Recent Work</div>
+        <p class="reference-label">Reference</p>
+        <p class="reference-title">CATS: The Jellicle Ball</p>
+      </a>
+      <a class="reference" href="https://proofbroadway.com" target="_blank" rel="noopener">
+        <div class="reference-thumb">Recent Work</div>
+        <p class="reference-label">Reference</p>
+        <p class="reference-title">Proof — Broadway</p>
+      </a>
+      <a class="reference" href="https://mrleather1976.com" target="_blank" rel="noopener">
+        <div class="reference-thumb">Recent Work</div>
+        <p class="reference-label">Reference</p>
+        <p class="reference-title">Mr. Leather 1976</p>
+      </a>
     </div>
 
     <div class="rate">
@@ -621,13 +879,14 @@
     </div>
   </section>
 
-  <!-- Service 02 — Creative Production -->
+  <!-- ════════════════════════════════════════════════════════
+       Service 02 — Creative Production (1 reference demo)
+       ════════════════════════════════════════════════════════ -->
   <section class="service">
     <div class="service-head">
-      <span class="service-num">02 — Creative Production</span>
-      <span class="service-delivered">Delivered by Flyer</span>
+      <span class="eyebrow">02 — Creative Production</span>
+      <img class="service-co-logo" src="/assets/flyer-logo.png" alt="Flyer">
     </div>
-    <img class="service-company-logo" src="/assets/flyer-logo.png" alt="Flyer">
     <h2 class="service-title">Announcement &amp; Rollout Assets</h2>
     <p class="service-blurb">Everything you need to take the new brand to market: social profile updates, save-the-date graphics, a press release layout, editable templates your team can build on for months, and clean working files delivered as packaged source.</p>
 
@@ -640,14 +899,15 @@
       <li>All packaged / working files</li>
     </ul>
 
-    <div class="reference">
-      <div class="reference-thumb">Recent Work</div>
-      <div class="reference-content">
-        <span class="reference-label">Reference</span>
-        <span class="reference-title">Proof — Broadway</span>
-        <span class="reference-desc">Full announcement rollout: social, press, and templates.</span>
-        <a class="reference-link" href="https://proofbroadway.com" target="_blank" rel="noopener">View Project →</a>
-      </div>
+    <div class="references refs-1">
+      <a class="reference" href="https://dramadesks.com" target="_blank" rel="noopener">
+        <div class="reference-thumb">Recent Work</div>
+        <div>
+          <p class="reference-label">Reference</p>
+          <p class="reference-title">The Drama Desk Awards</p>
+          <p class="reference-desc">Full announcement rollout: social, press, and templates across the campaign.</p>
+        </div>
+      </a>
     </div>
 
     <div class="rate">
@@ -658,7 +918,7 @@
 
   <!-- Terms -->
   <section class="terms">
-    <h2 class="terms-title">Terms</h2>
+    <span class="eyebrow">Terms</span>
     <ul class="terms-list">
       <li>External hard costs associated with photography, illustrators, logo renders, and font licensing are quoted separately.</li>
       <li>Payable 50% upon engagement, 50% upon approval of core brand identity.</li>
@@ -667,10 +927,8 @@
 
   <!-- Investment summary -->
   <section class="investment">
+    <span class="eyebrow">Investment Summary</span>
     <table class="investment-table">
-      <thead>
-        <tr><th>Service</th><th>Investment</th></tr>
-      </thead>
       <tbody>
         <tr><td>Logo &amp; Key Art · 11 O'Clock Studio</td><td>$5,000</td></tr>
         <tr><td>Creative Production · Flyer</td><td>$2,500</td></tr>
@@ -679,11 +937,14 @@
     </table>
   </section>
 
-  <!-- CTA close -->
+  <!-- CTA close — two buttons -->
   <section class="cta">
-    <p class="cta-eyebrow">Next Steps</p>
+    <span class="eyebrow eyebrow--dark">Next Steps</span>
     <h2 class="cta-title">Let's make Letters to the President unforgettable.</h2>
-    <a class="cta-link" href="mailto:hi@theseason.nyc?subject=Letters%20to%20the%20President%20Proposal">hi@theseason.nyc →</a>
+    <div class="cta-actions">
+      <button class="btn-cta btn-cta--primary" onclick="acceptProposal()">Accept This Proposal</button>
+      <button class="btn-cta btn-cta--ghost" onclick="openQuestions()">I Have Questions</button>
+    </div>
   </section>
 
 </main>
@@ -694,9 +955,51 @@
   <span class="meta">Proposal · June 2026 · Confidential</span>
 </footer>
 
+<!-- ════════════════════════════════════════════════════════
+     Questions modal
+     ════════════════════════════════════════════════════════ -->
+<div class="modal" id="modal-questions" aria-hidden="true">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal('modal-questions')" aria-label="Close">×</button>
+    <span class="modal-eyebrow">Drop a Note</span>
+    <h3 class="modal-title">Have questions on this proposal?</h3>
+    <p class="modal-sub">Share thoughts below or reach our team directly. We'll get back within one business day.</p>
+    <form class="modal-form" onsubmit="submitQuestions(event)">
+      <textarea class="modal-textarea" placeholder="What's on your mind?" required></textarea>
+      <button type="submit" class="modal-submit">Send Message</button>
+    </form>
+    <div class="modal-contacts">
+      <p class="modal-contacts-label">Or call us directly</p>
+      <!-- Admin selects which contacts to surface per proposal — placeholder for now -->
+      <div class="modal-contact">
+        <span class="modal-contact-name">Steven Tartick</span>
+        <a class="modal-contact-phone" href="tel:+1">555 · 123 · 4567</a>
+      </div>
+      <div class="modal-contact">
+        <span class="modal-contact-name">Mike Karns</span>
+        <a class="modal-contact-phone" href="tel:+1">555 · 123 · 4568</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     Confirmation modal (reused for Accept + Questions submit)
+     ════════════════════════════════════════════════════════ -->
+<div class="modal" id="modal-confirm" aria-hidden="true">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal('modal-confirm')" aria-label="Close">×</button>
+    <span class="modal-eyebrow" id="confirm-eyebrow">Confirmed</span>
+    <h3 class="modal-title" id="confirm-title">Thank you.</h3>
+    <p class="modal-sub" id="confirm-sub">We'll be in touch within one business day with an agreement to sign and a kickoff timeline.</p>
+  </div>
+</div>
+
 <script>
-  // Password gate — hash 'preview' with sha256, compare on submit.
-  // (Replace this hash per-proposal when generating from the admin tool.)
+  // ──────────────────────────────────────────────────────────
+  // Password gate — sha256 of "preview"
+  // (Replace this hash per-proposal when generating from admin)
+  // ──────────────────────────────────────────────────────────
   const PASSWORD_HASH = '5975cf1bba432391c94667f5886225f69377c0aa8b9fa21fddfb21c89bcf9092';
 
   async function sha256(text) {
@@ -711,7 +1014,6 @@
   const gateIn   = document.getElementById('gate-input');
   const gateErr  = document.getElementById('gate-err');
 
-  // Skip gate if already unlocked this session
   if (sessionStorage.getItem('ltp-unlocked') === '1') {
     gate.classList.add('hidden');
     setTimeout(() => gate.remove(), 320);
@@ -732,7 +1034,9 @@
     }
   });
 
+  // ──────────────────────────────────────────────────────────
   // Print handlers
+  // ──────────────────────────────────────────────────────────
   function downloadProposal() {
     document.body.classList.remove('print-ratecard');
     window.print();
@@ -740,8 +1044,64 @@
   function downloadRateCard() {
     document.body.classList.add('print-ratecard');
     window.print();
-    // restore after print dialog closes
     setTimeout(() => document.body.classList.remove('print-ratecard'), 1500);
+  }
+
+  // ──────────────────────────────────────────────────────────
+  // Modals
+  // ──────────────────────────────────────────────────────────
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Click outside the card closes the modal
+  document.querySelectorAll('.modal').forEach(m => {
+    m.addEventListener('click', (e) => {
+      if (e.target === m) closeModal(m.id);
+    });
+  });
+
+  // Esc closes any open modal
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal.open').forEach(m => closeModal(m.id));
+    }
+  });
+
+  // ──────────────────────────────────────────────────────────
+  // CTA actions
+  // ──────────────────────────────────────────────────────────
+  // TODO (Phase 3 backend): wire acceptProposal() and submitQuestions()
+  //   to a Vercel serverless endpoint that fires a notification to the
+  //   team. Follow the Apps Script → Google Sheets pattern in the
+  //   user's global CLAUDE.md preferences.
+  function acceptProposal() {
+    document.getElementById('confirm-eyebrow').textContent = 'Confirmed';
+    document.getElementById('confirm-title').textContent = 'Thank you.';
+    document.getElementById('confirm-sub').textContent =
+      "We'll be in touch within one business day with an agreement to sign and a kickoff timeline. Questions in the meantime → hi@theseason.nyc";
+    openModal('modal-confirm');
+  }
+
+  function openQuestions() {
+    openModal('modal-questions');
+  }
+
+  function submitQuestions(event) {
+    event.preventDefault();
+    // TODO: POST to /api/proposal-question
+    closeModal('modal-questions');
+    document.getElementById('confirm-eyebrow').textContent = 'Sent';
+    document.getElementById('confirm-title').textContent = 'Got it.';
+    document.getElementById('confirm-sub').textContent =
+      "Thanks for the note — we got it. We'll get back to you within one business day.";
+    setTimeout(() => openModal('modal-confirm'), 200);
+    event.target.reset();
   }
 </script>
 
