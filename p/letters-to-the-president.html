@@ -664,28 +664,56 @@
        Mobile
        ════════════════════════════════════════════════════════ */
     @media (max-width: 720px) {
-      .topbar-inner { padding: 14px 22px; }
+      .topbar-inner { padding: 12px 18px; gap: 10px; }
       .topbar-mark-text { display: none; }
+      .topbar-mark img { width: 26px; height: 26px; }
+      .btn { padding: 9px 12px; font-size: 9px; letter-spacing: 0.22em; }
+      .btn svg { width: 10px; height: 10px; }
       main { padding: 40px 22px 64px; }
       .hero { margin-bottom: 32px; }
       .intro { margin-bottom: 36px; padding-top: 24px; }
       .intro p { font-size: 18px; }
       .collective { padding: 22px 22px 24px; margin-bottom: 48px; }
       .collective-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      /* Mobile: stack logo on top, caption below (reverse source order) */
+      .collective-item {
+        flex-direction: column-reverse;
+        padding: 14px 6px;
+      }
       .collective-tooltip {
         position: static;
         opacity: 1; pointer-events: auto;
         transform: none;
-        width: auto; margin-top: 8px;
+        width: auto; margin-top: 10px;
+        padding: 10px 12px;
         font-size: 11px;
         text-align: center;
+        border-left: none;
+        border-top: 2px solid var(--yellow);
       }
-      .collective-item { flex-direction: column; padding: 12px 4px; }
+      .collective-tooltip::after { display: none; }
+      .collective-tooltip strong { font-size: 9px; }
       .service { margin-bottom: 48px; padding-top: 32px; }
       .service-head { margin-bottom: 18px; }
+      .service-co-logo { height: 18px; }
       .deliverables { padding: 6px 18px; }
+      /* References: collapse all multi-ref grids to horizontal cards on mobile */
       .references.refs-2, .references.refs-3 { grid-template-columns: 1fr; }
-      .references.refs-1 .reference { grid-template-columns: 100px 1fr; gap: 14px; }
+      .references.refs-1 .reference,
+      .references.refs-2 .reference,
+      .references.refs-3 .reference {
+        display: grid;
+        grid-template-columns: 96px 1fr;
+        gap: 14px;
+        align-items: center;
+        padding: 14px;
+      }
+      .references.refs-1 .reference-thumb,
+      .references.refs-2 .reference-thumb,
+      .references.refs-3 .reference-thumb {
+        aspect-ratio: 4 / 3;
+        margin-bottom: 0;
+      }
       .cta { padding: 36px 22px; }
       .cta-actions { flex-direction: column; }
       .btn-cta { width: 100%; }
