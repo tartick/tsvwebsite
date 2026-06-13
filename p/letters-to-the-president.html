@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letters to the President — Proposal • The Season</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1BF3Y4QWCS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1BF3Y4QWCS');
+  </script>
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --yellow: #FDB913;
+      --black:  #000;
+      --ink:    #0a0a0a;
+      --paper:  #FFFFFF;
+      --hair:   rgba(0,0,0,0.12);
+      --muted:  rgba(0,0,0,0.55);
+      --soft:   rgba(0,0,0,0.72);
+    }
+
+    html, body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      font-weight: 400;
+      line-height: 1.55;
+    }
+
+    /* ── Password gate ────────────────────────────────────── */
+    .gate {
+      position: fixed; inset: 0;
+      background: var(--black);
+      color: #fff;
+      z-index: 9999;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 24px;
+      transition: opacity 0.3s ease;
+    }
+    .gate.hidden { opacity: 0; pointer-events: none; }
+    .gate-icon {
+      width: 80px; height: 80px;
+      margin-bottom: 36px;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+    }
+    .gate-eyebrow {
+      font-size: 11px; letter-spacing: 0.38em; text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 14px;
+    }
+    .gate-title {
+      font-size: 28px; font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+    .gate-sub {
+      font-size: 14px; color: rgba(255,255,255,0.55);
+      margin-bottom: 36px;
+      text-align: center; max-width: 360px;
+    }
+    .gate-form {
+      display: flex; gap: 8px;
+      width: 100%; max-width: 380px;
+    }
+    .gate-input {
+      flex: 1;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.22);
+      color: #fff;
+      padding: 14px 16px;
+      font-family: inherit;
+      font-size: 15px; letter-spacing: 0.05em;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .gate-input:focus { border-color: var(--yellow); }
+    .gate-input::placeholder { color: rgba(255,255,255,0.30); }
+    .gate-submit {
+      background: var(--yellow);
+      color: var(--black);
+      border: none;
+      padding: 0 22px;
+      font-family: inherit;
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .gate-submit:hover { opacity: 0.85; }
+    .gate-err {
+      font-size: 12px; color: #ff7a7a;
+      margin-top: 14px; opacity: 0; transition: opacity 0.2s;
+    }
+    .gate-err.visible { opacity: 1; }
+
+    /* ── Top action bar ───────────────────────────────────── */
+    .topbar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--paper);
+      border-bottom: 1px solid var(--hair);
+    }
+    .topbar-inner {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 22px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px;
+    }
+    .topbar-mark {
+      display: flex; align-items: center; gap: 14px;
+      text-decoration: none; color: inherit;
+    }
+    .topbar-mark img {
+      width: 32px; height: 32px;
+    }
+    .topbar-mark-text {
+      font-size: 10px; letter-spacing: 0.32em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .actions {
+      display: flex; gap: 10px;
+    }
+    .btn {
+      background: var(--black);
+      color: #fff;
+      border: 1px solid var(--black);
+      padding: 12px 18px;
+      font-family: inherit;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn:hover { background: var(--yellow); color: var(--black); border-color: var(--yellow); }
+    .btn--ghost {
+      background: transparent; color: var(--ink);
+    }
+    .btn--ghost:hover { background: var(--black); color: #fff; border-color: var(--black); }
+    .btn svg { width: 12px; height: 12px; }
+
+    /* ── Layout ──────────────────────────────────────────── */
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 96px 48px 120px;
+    }
+
+    /* ── Hero ────────────────────────────────────────────── */
+    .hero {
+      margin-bottom: 96px;
+      padding-bottom: 64px;
+      border-bottom: 1px solid var(--hair);
+    }
+    .eyebrow {
+      font-size: 11px; letter-spacing: 0.38em; text-transform: uppercase;
+      color: var(--yellow);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-size: clamp(40px, 6.4vw, 88px);
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 28px;
+    }
+    .hero-title em {
+      font-style: italic;
+      font-weight: 400;
+    }
+    .hero-meta {
+      font-size: 13px; letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Intro narrative ─────────────────────────────────── */
+    .intro {
+      margin-bottom: 96px;
+      max-width: 760px;
+    }
+    .intro p {
+      font-size: clamp(18px, 1.8vw, 22px);
+      line-height: 1.55;
+      color: var(--soft);
+      margin-bottom: 20px;
+    }
+    .intro p:last-child { margin-bottom: 0; }
+    .intro strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* ── Service section ─────────────────────────────────── */
+    .service {
+      margin-bottom: 96px;
+      padding-top: 56px;
+      border-top: 1px solid var(--hair);
+    }
+    .service-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 36px;
+      gap: 24px; flex-wrap: wrap;
+    }
+    .service-num {
+      font-size: 11px; letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--yellow); font-weight: 600;
+    }
+    .service-delivered {
+      font-size: 10px; letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .service-title {
+      font-size: clamp(32px, 4.2vw, 56px);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -0.018em;
+      margin-bottom: 28px;
+      max-width: 800px;
+    }
+    .service-company-logo {
+      height: 24px;
+      width: auto;
+      margin-bottom: 28px;
+      opacity: 0.78;
+    }
+    .service-blurb {
+      font-size: 17px; line-height: 1.6;
+      color: var(--soft);
+      max-width: 720px;
+      margin-bottom: 40px;
+    }
+
+    /* Deliverables */
+    .deliverables {
+      list-style: none;
+      margin-bottom: 48px;
+      max-width: 760px;
+    }
+    .deliverables li {
+      position: relative;
+      padding: 18px 0 18px 28px;
+      border-top: 1px solid var(--hair);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .deliverables li:last-child { border-bottom: 1px solid var(--hair); }
+    .deliverables li::before {
+      content: '';
+      position: absolute; left: 0; top: 26px;
+      width: 12px; height: 1px;
+      background: var(--yellow);
+    }
+
+    /* Reference work card */
+    .reference {
+      margin-bottom: 48px;
+      padding: 24px;
+      background: #f7f7f7;
+      border-left: 3px solid var(--yellow);
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .reference-thumb {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #111;
+      color: var(--yellow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+      opacity: 0.9;
+    }
+    .reference-content {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .reference-label {
+      font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--muted); font-weight: 600;
+    }
+    .reference-title {
+      font-size: 18px; font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .reference-desc {
+      font-size: 14px; color: var(--soft); line-height: 1.5;
+    }
+    .reference-link {
+      font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--ink); text-decoration: none;
+      border-bottom: 1px solid var(--yellow);
+      padding-bottom: 2px;
+      align-self: flex-start;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+    .reference-link:hover { color: var(--muted); }
+
+    /* Rate */
+    .rate {
+      display: flex; align-items: baseline; gap: 16px;
+      padding: 22px 0;
+      border-top: 2px solid var(--ink);
+    }
+    .rate-label {
+      font-size: 11px; letter-spacing: 0.32em;
+      text-transform: uppercase; font-weight: 600;
+    }
+    .rate-amount {
+      font-size: clamp(28px, 3.6vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-left: auto;
+    }
+    .rate-amount .strike {
+      text-decoration: line-through;
+      color: var(--muted);
+      font-weight: 400;
+      margin-right: 12px;
+      font-size: 0.7em;
+    }
+
+    /* ── Terms ────────────────────────────────────────────── */
+    .terms {
+      margin-bottom: 96px;
+      padding-top: 56px;
+      border-top: 1px solid var(--hair);
+    }
+    .terms-title {
+      font-size: clamp(24px, 3vw, 36px);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 28px;
+    }
+    .terms-list {
+      list-style: none;
+      max-width: 720px;
+    }
+    .terms-list li {
+      position: relative;
+      padding: 14px 0 14px 28px;
+      font-size: 15px;
+      color: var(--soft);
+      line-height: 1.55;
+    }
+    .terms-list li::before {
+      content: '';
+      position: absolute; left: 0; top: 22px;
+      width: 12px; height: 1px;
+      background: var(--ink);
+    }
+
+    /* ── Investment summary ──────────────────────────────── */
+    .investment {
+      margin-bottom: 96px;
+      padding-top: 56px;
+      border-top: 1px solid var(--hair);
+    }
+    .investment-table {
+      width: 100%; border-collapse: collapse;
+      max-width: 760px;
+    }
+    .investment-table th,
+    .investment-table td {
+      text-align: left;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--hair);
+      font-size: 15px;
+    }
+    .investment-table th {
+      font-size: 10px; letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .investment-table td:last-child,
+    .investment-table th:last-child {
+      text-align: right;
+      font-weight: 600;
+    }
+    .investment-table tr.total td {
+      border-top: 2px solid var(--ink);
+      border-bottom: none;
+      padding-top: 22px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .investment-table tr.total td:first-child {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 13px;
+    }
+
+    /* ── CTA close ───────────────────────────────────────── */
+    .cta {
+      background: var(--black);
+      color: #fff;
+      padding: 64px 56px;
+      margin-top: 32px;
+    }
+    .cta-eyebrow {
+      font-size: 11px; letter-spacing: 0.38em; text-transform: uppercase;
+      color: var(--yellow); font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .cta-title {
+      font-size: clamp(28px, 3.6vw, 44px);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.015em;
+      margin-bottom: 32px;
+      max-width: 560px;
+    }
+    .cta-link {
+      display: inline-block;
+      color: var(--yellow);
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 600;
+      text-decoration: none;
+      border-bottom: 1px solid var(--yellow);
+      padding-bottom: 4px;
+      transition: opacity 0.2s;
+    }
+    .cta-link:hover { opacity: 0.7; }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    footer {
+      max-width: 920px;
+      margin: 64px auto 0;
+      padding: 32px 48px 64px;
+      border-top: 1px solid var(--hair);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+    }
+    footer img { width: 28px; height: 28px; opacity: 0.7; }
+    footer .meta {
+      font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Mobile ──────────────────────────────────────────── */
+    @media (max-width: 720px) {
+      .topbar-inner { padding: 18px 24px; flex-direction: column; align-items: stretch; gap: 14px; }
+      .actions { justify-content: stretch; }
+      .actions .btn { flex: 1; justify-content: center; padding: 12px 8px; }
+      main { padding: 64px 24px 80px; }
+      .hero { margin-bottom: 64px; padding-bottom: 48px; }
+      .intro, .service, .terms, .investment { margin-bottom: 64px; }
+      .service, .terms, .investment { padding-top: 40px; }
+      .reference { grid-template-columns: 80px 1fr; padding: 18px; gap: 16px; }
+      .cta { padding: 48px 32px; }
+      footer { padding: 24px; }
+    }
+
+    /* ════════════════════════════════════════════════════════
+       PRINT — proposal mode (default print)
+       ════════════════════════════════════════════════════════ */
+    @media print {
+      .gate, .topbar, footer .meta:last-child { display: none !important; }
+      :root { --hair: rgba(0,0,0,0.18); }
+      html, body { background: #fff; color: #000; }
+      main {
+        max-width: none;
+        padding: 0;
+        margin: 0;
+      }
+      .hero { margin-bottom: 32px; padding-bottom: 24px; }
+      .hero-title { font-size: 48px; }
+      .intro { margin-bottom: 32px; }
+      .intro p { font-size: 14px; line-height: 1.5; }
+      .service { margin-bottom: 36px; padding-top: 24px; page-break-inside: avoid; }
+      .service-title { font-size: 28px; }
+      .service-blurb { font-size: 12px; }
+      .deliverables li { padding: 8px 0 8px 24px; font-size: 11px; }
+      .deliverables li::before { top: 14px; }
+      .reference { display: none; }   /* refs aren't relevant in print */
+      .rate-amount { font-size: 24px; }
+      .terms, .investment { margin-bottom: 32px; padding-top: 24px; page-break-inside: avoid; }
+      .terms-title, .investment-table th { font-size: 18px; }
+      .terms-list li { font-size: 11px; padding: 6px 0 6px 24px; }
+      .terms-list li::before { top: 14px; }
+      .investment-table th, .investment-table td { padding: 10px 0; font-size: 12px; }
+      .investment-table tr.total td { font-size: 14px; }
+      .cta {
+        background: #000; color: #fff;
+        padding: 32px;
+        page-break-inside: avoid;
+      }
+      .cta-title { font-size: 24px; }
+      footer { display: none; }
+      a { color: inherit; text-decoration: none; }
+
+      @page { margin: 0.6in; size: letter; }
+    }
+
+    /* ════════════════════════════════════════════════════════
+       PRINT — rate card mode (triggered by body class)
+       ════════════════════════════════════════════════════════ */
+    @media print {
+      body.print-ratecard .intro,
+      body.print-ratecard .service-blurb,
+      body.print-ratecard .deliverables,
+      body.print-ratecard .reference,
+      body.print-ratecard .terms,
+      body.print-ratecard .cta { display: none !important; }
+      body.print-ratecard .service { padding-top: 14px; margin-bottom: 14px; }
+      body.print-ratecard .service-title { font-size: 18px; margin-bottom: 8px; }
+      body.print-ratecard .hero { margin-bottom: 24px; padding-bottom: 16px; }
+      body.print-ratecard .hero-title { font-size: 36px; }
+      body.print-ratecard .service-company-logo { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════
+     Password gate (sha256: 'preview')
+     ════════════════════════════════════════════════════════ -->
+<div class="gate" id="gate">
+  <img src="/assets/theseason-icon.png" class="gate-icon" alt="The Season">
+  <p class="gate-eyebrow">Proposal Access</p>
+  <h1 class="gate-title">Letters to the President</h1>
+  <p class="gate-sub">Enter the password your contact at The Season shared with you to view this proposal.</p>
+  <form class="gate-form" id="gate-form" autocomplete="off">
+    <input class="gate-input" type="password" id="gate-input" placeholder="Password" autofocus required>
+    <button class="gate-submit" type="submit">Enter</button>
+  </form>
+  <p class="gate-err" id="gate-err">Incorrect password — try again.</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     Top action bar
+     ════════════════════════════════════════════════════════ -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="topbar-mark" href="https://theseason.nyc" target="_blank" rel="noopener">
+      <img src="/assets/theseason-icon.png" alt="The Season">
+      <span class="topbar-mark-text">The Season</span>
+    </a>
+    <div class="actions">
+      <button class="btn btn--ghost" onclick="downloadRateCard()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+        Rate Card
+      </button>
+      <button class="btn" onclick="downloadProposal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14"/></svg>
+        Proposal
+      </button>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- Hero -->
+  <section class="hero">
+    <p class="eyebrow">Proposal Prepared For</p>
+    <h1 class="hero-title">Letters to <br><em>the President</em></h1>
+    <p class="hero-meta">By The Season · June 2026</p>
+  </section>
+
+  <!-- Intro narrative -->
+  <section class="intro">
+    <p><strong>Letters to the President</strong> deserves a brand worth talking about — a visual identity that signals the urgency and craft of the work itself, and a rollout that primes audiences before a single ticket goes on sale.</p>
+    <p>We've built a focused two-part engagement to deliver exactly that: a striking visual identity from <strong>Eleven O'Clock Studio</strong>, paired with rollout-ready creative production from <strong>Flyer</strong> to power your announcement and the runway to launch.</p>
+  </section>
+
+  <!-- Service 01 — Logo & Key Art -->
+  <section class="service">
+    <div class="service-head">
+      <span class="service-num">01 — Brand Identity</span>
+      <span class="service-delivered">Delivered by 11 O'Clock Studio</span>
+    </div>
+    <img class="service-company-logo" src="/assets/11oclock-logo.png" alt="11 O'Clock Studio">
+    <h2 class="service-title">Logo &amp; Key Art</h2>
+    <p class="service-blurb">A complete visual identity, from primary mark to full key art system. Three rounds of concept and design presentations to build the campaign in collaboration with you, ending with a final approved direction and a style guide ready for production handoff.</p>
+
+    <ul class="deliverables">
+      <li>Execute branding and key art design including logo and visual identity</li>
+      <li>3 concept &amp; design presentations / rounds to build the campaign</li>
+      <li>Delivery of final approved key art concept and style guide for production handoff</li>
+      <li>Full ownership and unlimited usage rights</li>
+    </ul>
+
+    <div class="reference">
+      <div class="reference-thumb">Recent Work</div>
+      <div class="reference-content">
+        <span class="reference-label">Reference</span>
+        <span class="reference-title">CATS: The Jellicle Ball</span>
+        <span class="reference-desc">Brand identity and campaign key art for the off-Broadway smash hit.</span>
+        <a class="reference-link" href="https://catsthejellicleball.com" target="_blank" rel="noopener">View Project →</a>
+      </div>
+    </div>
+
+    <div class="rate">
+      <span class="rate-label">Rate</span>
+      <span class="rate-amount">$5,000</span>
+    </div>
+  </section>
+
+  <!-- Service 02 — Creative Production -->
+  <section class="service">
+    <div class="service-head">
+      <span class="service-num">02 — Creative Production</span>
+      <span class="service-delivered">Delivered by Flyer</span>
+    </div>
+    <img class="service-company-logo" src="/assets/flyer-logo.png" alt="Flyer">
+    <h2 class="service-title">Announcement &amp; Rollout Assets</h2>
+    <p class="service-blurb">Everything you need to take the new brand to market: social profile updates, save-the-date graphics, a press release layout, editable templates your team can build on for months, and clean working files delivered as packaged source.</p>
+
+    <ul class="deliverables">
+      <li>Social profile &amp; header images</li>
+      <li>Announcement / save-the-date graphic</li>
+      <li>Press release layout</li>
+      <li>Editable social media post templates (feed + story)</li>
+      <li>Creative team &amp; composer list graphic template</li>
+      <li>All packaged / working files</li>
+    </ul>
+
+    <div class="reference">
+      <div class="reference-thumb">Recent Work</div>
+      <div class="reference-content">
+        <span class="reference-label">Reference</span>
+        <span class="reference-title">Proof — Broadway</span>
+        <span class="reference-desc">Full announcement rollout: social, press, and templates.</span>
+        <a class="reference-link" href="https://proofbroadway.com" target="_blank" rel="noopener">View Project →</a>
+      </div>
+    </div>
+
+    <div class="rate">
+      <span class="rate-label">All-in Rate</span>
+      <span class="rate-amount">$2,500</span>
+    </div>
+  </section>
+
+  <!-- Terms -->
+  <section class="terms">
+    <h2 class="terms-title">Terms</h2>
+    <ul class="terms-list">
+      <li>External hard costs associated with photography, illustrators, logo renders, and font licensing are quoted separately.</li>
+      <li>Payable 50% upon engagement, 50% upon approval of core brand identity.</li>
+    </ul>
+  </section>
+
+  <!-- Investment summary -->
+  <section class="investment">
+    <table class="investment-table">
+      <thead>
+        <tr><th>Service</th><th>Investment</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Logo &amp; Key Art · 11 O'Clock Studio</td><td>$5,000</td></tr>
+        <tr><td>Creative Production · Flyer</td><td>$2,500</td></tr>
+        <tr class="total"><td>Total</td><td>$7,500</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- CTA close -->
+  <section class="cta">
+    <p class="cta-eyebrow">Next Steps</p>
+    <h2 class="cta-title">Let's make Letters to the President unforgettable.</h2>
+    <a class="cta-link" href="mailto:hi@theseason.nyc?subject=Letters%20to%20the%20President%20Proposal">hi@theseason.nyc →</a>
+  </section>
+
+</main>
+
+<footer>
+  <img src="/assets/theseason-icon.png" alt="The Season">
+  <span class="meta">The Season · theseason.nyc</span>
+  <span class="meta">Proposal · June 2026 · Confidential</span>
+</footer>
+
+<script>
+  // Password gate — hash 'preview' with sha256, compare on submit.
+  // (Replace this hash per-proposal when generating from the admin tool.)
+  const PASSWORD_HASH = '5975cf1bba432391c94667f5886225f69377c0aa8b9fa21fddfb21c89bcf9092';
+
+  async function sha256(text) {
+    const buf = new TextEncoder().encode(text);
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(hash))
+      .map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  const gate     = document.getElementById('gate');
+  const gateForm = document.getElementById('gate-form');
+  const gateIn   = document.getElementById('gate-input');
+  const gateErr  = document.getElementById('gate-err');
+
+  // Skip gate if already unlocked this session
+  if (sessionStorage.getItem('ltp-unlocked') === '1') {
+    gate.classList.add('hidden');
+    setTimeout(() => gate.remove(), 320);
+  }
+
+  gateForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const hash = await sha256(gateIn.value.trim());
+    if (hash === PASSWORD_HASH) {
+      sessionStorage.setItem('ltp-unlocked', '1');
+      gate.classList.add('hidden');
+      setTimeout(() => gate.remove(), 320);
+      gateErr.classList.remove('visible');
+    } else {
+      gateErr.classList.add('visible');
+      gateIn.value = '';
+      gateIn.focus();
+    }
+  });
+
+  // Print handlers
+  function downloadProposal() {
+    document.body.classList.remove('print-ratecard');
+    window.print();
+  }
+  function downloadRateCard() {
+    document.body.classList.add('print-ratecard');
+    window.print();
+    // restore after print dialog closes
+    setTimeout(() => document.body.classList.remove('print-ratecard'), 1500);
+  }
+</script>
+
+</body>
+</html>
