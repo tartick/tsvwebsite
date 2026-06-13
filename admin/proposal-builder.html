@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proposal Builder · The Season Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --yellow: #FDB913;
+      --yellow-pale: #FFF6DA;
+      --black: #000;
+      --ink: #0a0a0a;
+      --paper: #FFFFFF;
+      --bg: #f7f7f4;
+      --hair: rgba(0,0,0,0.10);
+      --hair2: rgba(0,0,0,0.18);
+      --muted: rgba(0,0,0,0.55);
+      --soft: rgba(0,0,0,0.72);
+      --tint: #fafaf8;
+      --field-bg: #fafaf8;
+      --danger: #d9534f;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; }
+
+    /* ════════════════════════════════════════════════════════
+       Eyebrow
+       ════════════════════════════════════════════════════════ */
+    .eyebrow {
+      display: inline-block;
+      font-size: 10px; letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--ink); font-weight: 700;
+      padding-bottom: 4px;
+      border-bottom: 2px solid var(--yellow);
+    }
+
+    /* ════════════════════════════════════════════════════════
+       Admin password gate
+       ════════════════════════════════════════════════════════ */
+    .gate {
+      position: fixed; inset: 0;
+      background: var(--black); color: #fff;
+      z-index: 9999;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 24px;
+      transition: opacity 0.3s ease;
+    }
+    .gate.hidden { opacity: 0; pointer-events: none; }
+    .gate-icon {
+      width: 56px; height: 56px;
+      margin-bottom: 24px;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+    }
+    .gate-eyebrow {
+      font-size: 11px; letter-spacing: 0.38em; text-transform: uppercase;
+      color: var(--yellow); font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .gate-title {
+      font-size: 24px; font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 24px;
+    }
+    .gate-form { display: flex; gap: 8px; width: 100%; max-width: 360px; }
+    .gate-input {
+      flex: 1;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.22);
+      color: #fff;
+      padding: 13px 16px;
+      font-family: inherit;
+      font-size: 15px; letter-spacing: 0.05em;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .gate-input:focus { border-color: var(--yellow); }
+    .gate-submit {
+      background: var(--yellow); color: var(--black);
+      border: none;
+      padding: 0 22px;
+      font-family: inherit;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .gate-submit:hover { opacity: 0.85; }
+    .gate-err {
+      font-size: 12px; color: #ff7a7a;
+      margin-top: 14px; opacity: 0; transition: opacity 0.2s;
+    }
+    .gate-err.visible { opacity: 1; }
+
+    /* ════════════════════════════════════════════════════════
+       Top admin bar (sticky)
+       ════════════════════════════════════════════════════════ */
+    .adminbar {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--paper);
+      border-bottom: 1px solid var(--hair);
+    }
+    .adminbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px;
+    }
+    .adminbar-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
+    .adminbar-mark {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: inherit;
+    }
+    .adminbar-mark img { width: 22px; height: 22px; }
+    .adminbar-mark-text {
+      font-size: 10px; letter-spacing: 0.32em;
+      text-transform: uppercase; color: var(--muted);
+      font-weight: 700;
+    }
+    .adminbar-crumb {
+      font-size: 12px; color: var(--muted);
+      display: flex; align-items: center; gap: 8px;
+      letter-spacing: 0.02em;
+    }
+    .adminbar-crumb a { color: var(--muted); text-decoration: none; }
+    .adminbar-crumb a:hover { color: var(--ink); }
+    .adminbar-crumb .sep { opacity: 0.4; }
+    .adminbar-crumb strong { color: var(--ink); font-weight: 600; }
+
+    .adminbar-right { display: flex; align-items: center; gap: 8px; }
+    .bar-btn {
+      font-family: inherit;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.26em; text-transform: uppercase;
+      padding: 9px 14px;
+      cursor: pointer;
+      border: 1px solid var(--hair2);
+      background: transparent; color: var(--ink);
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .bar-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .bar-btn--primary {
+      background: var(--yellow);
+      color: var(--ink);
+      border-color: var(--yellow);
+    }
+    .bar-btn--primary:hover { background: var(--ink); color: var(--yellow); border-color: var(--ink); }
+
+    /* ════════════════════════════════════════════════════════
+       Builder layout
+       ════════════════════════════════════════════════════════ */
+    .builder {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 36px 32px 120px;
+    }
+
+    .builder-titlebar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 36px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--hair);
+    }
+    .builder-titlebar-left {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .builder-title {
+      font-size: 30px; font-weight: 600;
+      letter-spacing: -0.018em;
+    }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+      font-weight: 700;
+      padding: 6px 12px;
+      background: var(--yellow-pale);
+      color: var(--ink);
+      border: 1px solid var(--yellow);
+    }
+    .status-pill::before {
+      content: ''; width: 6px; height: 6px; background: var(--yellow);
+      display: inline-block;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       Form section
+       ════════════════════════════════════════════════════════ */
+    .form-section {
+      background: var(--paper);
+      border: 1px solid var(--hair);
+      margin-bottom: 22px;
+      padding: 28px 32px;
+    }
+    .form-section-head {
+      display: flex; align-items: baseline; gap: 16px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+    .form-section-num {
+      font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--muted); font-weight: 700;
+      min-width: 22px;
+    }
+    .form-section-title {
+      font-size: 20px; font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .form-section-help {
+      font-size: 12px; color: var(--muted);
+      letter-spacing: 0.01em;
+      margin-left: auto;
+    }
+    .form-section-action {
+      margin-left: auto;
+    }
+
+    /* ── Form fields ──────────────────────────────────────── */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .field-grid .full { grid-column: 1 / -1; }
+
+    .field {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .field-label {
+      font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--muted); font-weight: 700;
+    }
+    .field-input,
+    .field-textarea {
+      font-family: inherit;
+      font-size: 14px;
+      padding: 11px 13px;
+      background: var(--field-bg);
+      border: 1px solid var(--hair2);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+      width: 100%;
+    }
+    .field-input:focus,
+    .field-textarea:focus {
+      border-color: var(--yellow);
+      background: var(--paper);
+    }
+    .field-textarea {
+      min-height: 96px;
+      line-height: 1.5;
+      resize: vertical;
+    }
+    .field-textarea.tall { min-height: 130px; }
+    .field-help {
+      font-size: 11px; color: var(--muted);
+      margin-top: 2px;
+      letter-spacing: 0.01em;
+    }
+
+    /* URL composer */
+    .url-wrap {
+      display: flex; align-items: stretch;
+      border: 1px solid var(--hair2);
+      background: var(--field-bg);
+    }
+    .url-wrap:focus-within { border-color: var(--yellow); background: var(--paper); }
+    .url-wrap-prefix {
+      padding: 11px 12px;
+      font-size: 13px; color: var(--muted);
+      background: rgba(0,0,0,0.04);
+      border-right: 1px solid var(--hair);
+      font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+      letter-spacing: -0.01em;
+      display: flex; align-items: center;
+    }
+    .url-wrap-input {
+      border: none; outline: none; background: transparent;
+      flex: 1;
+      font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+      font-size: 13px;
+      padding: 11px 13px;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    /* Password composer */
+    .pwd-wrap {
+      display: flex; gap: 6px;
+    }
+    .pwd-wrap .field-input { flex: 1; font-family: 'JetBrains Mono', monospace; }
+    .btn-inline {
+      font-family: inherit;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.24em;
+      text-transform: uppercase;
+      padding: 0 14px;
+      background: var(--ink); color: #fff;
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .btn-inline:hover { background: var(--yellow); color: var(--ink); border-color: var(--yellow); }
+
+    /* ── Service cards ────────────────────────────────────── */
+    .services-list {
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .service-card {
+      background: var(--tint);
+      border: 1px solid var(--hair);
+      border-left: 3px solid var(--yellow);
+      padding: 22px 24px;
+    }
+    .service-card-head {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--hair);
+    }
+    .service-card-id {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .service-card-num {
+      font-size: 10px; letter-spacing: 0.32em; text-transform: uppercase;
+      color: var(--muted); font-weight: 700;
+    }
+    .service-card-name {
+      font-size: 18px; font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .service-card-badge {
+      display: inline-block;
+      font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+      font-weight: 600;
+      padding: 3px 8px;
+      background: var(--paper);
+      border: 1px solid var(--hair2);
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    .service-card-remove {
+      font-family: inherit;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 6px 10px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .service-card-remove:hover { color: var(--danger); }
+    .service-card-fields {
+      display: flex; flex-direction: column; gap: 16px;
+    }
+
+    /* Editable deliverables */
+    .bullets-edit {
+      display: flex; flex-direction: column;
+      background: var(--paper);
+      border: 1px solid var(--hair2);
+    }
+    .bullet-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--hair);
+    }
+    .bullet-row:last-of-type { border-bottom: none; }
+    .bullet-marker {
+      width: 8px; height: 8px; background: var(--yellow);
+      flex-shrink: 0;
+    }
+    .bullet-input {
+      flex: 1;
+      border: none; outline: none; background: transparent;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 6px 4px;
+      color: var(--ink);
+    }
+    .bullet-input:focus { background: var(--field-bg); }
+    .bullet-remove {
+      background: transparent; border: none;
+      color: var(--muted);
+      cursor: pointer;
+      width: 22px; height: 22px;
+      font-size: 16px; line-height: 1;
+      transition: color 0.15s;
+    }
+    .bullet-remove:hover { color: var(--danger); }
+    .bullets-add {
+      font-family: inherit;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.24em;
+      text-transform: uppercase;
+      padding: 10px 12px;
+      background: rgba(0,0,0,0.02);
+      border: none; border-top: 1px dashed var(--hair2);
+      color: var(--soft);
+      cursor: pointer;
+      text-align: left;
+      transition: color 0.15s, background 0.15s;
+    }
+    .bullets-add:hover { color: var(--ink); background: var(--yellow-pale); }
+
+    /* Rate row */
+    .rate-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 18px;
+      align-items: end;
+    }
+    .discount-toggle {
+      display: flex; align-items: center; gap: 8px;
+      padding: 11px 0;
+      font-size: 13px;
+      color: var(--soft);
+      cursor: pointer;
+    }
+    .discount-toggle input { accent-color: var(--ink); }
+
+    /* References */
+    .refs-edit {
+      display: flex; flex-wrap: wrap; gap: 6px;
+      padding: 10px;
+      background: var(--paper);
+      border: 1px solid var(--hair2);
+      min-height: 52px;
+      align-items: center;
+    }
+    .ref-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 7px 6px 7px 12px;
+      background: var(--ink); color: #fff;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .ref-chip-x {
+      background: transparent; border: none;
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      font-size: 14px; line-height: 1;
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.15s;
+    }
+    .ref-chip-x:hover { color: var(--yellow); }
+    .ref-add {
+      font-family: inherit;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.24em;
+      text-transform: uppercase;
+      padding: 7px 12px;
+      background: transparent;
+      border: 1px dashed var(--hair2);
+      color: var(--soft);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .ref-add:hover { border-color: var(--yellow); color: var(--ink); }
+
+    /* Add service button (large) */
+    .add-service {
+      width: 100%;
+      font-family: inherit;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.28em;
+      text-transform: uppercase;
+      padding: 18px 16px;
+      background: transparent;
+      border: 1px dashed var(--hair2);
+      color: var(--soft);
+      cursor: pointer;
+      margin-top: 16px;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .add-service:hover {
+      border-color: var(--yellow);
+      color: var(--ink);
+      background: var(--yellow-pale);
+    }
+
+    /* Contacts chips */
+    .contacts-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .contact-chip {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 10px 12px 10px 14px;
+      background: var(--paper);
+      border: 1px solid var(--hair2);
+      font-size: 13px;
+    }
+    .contact-chip strong { font-weight: 600; }
+    .contact-chip .phone { color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+    .contact-chip-x {
+      background: transparent; border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px; line-height: 1;
+      transition: color 0.15s;
+    }
+    .contact-chip-x:hover { color: var(--danger); }
+
+    /* Investment summary (read-only display) */
+    .summary {
+      background: var(--ink); color: #fff;
+      padding: 22px 26px;
+      margin-top: -22px; /* offset section header */
+    }
+    .summary-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .summary-row:last-of-type { border-bottom: none; }
+    .summary-row.total {
+      border-top: 2px solid var(--yellow);
+      border-bottom: none;
+      padding-top: 16px;
+      margin-top: 8px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .summary-row.total .label {
+      text-transform: uppercase; letter-spacing: 0.18em; font-size: 13px;
+    }
+    .summary-row .label-sub {
+      font-size: 11px; color: rgba(255,255,255,0.5);
+      letter-spacing: 0.04em;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       Sticky footer action bar
+       ════════════════════════════════════════════════════════ */
+    .builder-footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--paper);
+      border-top: 1px solid var(--hair);
+      padding: 12px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      z-index: 50;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+    }
+    .builder-footer-status {
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    .builder-footer-status .dot {
+      display: inline-block; width: 6px; height: 6px;
+      background: var(--yellow);
+      margin-right: 8px;
+    }
+    .builder-footer-actions {
+      display: flex; gap: 8px;
+    }
+
+    /* ════════════════════════════════════════════════════════
+       Mobile
+       ════════════════════════════════════════════════════════ */
+    @media (max-width: 720px) {
+      .adminbar-inner { padding: 10px 18px; flex-wrap: wrap; gap: 10px; }
+      .adminbar-crumb { font-size: 11px; }
+      .adminbar-right { width: 100%; justify-content: flex-end; }
+      .bar-btn { padding: 8px 10px; font-size: 9px; letter-spacing: 0.18em; }
+      .builder { padding: 24px 18px 140px; }
+      .builder-titlebar { flex-direction: column; align-items: flex-start; gap: 12px; margin-bottom: 24px; }
+      .form-section { padding: 22px 20px; }
+      .field-grid { grid-template-columns: 1fr; gap: 14px; }
+      .rate-row { grid-template-columns: 1fr; gap: 8px; }
+      .service-card { padding: 18px 18px; }
+      .service-card-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .builder-footer { padding: 10px 18px; flex-direction: column; gap: 8px; align-items: stretch; }
+      .builder-footer-actions { justify-content: stretch; }
+      .builder-footer-actions .bar-btn { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Admin password gate (sha256 of "tsv2026") -->
+<div class="gate" id="gate">
+  <img src="/assets/theseason-icon.png" class="gate-icon" alt="The Season">
+  <p class="gate-eyebrow">Admin Access</p>
+  <h1 class="gate-title">Proposal Builder</h1>
+  <form class="gate-form" id="gate-form" autocomplete="off">
+    <input class="gate-input" type="password" id="gate-input" placeholder="Admin password" autofocus required>
+    <button class="gate-submit" type="submit">Enter</button>
+  </form>
+  <p class="gate-err" id="gate-err">Incorrect — try again.</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     Top admin bar
+     ════════════════════════════════════════════════════════ -->
+<header class="adminbar">
+  <div class="adminbar-inner">
+    <div class="adminbar-left">
+      <a class="adminbar-mark" href="/admin/proposals">
+        <img src="/assets/theseason-icon.png" alt="The Season">
+        <span class="adminbar-mark-text">Admin</span>
+      </a>
+      <div class="adminbar-crumb">
+        <a href="/admin/proposals">Proposals</a>
+        <span class="sep">/</span>
+        <strong>New</strong>
+      </div>
+    </div>
+    <div class="adminbar-right">
+      <button class="bar-btn" onclick="openPreview()">Preview</button>
+      <button class="bar-btn">Save Draft</button>
+      <button class="bar-btn bar-btn--primary">Publish</button>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════
+     Builder body
+     ════════════════════════════════════════════════════════ -->
+<main class="builder">
+
+  <!-- Title strip -->
+  <div class="builder-titlebar">
+    <div class="builder-titlebar-left">
+      <span class="eyebrow">New Proposal</span>
+      <h1 class="builder-title">Letters to the President</h1>
+    </div>
+    <span class="status-pill">Draft</span>
+  </div>
+
+  <!-- ─────────── 01 · Basics ─────────── -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-num">01</span>
+      <h2 class="form-section-title">The Basics</h2>
+      <span class="form-section-help">Client info + share URL + access password</span>
+    </div>
+    <div class="field-grid">
+      <label class="field">
+        <span class="field-label">Client / Show Name</span>
+        <input class="field-input" value="Letters to the President">
+      </label>
+      <label class="field">
+        <span class="field-label">Date (shown in hero)</span>
+        <input class="field-input" value="June 2026">
+      </label>
+      <div class="field full">
+        <span class="field-label">Public URL</span>
+        <div class="url-wrap">
+          <span class="url-wrap-prefix">theseason.nyc/p/</span>
+          <input class="url-wrap-input" value="letters-to-the-president">
+        </div>
+        <span class="field-help">Auto-generated from client name. Editable.</span>
+      </div>
+      <div class="field">
+        <span class="field-label">Client Password</span>
+        <div class="pwd-wrap">
+          <input class="field-input mono" value="preview">
+          <button type="button" class="btn-inline">Generate</button>
+        </div>
+        <span class="field-help">Shown here once. Client uses this to unlock the proposal.</span>
+      </div>
+      <label class="field">
+        <span class="field-label">Internal Tag (optional)</span>
+        <input class="field-input" placeholder="e.g. Off-Broadway · Spring 2026">
+      </label>
+    </div>
+  </section>
+
+  <!-- ─────────── 02 · Opening Note ─────────── -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-num">02</span>
+      <h2 class="form-section-title">Opening Note</h2>
+      <span class="form-section-help">Warm, project-specific. 2–3 sentences.</span>
+    </div>
+    <textarea class="field-textarea tall">We've been following Letters to the President with real interest — the urgency of the piece and the rigor of the team behind it is exactly the kind of work we want our name on. Here's a focused two-part engagement built to give this show the visual identity and rollout it deserves.</textarea>
+  </section>
+
+  <!-- ─────────── 03 · Services ─────────── -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-num">03</span>
+      <h2 class="form-section-title">Services</h2>
+      <span class="form-section-help">Pick from catalog, then tune per client</span>
+    </div>
+
+    <div class="services-list">
+
+      <!-- Service card 01 (expanded) -->
+      <article class="service-card">
+        <header class="service-card-head">
+          <div class="service-card-id">
+            <span class="service-card-num">Service 01</span>
+            <span class="service-card-name">Logo &amp; Key Art</span>
+            <span class="service-card-badge">11 O'Clock Studio</span>
+          </div>
+          <button class="service-card-remove" type="button">Remove</button>
+        </header>
+
+        <div class="service-card-fields">
+
+          <label class="field">
+            <span class="field-label">Blurb</span>
+            <textarea class="field-textarea">A complete visual identity, from primary mark to full key art system. Three rounds of concept and design presentations to build the campaign in collaboration with you, ending with a final approved direction and a style guide ready for production handoff.</textarea>
+          </label>
+
+          <div class="field">
+            <span class="field-label">Deliverables</span>
+            <div class="bullets-edit">
+              <div class="bullet-row">
+                <span class="bullet-marker"></span>
+                <input class="bullet-input" value="Execute branding and key art design including logo and visual identity">
+                <button class="bullet-remove" type="button" aria-label="Remove">×</button>
+              </div>
+              <div class="bullet-row">
+                <span class="bullet-marker"></span>
+                <input class="bullet-input" value="3 concept &amp; design presentations / rounds to build the campaign">
+                <button class="bullet-remove" type="button" aria-label="Remove">×</button>
+              </div>
+              <div class="bullet-row">
+                <span class="bullet-marker"></span>
+                <input class="bullet-input" value="Delivery of final approved key art concept and style guide for production handoff">
+                <button class="bullet-remove" type="button" aria-label="Remove">×</button>
+              </div>
+              <div class="bullet-row">
+                <span class="bullet-marker"></span>
+                <input class="bullet-input" value="Full ownership and unlimited usage rights">
+                <button class="bullet-remove" type="button" aria-label="Remove">×</button>
+              </div>
+              <button class="bullets-add" type="button">+ Add deliverable</button>
+            </div>
+          </div>
+
+          <div class="rate-row">
+            <label class="field">
+              <span class="field-label">Rate</span>
+              <input class="field-input mono" value="$5,000">
+            </label>
+            <label class="discount-toggle">
+              <input type="checkbox">
+              Show as discount (strikethrough original price)
+            </label>
+          </div>
+
+          <div class="field">
+            <span class="field-label">References (1–3)</span>
+            <div class="refs-edit">
+              <span class="ref-chip">CATS: The Jellicle Ball <button class="ref-chip-x" type="button">×</button></span>
+              <span class="ref-chip">Proof — Broadway <button class="ref-chip-x" type="button">×</button></span>
+              <span class="ref-chip">Mr. Leather 1976 <button class="ref-chip-x" type="button">×</button></span>
+              <button class="ref-add" type="button">+ Add Reference</button>
+            </div>
+            <span class="field-help">Pulled from the reference library. Drag chips to reorder.</span>
+          </div>
+
+        </div>
+      </article>
+
+      <!-- Service card 02 -->
+      <article class="service-card">
+        <header class="service-card-head">
+          <div class="service-card-id">
+            <span class="service-card-num">Service 02</span>
+            <span class="service-card-name">Announcement &amp; Rollout Assets</span>
+            <span class="service-card-badge">Flyer</span>
+          </div>
+          <button class="service-card-remove" type="button">Remove</button>
+        </header>
+
+        <div class="service-card-fields">
+
+          <label class="field">
+            <span class="field-label">Blurb</span>
+            <textarea class="field-textarea">Everything you need to take the new brand to market: social profile updates, save-the-date graphics, a press release layout, editable templates your team can build on for months, and clean working files delivered as packaged source.</textarea>
+          </label>
+
+          <div class="field">
+            <span class="field-label">Deliverables</span>
+            <div class="bullets-edit">
+              <div class="bullet-row">
+                <span class="bullet-marker"></span>
+                <input class="bullet-input" value="Social profile &amp; header images">
+                <button class="bullet-remove" type="button" aria-label="Remove">×</button>
+              </div>
+              <div class="bullet-row">
+                <span class="bullet-marker"></span>
+                <input class="bullet-input" value="Announcement / save-the-date graphic">
+                <button class="bullet-remove" type="button" aria-label="Remove">×</button>
+              </div>
+              <div class="bullet-row">
+                <span class="bullet-marker"></span>
+                <input class="bullet-input" value="Press release layout">
+                <button class="bullet-remove" type="button" aria-label="Remove">×</button>
+              </div>
+              <div class="bullet-row">
+                <span class="bullet-marker"></span>
+                <input class="bullet-input" value="Editable social media post templates (feed + story)">
+                <button class="bullet-remove" type="button" aria-label="Remove">×</button>
+              </div>
+              <div class="bullet-row">
+                <span class="bullet-marker"></span>
+                <input class="bullet-input" value="Creative team &amp; composer list graphic template">
+                <button class="bullet-remove" type="button" aria-label="Remove">×</button>
+              </div>
+              <div class="bullet-row">
+                <span class="bullet-marker"></span>
+                <input class="bullet-input" value="All packaged / working files">
+                <button class="bullet-remove" type="button" aria-label="Remove">×</button>
+              </div>
+              <button class="bullets-add" type="button">+ Add deliverable</button>
+            </div>
+          </div>
+
+          <div class="rate-row">
+            <label class="field">
+              <span class="field-label">Rate Label</span>
+              <input class="field-input" value="All-in Rate">
+            </label>
+            <label class="field">
+              <span class="field-label">Rate</span>
+              <input class="field-input mono" value="$2,500">
+            </label>
+          </div>
+
+          <div class="field">
+            <span class="field-label">References (1–3)</span>
+            <div class="refs-edit">
+              <span class="ref-chip">The Drama Desk Awards <button class="ref-chip-x" type="button">×</button></span>
+              <button class="ref-add" type="button">+ Add Reference</button>
+            </div>
+          </div>
+
+        </div>
+      </article>
+
+      <button class="add-service" type="button">+ Add Another Service</button>
+
+    </div>
+  </section>
+
+  <!-- ─────────── 04 · Terms ─────────── -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-num">04</span>
+      <h2 class="form-section-title">Terms</h2>
+      <span class="form-section-help">Default boilerplate — edit if needed for this client</span>
+    </div>
+    <div class="bullets-edit">
+      <div class="bullet-row">
+        <span class="bullet-marker"></span>
+        <input class="bullet-input" value="External hard costs associated with photography, illustrators, logo renders, and font licensing are quoted separately.">
+        <button class="bullet-remove" type="button">×</button>
+      </div>
+      <div class="bullet-row">
+        <span class="bullet-marker"></span>
+        <input class="bullet-input" value="Payable 50% upon engagement, 50% upon approval of core brand identity.">
+        <button class="bullet-remove" type="button">×</button>
+      </div>
+      <button class="bullets-add" type="button">+ Add term</button>
+    </div>
+  </section>
+
+  <!-- ─────────── 05 · Investment Summary (auto) ─────────── -->
+  <section class="form-section" style="background: transparent; border: none; padding: 0;">
+    <div class="form-section-head" style="padding: 0 32px;">
+      <span class="form-section-num">05</span>
+      <h2 class="form-section-title">Investment Summary</h2>
+      <span class="form-section-help">Auto-calculated from services</span>
+    </div>
+    <div class="summary">
+      <div class="summary-row">
+        <span>Logo &amp; Key Art <span class="label-sub">· 11 O'Clock Studio</span></span>
+        <span class="mono">$5,000</span>
+      </div>
+      <div class="summary-row">
+        <span>Announcement &amp; Rollout Assets <span class="label-sub">· Flyer</span></span>
+        <span class="mono">$2,500</span>
+      </div>
+      <div class="summary-row total">
+        <span class="label">Total</span>
+        <span class="mono">$7,500</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── 06 · Contacts for Questions modal ─────────── -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-num">06</span>
+      <h2 class="form-section-title">Questions Modal Contacts</h2>
+      <span class="form-section-help">Up to 4 — pick from team library</span>
+    </div>
+    <div class="contacts-chips">
+      <span class="contact-chip">
+        <strong>Steven Tartick</strong>
+        <span class="phone">555 · 123 · 4567</span>
+        <button class="contact-chip-x" type="button">×</button>
+      </span>
+      <span class="contact-chip">
+        <strong>Mike Karns</strong>
+        <span class="phone">555 · 123 · 4568</span>
+        <button class="contact-chip-x" type="button">×</button>
+      </span>
+      <button class="ref-add" type="button" style="margin-left: 4px;">+ Add Contact</button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════════════════════════════
+     Sticky footer action bar
+     ════════════════════════════════════════════════════════ -->
+<footer class="builder-footer">
+  <div class="builder-footer-status">
+    <span class="dot"></span>
+    Unsaved changes · last edited just now
+  </div>
+  <div class="builder-footer-actions">
+    <button class="bar-btn" onclick="openPreview()">Preview</button>
+    <button class="bar-btn">Save Draft</button>
+    <button class="bar-btn bar-btn--primary">Publish &amp; Generate Link</button>
+  </div>
+</footer>
+
+<script>
+  // Admin password gate — sha256 of "tsv2026"
+  const ADMIN_HASH = 'a67fd79dd6ca5da8c1587997fd30c4ea1e6e401b76243dc4e41011e76c8c1527';
+
+  async function sha256(text) {
+    const buf = new TextEncoder().encode(text);
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(hash))
+      .map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  const gate = document.getElementById('gate');
+  const gateForm = document.getElementById('gate-form');
+  const gateIn = document.getElementById('gate-input');
+  const gateErr = document.getElementById('gate-err');
+
+  if (sessionStorage.getItem('admin-unlocked') === '1') {
+    gate.classList.add('hidden');
+    setTimeout(() => gate.remove(), 320);
+  }
+
+  gateForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const hash = await sha256(gateIn.value.trim());
+    if (hash === ADMIN_HASH) {
+      sessionStorage.setItem('admin-unlocked', '1');
+      gate.classList.add('hidden');
+      setTimeout(() => gate.remove(), 320);
+    } else {
+      gateErr.classList.add('visible');
+      gateIn.value = '';
+      gateIn.focus();
+    }
+  });
+
+  // Preview button — opens the rendered proposal in a new tab
+  function openPreview() {
+    window.open('/p/letters-to-the-president', '_blank');
+  }
+</script>
+
+</body>
+</html>
