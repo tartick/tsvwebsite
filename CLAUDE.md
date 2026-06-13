@@ -104,3 +104,29 @@ Brand guide page indices (0-based):
 - No PWA / manifest / install prompts — user explicitly doesn't want them
 - User supplies video files directly to `/assets/`; commit and push when updated
 - Brand guide is the source of truth for typography, color, and logo extraction
+
+## Hosting / uploading files to TheSeason.nyc (e.g. email images, assets)
+Use this when you need a public URL for an image or file — for example, hosting images for an
+email campaign so they render in recipients' inboxes (data-URI / base64 images get stripped by Gmail).
+
+Steps:
+1. Put the file(s) in the repo under `/assets/` (use a subfolder to stay organized, e.g.
+   `/assets/email/` for email campaign images).
+2. Commit and push to `main`:
+   ```
+   cd ~/Documents/Claude/tsvwebsite
+   git add assets/<your-subfolder>/
+   git commit -m "Add <description> assets"
+   git push origin main
+   ```
+3. Vercel auto-deploys on push (no build step). Within ~1 minute the files are live at:
+   `https://www.theseason.nyc/assets/<your-subfolder>/<filename>`
+
+Notes:
+- Keep filenames URL-safe (lowercase, hyphens, no spaces).
+- The Cowork sandbox can stage/commit locally but CANNOT push (no GitHub credentials) —
+  run the `git push` from your own terminal, or have Claude commit and then you push.
+- Optimize before committing: photos as JPEG (quality ~82), graphics/logos as PNG.
+  Email images: ~600px display width is plenty (export ~1200px wide for retina).
+- Once live, reference each image in HTML as
+  `<img src="https://www.theseason.nyc/assets/<subfolder>/<file>">`.
