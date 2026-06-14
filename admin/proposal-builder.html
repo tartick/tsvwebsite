@@ -520,6 +520,15 @@
     }
     .contact-chip-x:hover { color: var(--danger); }
 
+    /* Contract status radios */
+    .contract-status { display: flex; flex-wrap: wrap; gap: 18px; padding: 4px 0; }
+    .contract-radio { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; user-select: none; }
+    .contract-radio input { accent-color: var(--ink); }
+    .contract-radio .dot-not, .contract-radio .dot-sent, .contract-radio .dot-signed { width: 8px; height: 8px; border-radius: 100px; display: inline-block; }
+    .contract-radio .dot-not { background: #c8c8c8; }
+    .contract-radio .dot-sent { background: #FDB913; }
+    .contract-radio .dot-signed { background: #2a8a3a; }
+
     /* Investment summary (read-only display) */
     .summary {
       background: var(--ink); color: #fff;
@@ -923,6 +932,47 @@
         <button class="contact-chip-x" type="button">×</button>
       </span>
       <button class="ref-add" type="button" style="margin-left: 4px;">+ Add Contact</button>
+    </div>
+  </section>
+
+  <!-- ─────────── 07 · Contract ─────────── -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-num">07</span>
+      <h2 class="form-section-title">Contract</h2>
+      <span class="form-section-help">Drop the DocuSign link once the envelope is sent</span>
+    </div>
+
+    <div class="field-grid">
+      <div class="field full">
+        <span class="field-label">Status</span>
+        <div class="contract-status">
+          <label class="contract-radio"><input type="radio" name="contract-status" checked> <span class="dot-not"></span> Not started</label>
+          <label class="contract-radio"><input type="radio" name="contract-status"> <span class="dot-sent"></span> Sent for signature</label>
+          <label class="contract-radio"><input type="radio" name="contract-status"> <span class="dot-signed"></span> Signed</label>
+        </div>
+      </div>
+
+      <div class="field full">
+        <span class="field-label">DocuSign signing link</span>
+        <input class="field-input mono" placeholder="https://na4.docusign.net/Signing/...">
+        <span class="field-help">Paste the recipient signing URL from DocuSign here. Surfaced on the proposal's "What's Next" screen as a fallback if the client's DocuSign email lands in spam.</span>
+      </div>
+
+      <label class="field">
+        <span class="field-label">Signed date</span>
+        <input class="field-input" placeholder="YYYY-MM-DD" disabled>
+        <span class="field-help">Unlocks when status = Signed.</span>
+      </label>
+
+      <div class="field">
+        <span class="field-label">Signed PDF</span>
+        <div class="pwd-wrap">
+          <input class="field-input mono" placeholder="No file uploaded" disabled>
+          <button type="button" class="btn-inline" disabled>Upload</button>
+        </div>
+        <span class="field-help">Optional. For your archive — DocuSign retains the master copy.</span>
+      </div>
     </div>
   </section>
 

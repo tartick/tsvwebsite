@@ -118,6 +118,10 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
 .pill-questions { background: #fff4d6; color: #806000; }
 .pill-draft { background: var(--gray-100); color: var(--gray-700); }
 .pill-archived { background: #f2dada; color: #8a3030; }
+.pill-contract-sent { background: rgba(253, 185, 19, 0.22); color: #806000; }
+.pill-contract-sent::before { content: "✎ "; }
+.pill-contracted { background: #1f6f3a; color: #fff; }
+.pill-contracted::before { content: "✓ "; }
 
 .actions { display: flex; gap: 6px; justify-content: flex-end; }
 .action-btn { background: transparent; border: 1px solid var(--gray-200); padding: 6px 11px; font-size: 12px; font-family: inherit; font-weight: 600; letter-spacing: 0.04em; color: var(--gray-700); cursor: pointer; border-radius: 2px; transition: all 0.12s; }
@@ -197,7 +201,7 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
 
   <div class="section-head">
     <h2>Active</h2>
-    <span class="count-badge" id="active-count">4 proposals</span>
+    <span class="count-badge" id="active-count">6 proposals</span>
   </div>
 
   <div class="table-wrap">
@@ -313,29 +317,8 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <button class="action-btn more" onclick="event.stopPropagation();">⋯</button>
         </div>
       </div>
-    </div>
 
-    <div class="empty hidden" id="empty-active">
-      No active proposals match your search.
-    </div>
-  </div>
-
-  <div class="section-head muted">
-    <h2>Accepted</h2>
-    <span class="count-badge" id="accepted-count">2 proposals</span>
-  </div>
-
-  <div class="table-wrap muted">
-    <div class="tbl-head">
-      <div>Client / Show</div>
-      <div>Services</div>
-      <div>Date</div>
-      <div>Status</div>
-      <div style="text-align: right;">Actions</div>
-    </div>
-
-    <div id="rows-accepted">
-      <!-- Woolly Mammoth — Accepted -->
+      <!-- Woolly Mammoth — Accepted (awaiting contract creation) -->
       <div class="tbl-row" data-status="accepted" data-search="woolly mammoth dc theatre branding website">
         <div class="client">
           <span class="name">Woolly Mammoth Theatre</span>
@@ -362,8 +345,8 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
         </div>
       </div>
 
-      <!-- NPAC — Accepted -->
-      <div class="tbl-row" data-status="accepted" data-search="npac arts center marketing branding">
+      <!-- NPAC — Contract Sent -->
+      <div class="tbl-row" data-status="contract-sent" data-search="npac arts center marketing branding docusign contract">
         <div class="client">
           <span class="name">NPAC</span>
           <span class="show">Spring 26 marketing partnership</span>
@@ -382,7 +365,7 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <span class="svc-tag">+2</span>
         </div>
         <div class="date-cell row-meta">Apr 14, 2026</div>
-        <div><span class="pill pill-accepted">Accepted</span></div>
+        <div><span class="pill pill-contract-sent">Contract Sent</span></div>
         <div class="actions">
           <button class="action-btn" onclick="event.stopPropagation();">View</button>
           <button class="action-btn duplicate" onclick="event.stopPropagation(); duplicate('NPAC')">Duplicate</button>
@@ -391,8 +374,55 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
       </div>
     </div>
 
+    <div class="empty hidden" id="empty-active">
+      No active proposals match your search.
+    </div>
+  </div>
+
+  <div class="section-head muted">
+    <h2>Contracted</h2>
+    <span class="count-badge" id="accepted-count">1 proposal</span>
+  </div>
+
+  <div class="table-wrap muted">
+    <div class="tbl-head">
+      <div>Client / Show</div>
+      <div>Services</div>
+      <div>Date</div>
+      <div>Status</div>
+      <div style="text-align: right;">Actions</div>
+    </div>
+
+    <div id="rows-accepted">
+      <!-- Drama Desk — Contracted -->
+      <div class="tbl-row" data-status="contracted" data-search="drama desk awards branding identity contracted">
+        <div class="client">
+          <span class="name">Drama Desk Awards</span>
+          <span class="show">2025 identity refresh · contract signed</span>
+          <span class="slug">/p/drama-desk-25</span>
+          <div class="pw-row">
+            <span class="lock">🔒</span>
+            <span class="pw" data-pw="dd2025" title="Click to copy">dd2025</span>
+            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/drama-desk-25', 'dd2025')">Copy link + pw</button>
+            <span class="copied">Copied</span>
+          </div>
+        </div>
+        <div class="services-cell">
+          <span class="svc-tag">Logo Dev & Branding</span>
+          <span class="svc-tag">Broadcast Pkg</span>
+        </div>
+        <div class="date-cell row-meta">Mar 02, 2025</div>
+        <div><span class="pill pill-contracted">Contracted</span></div>
+        <div class="actions">
+          <button class="action-btn" onclick="event.stopPropagation();">View</button>
+          <button class="action-btn duplicate" onclick="event.stopPropagation(); duplicate('Drama Desk Awards')">Duplicate</button>
+          <button class="action-btn more" onclick="event.stopPropagation();">⋯</button>
+        </div>
+      </div>
+    </div>
+
     <div class="empty hidden" id="empty-accepted">
-      No accepted proposals match your search.
+      No contracted proposals match your search.
     </div>
   </div>
 </main>
