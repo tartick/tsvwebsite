@@ -80,6 +80,14 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
 .client .name { font-weight: 600; font-size: 15px; color: var(--gray-900); }
 .client .show { font-size: 12px; color: var(--gray-500); }
 .client .slug { font-size: 11px; color: var(--gray-500); font-family: 'SF Mono', Menlo, monospace; margin-top: 2px; }
+.client .pw-row { display: flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 11px; font-family: 'SF Mono', Menlo, monospace; color: var(--gray-700); }
+.client .pw-row .lock { color: var(--gray-500); font-size: 10px; }
+.client .pw-row .pw { background: #fff8d8; border: 1px solid #f0d878; padding: 2px 7px; border-radius: 3px; color: #806000; font-weight: 600; letter-spacing: 0.02em; cursor: pointer; transition: all 0.12s; user-select: all; }
+.client .pw-row .pw:hover { background: var(--yellow); color: var(--black); border-color: var(--yellow); }
+.client .pw-row .copied { color: #1f6f3a; font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0; transition: opacity 0.15s; }
+.client .pw-row .copied.show { opacity: 1; }
+.client .pw-row .copy-link { background: transparent; border: none; color: var(--gray-500); font-size: 11px; cursor: pointer; padding: 0; font-family: inherit; text-decoration: underline; text-decoration-color: var(--gray-300); text-underline-offset: 2px; }
+.client .pw-row .copy-link:hover { color: var(--gray-900); text-decoration-color: var(--gray-700); }
 
 .services-cell { display: flex; flex-wrap: wrap; gap: 4px; }
 .svc-tag { background: var(--gray-100); color: var(--gray-700); font-size: 11px; padding: 3px 8px; border-radius: 100px; font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; }
@@ -203,6 +211,12 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <span class="name">Letters to the President</span>
           <span class="show">Producer: Maria Stewart · Off-Broadway</span>
           <span class="slug">/p/letters-to-the-president</span>
+          <div class="pw-row">
+            <span class="lock">🔒</span>
+            <span class="pw" data-pw="preview" title="Click to copy">preview</span>
+            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/letters-to-the-president', 'preview')">Copy link + pw</button>
+            <span class="copied">Copied</span>
+          </div>
         </div>
         <div class="services-cell">
           <span class="svc-tag">Logo & Key Art</span>
@@ -229,6 +243,12 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <span class="name">Woolly Mammoth Theatre</span>
           <span class="show">Season Branding Refresh · 25/26</span>
           <span class="slug">/p/woolly-mammoth-25</span>
+          <div class="pw-row">
+            <span class="lock">🔒</span>
+            <span class="pw" data-pw="mammoth26" title="Click to copy">mammoth26</span>
+            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/woolly-mammoth-25', 'mammoth26')">Copy link + pw</button>
+            <span class="copied">Copied</span>
+          </div>
         </div>
         <div class="services-cell">
           <span class="svc-tag">Logo Dev & Branding</span>
@@ -254,6 +274,12 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <span class="name">Rigor + Ruckus</span>
           <span class="show">Podcast launch campaign</span>
           <span class="slug">/p/rigor-ruckus</span>
+          <div class="pw-row">
+            <span class="lock">🔒</span>
+            <span class="pw" data-pw="ruckus2026" title="Click to copy">ruckus2026</span>
+            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/rigor-ruckus', 'ruckus2026')">Copy link + pw</button>
+            <span class="copied">Copied</span>
+          </div>
         </div>
         <div class="services-cell">
           <span class="svc-tag">Creative Production</span>
@@ -278,6 +304,12 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <span class="name">NPAC</span>
           <span class="show">Spring 26 marketing partnership</span>
           <span class="slug">/p/npac-spring-26</span>
+          <div class="pw-row">
+            <span class="lock">🔒</span>
+            <span class="pw" data-pw="npac-spring" title="Click to copy">npac-spring</span>
+            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/npac-spring-26', 'npac-spring')">Copy link + pw</button>
+            <span class="copied">Copied</span>
+          </div>
         </div>
         <div class="services-cell">
           <span class="svc-tag">Logo & Key Art</span>
@@ -307,6 +339,12 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <span class="name">Proof on Broadway</span>
           <span class="show">Creator activation, opening run</span>
           <span class="slug">/p/proof-broadway-creators</span>
+          <div class="pw-row">
+            <span class="lock">🔒</span>
+            <span class="pw" data-pw="proof-creators" title="Click to copy">proof-creators</span>
+            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/proof-broadway-creators', 'proof-creators')">Copy link + pw</button>
+            <span class="copied">Copied</span>
+          </div>
         </div>
         <div class="services-cell">
           <span class="svc-tag">Creator Network</span>
@@ -331,6 +369,12 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <span class="name">Mr. Leather 1976</span>
           <span class="show">Documentary marketing — Forest bundle</span>
           <span class="slug">/p/mr-leather-1976-draft</span>
+          <div class="pw-row">
+            <span class="lock">🔒</span>
+            <span class="pw" data-pw="leather76" title="Click to copy">leather76</span>
+            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/mr-leather-1976-draft', 'leather76')">Copy link + pw</button>
+            <span class="copied">Copied</span>
+          </div>
         </div>
         <div class="services-cell">
           <span class="svc-tag">Logo & Key Art</span>
@@ -425,6 +469,28 @@ rows.forEach(r => r.addEventListener('click', () => {
   const view = r.querySelector('.action-btn');
   if (view) view.click();
 }));
+
+// Click password chip → copy to clipboard
+document.querySelectorAll('.pw-row .pw').forEach(el => {
+  el.addEventListener('click', e => {
+    e.stopPropagation();
+    const pw = el.dataset.pw;
+    navigator.clipboard?.writeText(pw);
+    const flash = el.parentElement.querySelector('.copied');
+    flash.classList.add('show');
+    setTimeout(() => flash.classList.remove('show'), 1100);
+  });
+});
+
+// Copy "link + pw" → multi-line text for pasting into an email
+function copyLink(btn, slug, pw) {
+  const url = 'https://www.theseason.nyc' + slug;
+  const text = `${url}\nPassword: ${pw}`;
+  navigator.clipboard?.writeText(text);
+  const flash = btn.parentElement.querySelector('.copied');
+  flash.classList.add('show');
+  setTimeout(() => flash.classList.remove('show'), 1100);
+}
 
 // Duplicate action — mockup behavior
 function duplicate(name) {
