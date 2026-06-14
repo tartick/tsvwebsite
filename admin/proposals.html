@@ -68,9 +68,18 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
 .chip.active { background: var(--black); color: var(--white); border-color: var(--black); }
 .chip .count { opacity: 0.55; margin-left: 6px; font-weight: 400; }
 
+/* Section heads */
+.section-head { display: flex; align-items: baseline; gap: 12px; margin: 28px 0 10px; padding-bottom: 8px; border-bottom: 1px solid var(--gray-200); }
+.section-head:first-of-type { margin-top: 0; }
+.section-head h2 { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.section-head .count-badge { font-size: 12px; color: var(--gray-500); }
+.section-head.muted h2 { color: var(--gray-500); }
+
 /* Table */
 .table-wrap { background: var(--white); border: 1px solid var(--gray-200); border-radius: 4px; overflow: hidden; }
-.tbl-head, .tbl-row { display: grid; grid-template-columns: 1.8fr 1.4fr 1fr 0.8fr 1fr 1fr; align-items: center; gap: 16px; padding: 14px 22px; }
+.table-wrap.muted { opacity: 0.85; }
+.table-wrap.muted .tbl-row { background: var(--gray-50); }
+.tbl-head, .tbl-row { display: grid; grid-template-columns: 2fr 1.6fr 0.9fr 1fr 1.1fr; align-items: center; gap: 16px; padding: 14px 22px; }
 .tbl-head { background: var(--gray-100); border-bottom: 1px solid var(--gray-200); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-500); }
 .tbl-row { border-bottom: 1px solid var(--gray-100); transition: background 0.1s; cursor: pointer; }
 .tbl-row:hover { background: var(--gray-50); }
@@ -184,28 +193,76 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
     <div class="search">
       <input type="text" id="search" placeholder="Search by client, show, or service…">
     </div>
-    <div class="chips" id="filter-chips">
-      <button class="chip active" data-filter="all">All <span class="count">6</span></button>
-      <button class="chip" data-filter="draft">Drafts <span class="count">1</span></button>
-      <button class="chip" data-filter="sent">Sent <span class="count">2</span></button>
-      <button class="chip" data-filter="accepted">Accepted <span class="count">2</span></button>
-      <button class="chip" data-filter="questions">Questions <span class="count">1</span></button>
-      <button class="chip" data-filter="archived">Archived <span class="count">0</span></button>
-    </div>
+  </div>
+
+  <div class="section-head">
+    <h2>Active</h2>
+    <span class="count-badge" id="active-count">4 proposals</span>
   </div>
 
   <div class="table-wrap">
     <div class="tbl-head">
       <div>Client / Show</div>
       <div>Services</div>
-      <div>Companies</div>
       <div>Date</div>
       <div>Status</div>
       <div style="text-align: right;">Actions</div>
     </div>
 
-    <div id="rows">
-      <!-- Row 1 -->
+    <div id="rows-active">
+      <!-- Mr. Leather 1976 — Draft -->
+      <div class="tbl-row" data-status="draft" data-search="mr leather 1976 forest documentary">
+        <div class="client">
+          <span class="name">Mr. Leather 1976</span>
+          <span class="show">Documentary marketing — Forest bundle</span>
+          <span class="slug">/p/mr-leather-1976-draft</span>
+          <div class="pw-row">
+            <span class="lock">🔒</span>
+            <span class="pw" data-pw="leather76" title="Click to copy">leather76</span>
+            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/mr-leather-1976-draft', 'leather76')">Copy link + pw</button>
+            <span class="copied">Copied</span>
+          </div>
+        </div>
+        <div class="services-cell">
+          <span class="svc-tag">Logo & Key Art</span>
+          <span class="svc-tag">Website</span>
+        </div>
+        <div class="date-cell row-meta">Jun 13, 2026</div>
+        <div><span class="pill pill-draft">Draft</span></div>
+        <div class="actions">
+          <button class="action-btn" onclick="event.stopPropagation();">Edit</button>
+          <button class="action-btn duplicate" onclick="event.stopPropagation(); duplicate('Mr. Leather 1976')">Duplicate</button>
+          <button class="action-btn more" onclick="event.stopPropagation();">⋯</button>
+        </div>
+      </div>
+
+      <!-- Rigor + Ruckus — Questions -->
+      <div class="tbl-row" data-status="questions" data-search="rigor ruckus podcast creative production animation">
+        <div class="client">
+          <span class="name">Rigor + Ruckus</span>
+          <span class="show">Podcast launch campaign</span>
+          <span class="slug">/p/rigor-ruckus</span>
+          <div class="pw-row">
+            <span class="lock">🔒</span>
+            <span class="pw" data-pw="ruckus2026" title="Click to copy">ruckus2026</span>
+            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/rigor-ruckus', 'ruckus2026')">Copy link + pw</button>
+            <span class="copied">Copied</span>
+          </div>
+        </div>
+        <div class="services-cell">
+          <span class="svc-tag">Creative Production</span>
+          <span class="svc-tag">Animation Pkg</span>
+        </div>
+        <div class="date-cell row-meta">May 21, 2026</div>
+        <div><span class="pill pill-questions">Questions</span></div>
+        <div class="actions">
+          <button class="action-btn" onclick="event.stopPropagation();">View</button>
+          <button class="action-btn duplicate" onclick="event.stopPropagation(); duplicate('Rigor + Ruckus')">Duplicate</button>
+          <button class="action-btn more" onclick="event.stopPropagation();">⋯</button>
+        </div>
+      </div>
+
+      <!-- Letters to the President — Sent -->
       <div class="tbl-row" data-status="sent" data-search="letters president 11 o'clock logo key art">
         <div class="client">
           <span class="name">Letters to the President</span>
@@ -222,12 +279,6 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <span class="svc-tag">Logo & Key Art</span>
           <span class="svc-tag">Animation Pkg</span>
         </div>
-        <div class="cos-cell">
-          <span class="co co-tsv">TSV</span>
-          <span class="co co-11oc">11OC</span>
-          <span class="co co-relay">RLY</span>
-          <span class="co co-flyer">FLY</span>
-        </div>
         <div class="date-cell row-meta">Jun 10, 2026</div>
         <div><span class="pill pill-sent">Sent</span></div>
         <div class="actions">
@@ -237,7 +288,54 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
         </div>
       </div>
 
-      <!-- Row 2 -->
+      <!-- Proof on Broadway — Sent -->
+      <div class="tbl-row" data-status="sent" data-search="proof broadway influencer creator network relay">
+        <div class="client">
+          <span class="name">Proof on Broadway</span>
+          <span class="show">Creator activation, opening run</span>
+          <span class="slug">/p/proof-broadway-creators</span>
+          <div class="pw-row">
+            <span class="lock">🔒</span>
+            <span class="pw" data-pw="proof-creators" title="Click to copy">proof-creators</span>
+            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/proof-broadway-creators', 'proof-creators')">Copy link + pw</button>
+            <span class="copied">Copied</span>
+          </div>
+        </div>
+        <div class="services-cell">
+          <span class="svc-tag">Creator Network</span>
+          <span class="svc-tag">Creative Production</span>
+        </div>
+        <div class="date-cell row-meta">Jun 02, 2026</div>
+        <div><span class="pill pill-sent">Sent</span></div>
+        <div class="actions">
+          <button class="action-btn" onclick="event.stopPropagation();">View</button>
+          <button class="action-btn duplicate" onclick="event.stopPropagation(); duplicate('Proof on Broadway')">Duplicate</button>
+          <button class="action-btn more" onclick="event.stopPropagation();">⋯</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty hidden" id="empty-active">
+      No active proposals match your search.
+    </div>
+  </div>
+
+  <div class="section-head muted">
+    <h2>Accepted</h2>
+    <span class="count-badge" id="accepted-count">2 proposals</span>
+  </div>
+
+  <div class="table-wrap muted">
+    <div class="tbl-head">
+      <div>Client / Show</div>
+      <div>Services</div>
+      <div>Date</div>
+      <div>Status</div>
+      <div style="text-align: right;">Actions</div>
+    </div>
+
+    <div id="rows-accepted">
+      <!-- Woolly Mammoth — Accepted -->
       <div class="tbl-row" data-status="accepted" data-search="woolly mammoth dc theatre branding website">
         <div class="client">
           <span class="name">Woolly Mammoth Theatre</span>
@@ -255,10 +353,6 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <span class="svc-tag">Website</span>
           <span class="svc-tag">Merch Design</span>
         </div>
-        <div class="cos-cell">
-          <span class="co co-11oc">11OC</span>
-          <span class="co co-flyer">FLY</span>
-        </div>
         <div class="date-cell row-meta">May 28, 2026</div>
         <div><span class="pill pill-accepted">Accepted</span></div>
         <div class="actions">
@@ -268,37 +362,7 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
         </div>
       </div>
 
-      <!-- Row 3 -->
-      <div class="tbl-row" data-status="questions" data-search="rigor ruckus podcast creative production animation">
-        <div class="client">
-          <span class="name">Rigor + Ruckus</span>
-          <span class="show">Podcast launch campaign</span>
-          <span class="slug">/p/rigor-ruckus</span>
-          <div class="pw-row">
-            <span class="lock">🔒</span>
-            <span class="pw" data-pw="ruckus2026" title="Click to copy">ruckus2026</span>
-            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/rigor-ruckus', 'ruckus2026')">Copy link + pw</button>
-            <span class="copied">Copied</span>
-          </div>
-        </div>
-        <div class="services-cell">
-          <span class="svc-tag">Creative Production</span>
-          <span class="svc-tag">Animation Pkg</span>
-        </div>
-        <div class="cos-cell">
-          <span class="co co-flyer">FLY</span>
-          <span class="co co-relay">RLY</span>
-        </div>
-        <div class="date-cell row-meta">May 21, 2026</div>
-        <div><span class="pill pill-questions">Questions</span></div>
-        <div class="actions">
-          <button class="action-btn" onclick="event.stopPropagation();">View</button>
-          <button class="action-btn duplicate" onclick="event.stopPropagation(); duplicate('Rigor + Ruckus')">Duplicate</button>
-          <button class="action-btn more" onclick="event.stopPropagation();">⋯</button>
-        </div>
-      </div>
-
-      <!-- Row 4 -->
+      <!-- NPAC — Accepted -->
       <div class="tbl-row" data-status="accepted" data-search="npac arts center marketing branding">
         <div class="client">
           <span class="name">NPAC</span>
@@ -317,13 +381,6 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <span class="svc-tag">Merch PM</span>
           <span class="svc-tag">+2</span>
         </div>
-        <div class="cos-cell">
-          <span class="co co-tsv">TSV</span>
-          <span class="co co-11oc">11OC</span>
-          <span class="co co-relay">RLY</span>
-          <span class="co co-flyer">FLY</span>
-          <span class="co co-mar">MAR</span>
-        </div>
         <div class="date-cell row-meta">Apr 14, 2026</div>
         <div><span class="pill pill-accepted">Accepted</span></div>
         <div class="actions">
@@ -332,71 +389,10 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
           <button class="action-btn more" onclick="event.stopPropagation();">⋯</button>
         </div>
       </div>
-
-      <!-- Row 5 -->
-      <div class="tbl-row" data-status="sent" data-search="proof broadway influencer creator network relay">
-        <div class="client">
-          <span class="name">Proof on Broadway</span>
-          <span class="show">Creator activation, opening run</span>
-          <span class="slug">/p/proof-broadway-creators</span>
-          <div class="pw-row">
-            <span class="lock">🔒</span>
-            <span class="pw" data-pw="proof-creators" title="Click to copy">proof-creators</span>
-            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/proof-broadway-creators', 'proof-creators')">Copy link + pw</button>
-            <span class="copied">Copied</span>
-          </div>
-        </div>
-        <div class="services-cell">
-          <span class="svc-tag">Creator Network</span>
-          <span class="svc-tag">Creative Production</span>
-        </div>
-        <div class="cos-cell">
-          <span class="co co-relay">RLY</span>
-          <span class="co co-flyer">FLY</span>
-        </div>
-        <div class="date-cell row-meta">Jun 02, 2026</div>
-        <div><span class="pill pill-sent">Sent</span></div>
-        <div class="actions">
-          <button class="action-btn" onclick="event.stopPropagation();">View</button>
-          <button class="action-btn duplicate" onclick="event.stopPropagation(); duplicate('Proof on Broadway')">Duplicate</button>
-          <button class="action-btn more" onclick="event.stopPropagation();">⋯</button>
-        </div>
-      </div>
-
-      <!-- Row 6 -->
-      <div class="tbl-row" data-status="draft" data-search="mr leather 1976 forest documentary">
-        <div class="client">
-          <span class="name">Mr. Leather 1976</span>
-          <span class="show">Documentary marketing — Forest bundle</span>
-          <span class="slug">/p/mr-leather-1976-draft</span>
-          <div class="pw-row">
-            <span class="lock">🔒</span>
-            <span class="pw" data-pw="leather76" title="Click to copy">leather76</span>
-            <button class="copy-link" onclick="event.stopPropagation(); copyLink(this, '/p/mr-leather-1976-draft', 'leather76')">Copy link + pw</button>
-            <span class="copied">Copied</span>
-          </div>
-        </div>
-        <div class="services-cell">
-          <span class="svc-tag">Logo & Key Art</span>
-          <span class="svc-tag">Website</span>
-        </div>
-        <div class="cos-cell">
-          <span class="co co-11oc">11OC</span>
-          <span class="co co-flyer">FLY</span>
-          <span class="co co-fst">FST</span>
-        </div>
-        <div class="date-cell row-meta">Jun 13, 2026</div>
-        <div><span class="pill pill-draft">Draft</span></div>
-        <div class="actions">
-          <button class="action-btn" onclick="event.stopPropagation();">Edit</button>
-          <button class="action-btn duplicate" onclick="event.stopPropagation(); duplicate('Mr. Leather 1976')">Duplicate</button>
-          <button class="action-btn more" onclick="event.stopPropagation();">⋯</button>
-        </div>
-      </div>
     </div>
 
-    <div class="empty hidden" id="empty">
-      No proposals match these filters.
+    <div class="empty hidden" id="empty-accepted">
+      No accepted proposals match your search.
     </div>
   </div>
 </main>
@@ -435,37 +431,42 @@ form.addEventListener('submit', async e => {
   }
 });
 
-// Filtering
-const chips = document.querySelectorAll('.chip');
+// Search
 const search = document.getElementById('search');
-const rows = document.querySelectorAll('.tbl-row');
-const empty = document.getElementById('empty');
-let activeFilter = 'all';
+const activeRows = document.querySelectorAll('#rows-active .tbl-row');
+const acceptedRows = document.querySelectorAll('#rows-accepted .tbl-row');
+const emptyActive = document.getElementById('empty-active');
+const emptyAccepted = document.getElementById('empty-accepted');
+const activeCount = document.getElementById('active-count');
+const acceptedCount = document.getElementById('accepted-count');
 
 function applyFilter() {
   const q = search.value.trim().toLowerCase();
-  let shown = 0;
-  rows.forEach(r => {
-    const matchesStatus = activeFilter === 'all' || r.dataset.status === activeFilter;
-    const matchesSearch = !q || r.dataset.search.includes(q) || r.querySelector('.name').textContent.toLowerCase().includes(q);
-    const show = matchesStatus && matchesSearch;
-    r.style.display = show ? '' : 'none';
-    if (show) shown++;
-  });
-  empty.classList.toggle('hidden', shown > 0);
-}
+  let activeShown = 0, acceptedShown = 0;
 
-chips.forEach(c => c.addEventListener('click', () => {
-  chips.forEach(x => x.classList.remove('active'));
-  c.classList.add('active');
-  activeFilter = c.dataset.filter;
-  applyFilter();
-}));
+  activeRows.forEach(r => {
+    const text = r.dataset.search + ' ' + r.querySelector('.name').textContent.toLowerCase();
+    const show = !q || text.toLowerCase().includes(q);
+    r.style.display = show ? '' : 'none';
+    if (show) activeShown++;
+  });
+  acceptedRows.forEach(r => {
+    const text = r.dataset.search + ' ' + r.querySelector('.name').textContent.toLowerCase();
+    const show = !q || text.toLowerCase().includes(q);
+    r.style.display = show ? '' : 'none';
+    if (show) acceptedShown++;
+  });
+
+  emptyActive.classList.toggle('hidden', activeShown > 0);
+  emptyAccepted.classList.toggle('hidden', acceptedShown > 0);
+  activeCount.textContent = `${activeShown} proposal${activeShown === 1 ? '' : 's'}`;
+  acceptedCount.textContent = `${acceptedShown} proposal${acceptedShown === 1 ? '' : 's'}`;
+}
 
 search.addEventListener('input', applyFilter);
 
 // Row click → view (matches first View button behavior)
-rows.forEach(r => r.addEventListener('click', () => {
+document.querySelectorAll('.tbl-row').forEach(r => r.addEventListener('click', () => {
   const view = r.querySelector('.action-btn');
   if (view) view.click();
 }));
