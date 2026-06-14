@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Contacts — The Season Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yellow: #FDB913;
+  --black: #000;
+  --white: #FFF;
+  --gray-50: #FAFAFA;
+  --gray-100: #F4F4F4;
+  --gray-200: #E8E8E8;
+  --gray-300: #D0D0D0;
+  --gray-500: #888;
+  --gray-700: #444;
+  --gray-900: #1A1A1A;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--gray-50); color: var(--gray-900); font-family: 'Source Sans 3', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+body { min-height: 100vh; }
+
+#gate { position: fixed; inset: 0; background: var(--black); color: var(--white); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+#gate.hidden { display: none; }
+.gate-box { width: min(420px, 90vw); text-align: center; }
+.gate-box h1 { font-size: 14px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--yellow); margin-bottom: 24px; }
+.gate-box input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.3); color: var(--white); padding: 12px 0; font-size: 18px; font-family: inherit; text-align: center; outline: none; }
+.gate-box input:focus { border-bottom-color: var(--yellow); }
+.gate-box button { margin-top: 20px; background: var(--yellow); color: var(--black); border: none; padding: 12px 32px; font-family: inherit; font-weight: 600; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; border-radius: 2px; }
+.gate-err { color: #ff6b6b; font-size: 13px; margin-top: 12px; min-height: 18px; }
+
+.adminbar { background: var(--black); color: var(--white); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.adminbar-left { display: flex; align-items: center; gap: 20px; }
+.adminbar .badge { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--yellow); font-weight: 600; }
+.adminbar .sep { color: var(--gray-700); }
+.adminbar nav { display: flex; gap: 18px; }
+.adminbar nav a { color: rgba(255,255,255,0.5); font-size: 13px; text-decoration: none; padding: 4px 0; transition: color 0.15s; }
+.adminbar nav a.active { color: var(--white); border-bottom: 2px solid var(--yellow); }
+.adminbar nav a:hover { color: var(--white); }
+.adminbar-right { display: flex; align-items: center; gap: 14px; font-size: 12px; color: rgba(255,255,255,0.5); }
+
+main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
+
+.page-head { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 18px; margin-bottom: 28px; }
+.page-head h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.01em; }
+.page-head .sub { color: var(--gray-500); font-size: 14px; margin-top: 4px; max-width: 540px; }
+.btn-primary { background: var(--black); color: var(--white); border: none; padding: 14px 22px; font-family: inherit; font-weight: 600; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; border-radius: 2px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
+.btn-primary:hover { background: var(--yellow); color: var(--black); }
+.btn-primary .plus { font-size: 18px; line-height: 1; }
+
+.toolbar { display: flex; gap: 12px; align-items: center; margin-bottom: 24px; flex-wrap: wrap; }
+.search { flex: 1; min-width: 240px; max-width: 360px; position: relative; }
+.search input { width: 100%; background: var(--white); border: 1px solid var(--gray-200); padding: 11px 14px 11px 38px; font-family: inherit; font-size: 14px; border-radius: 2px; outline: none; transition: border-color 0.15s; }
+.search input:focus { border-color: var(--gray-500); }
+.search::before { content: "⌕"; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-500); font-size: 18px; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip { background: var(--white); border: 1px solid var(--gray-200); padding: 8px 14px; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; border-radius: 100px; color: var(--gray-700); transition: all 0.15s; }
+.chip:hover { border-color: var(--gray-500); }
+.chip.active { background: var(--black); color: var(--white); border-color: var(--black); }
+.chip .count { opacity: 0.55; margin-left: 6px; font-weight: 400; }
+
+/* Contact grid */
+.contact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.contact-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 4px; padding: 20px; display: flex; flex-direction: column; gap: 8px; transition: border-color 0.15s; position: relative; }
+.contact-card:hover { border-color: var(--gray-500); }
+.contact-card .pin { position: absolute; top: 14px; right: 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--yellow); display: flex; align-items: center; gap: 4px; }
+.contact-card .pin::before { content: "★"; font-size: 13px; }
+
+.contact-top { display: flex; gap: 14px; align-items: center; }
+.avatar { width: 48px; height: 48px; border-radius: 100px; background: var(--gray-200); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: var(--gray-700); letter-spacing: 0.02em; flex-shrink: 0; }
+.avatar.tsv { background: var(--black); color: var(--yellow); }
+.avatar.oc11 { background: #fff4d6; color: #806000; }
+.avatar.relay { background: #efe6ff; color: #6936c4; }
+.avatar.flyer { background: #e2f0ff; color: #1e5599; }
+.avatar.forest { background: #e8f3ea; color: #336e3e; }
+.contact-id { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.contact-name { font-size: 16px; font-weight: 700; }
+.contact-title { font-size: 12px; color: var(--gray-500); }
+
+.contact-co { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 100px; display: inline-block; align-self: flex-start; margin-top: 4px; }
+.co-tsv { background: rgba(253, 185, 19, 0.12); color: #b88200; }
+.co-11oc { background: #fff4d6; color: #806000; }
+.co-relay { background: #efe6ff; color: #6936c4; }
+.co-flyer { background: #e2f0ff; color: #1e5599; }
+.co-forest { background: #e8f3ea; color: #336e3e; }
+
+.contact-lines { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--gray-100); font-size: 13px; }
+.contact-lines .line { display: flex; align-items: center; gap: 8px; color: var(--gray-700); }
+.contact-lines .icon { width: 14px; flex-shrink: 0; color: var(--gray-500); font-size: 12px; }
+.contact-lines a { color: var(--gray-900); text-decoration: none; }
+.contact-lines a:hover { text-decoration: underline; }
+
+.contact-meta { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding-top: 10px; border-top: 1px solid var(--gray-100); }
+.specialty { font-size: 11px; color: var(--gray-500); letter-spacing: 0.04em; text-transform: uppercase; }
+.contact-actions { display: flex; gap: 4px; }
+.contact-actions button { background: transparent; border: 1px solid var(--gray-200); padding: 5px 10px; font-size: 10px; font-family: inherit; font-weight: 600; letter-spacing: 0.06em; color: var(--gray-700); cursor: pointer; border-radius: 2px; transition: all 0.12s; text-transform: uppercase; }
+.contact-actions button:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+
+.empty { padding: 60px 24px; text-align: center; color: var(--gray-500); background: var(--white); border: 1px solid var(--gray-200); border-radius: 4px; grid-column: 1 / -1; }
+.empty.hidden { display: none; }
+
+@media (max-width: 720px) {
+  .adminbar { padding: 12px 16px; flex-wrap: wrap; gap: 10px; }
+  .adminbar nav { gap: 14px; }
+  .adminbar-right { display: none; }
+  main { padding: 24px 16px 60px; }
+  .page-head h1 { font-size: 24px; }
+  .btn-primary { padding: 11px 16px; font-size: 12px; }
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .search { max-width: none; }
+  .contact-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-box">
+    <h1>The Season — Admin</h1>
+    <form id="gate-form">
+      <input id="gate-pw" type="password" placeholder="Password" autocomplete="off">
+      <div class="gate-err" id="gate-err"></div>
+      <button type="submit">Unlock</button>
+    </form>
+  </div>
+</div>
+
+<div class="adminbar">
+  <div class="adminbar-left">
+    <span class="badge">★ Admin</span>
+    <span class="sep">/</span>
+    <nav>
+      <a href="/admin/proposals">Proposals</a>
+      <a href="/admin/services">Services</a>
+      <a href="/admin/references">References</a>
+      <a href="/admin/contacts" class="active">Contacts</a>
+    </nav>
+  </div>
+  <div class="adminbar-right">
+    <span>theseason.nyc</span>
+    <span class="sep">·</span>
+    <a href="/" style="color: rgba(255,255,255,0.7); text-decoration: none;">View site →</a>
+  </div>
+</div>
+
+<main>
+  <div class="page-head">
+    <div>
+      <h1>Team Contacts</h1>
+      <div class="sub">Featured in the "I Have Questions" modal on proposals. Pin your defaults — the builder will pre-select them, and you can swap per proposal.</div>
+    </div>
+    <button class="btn-primary"><span class="plus">+</span> Add Contact</button>
+  </div>
+
+  <div class="toolbar">
+    <div class="search">
+      <input type="text" id="search" placeholder="Search by name, role, or company…">
+    </div>
+    <div class="chips" id="filter-chips">
+      <button class="chip active" data-filter="all">All <span class="count">8</span></button>
+      <button class="chip" data-filter="pinned">Pinned defaults <span class="count">3</span></button>
+      <button class="chip" data-filter="tsv">The Season <span class="count">2</span></button>
+      <button class="chip" data-filter="11oc">11 O'Clock <span class="count">2</span></button>
+      <button class="chip" data-filter="relay">Relay <span class="count">1</span></button>
+      <button class="chip" data-filter="flyer">Flyer <span class="count">2</span></button>
+      <button class="chip" data-filter="forest">Forest <span class="count">1</span></button>
+    </div>
+  </div>
+
+  <div class="contact-grid" id="grid">
+
+    <!-- 1 -->
+    <div class="contact-card" data-co="tsv" data-pinned="1" data-search="steven tartick founder season producing marketing direction">
+      <span class="pin">Default</span>
+      <div class="contact-top">
+        <div class="avatar tsv">ST</div>
+        <div class="contact-id">
+          <span class="contact-name">Steven Tartick</span>
+          <span class="contact-title">Founder &amp; Marketing Director</span>
+        </div>
+      </div>
+      <span class="contact-co co-tsv">The Season</span>
+      <div class="contact-lines">
+        <div class="line"><span class="icon">✉</span><a href="mailto:steven@theseason.nyc">steven@theseason.nyc</a></div>
+        <div class="line"><span class="icon">☎</span><a href="tel:+12125550101">(212) 555-0101</a></div>
+      </div>
+      <div class="contact-meta">
+        <span class="specialty">Strategy · Producing · Pricing</span>
+        <div class="contact-actions"><button>Edit</button><button>Unpin</button></div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="contact-card" data-co="tsv" data-pinned="0" data-search="emma chen producer associate season operations">
+      <div class="contact-top">
+        <div class="avatar tsv">EC</div>
+        <div class="contact-id">
+          <span class="contact-name">Emma Chen</span>
+          <span class="contact-title">Associate Producer</span>
+        </div>
+      </div>
+      <span class="contact-co co-tsv">The Season</span>
+      <div class="contact-lines">
+        <div class="line"><span class="icon">✉</span><a href="mailto:emma@theseason.nyc">emma@theseason.nyc</a></div>
+        <div class="line"><span class="icon">☎</span><a href="tel:+12125550102">(212) 555-0102</a></div>
+      </div>
+      <div class="contact-meta">
+        <span class="specialty">Operations · Scheduling · Contracts</span>
+        <div class="contact-actions"><button>Edit</button><button>Pin</button></div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="contact-card" data-co="11oc" data-pinned="1" data-search="alex rivera creative director 11 oclock studio branding key art">
+      <span class="pin">Default</span>
+      <div class="contact-top">
+        <div class="avatar oc11">AR</div>
+        <div class="contact-id">
+          <span class="contact-name">Alex Rivera</span>
+          <span class="contact-title">Creative Director</span>
+        </div>
+      </div>
+      <span class="contact-co co-11oc">11 O'Clock</span>
+      <div class="contact-lines">
+        <div class="line"><span class="icon">✉</span><a href="mailto:alex@11oclock.com">alex@11oclock.com</a></div>
+        <div class="line"><span class="icon">☎</span><a href="tel:+12125550103">(212) 555-0103</a></div>
+      </div>
+      <div class="contact-meta">
+        <span class="specialty">Logo · Key Art · Brand Strategy</span>
+        <div class="contact-actions"><button>Edit</button><button>Unpin</button></div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="contact-card" data-co="11oc" data-pinned="0" data-search="jordan kim senior designer 11 oclock illustration">
+      <div class="contact-top">
+        <div class="avatar oc11">JK</div>
+        <div class="contact-id">
+          <span class="contact-name">Jordan Kim</span>
+          <span class="contact-title">Senior Designer</span>
+        </div>
+      </div>
+      <span class="contact-co co-11oc">11 O'Clock</span>
+      <div class="contact-lines">
+        <div class="line"><span class="icon">✉</span><a href="mailto:jordan@11oclock.com">jordan@11oclock.com</a></div>
+        <div class="line"><span class="icon">☎</span><a href="tel:+12125550104">(212) 555-0104</a></div>
+      </div>
+      <div class="contact-meta">
+        <span class="specialty">Illustration · Type · Print</span>
+        <div class="contact-actions"><button>Edit</button><button>Pin</button></div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="contact-card" data-co="relay" data-pinned="1" data-search="maya patel relay creator network influencer partnerships">
+      <span class="pin">Default</span>
+      <div class="contact-top">
+        <div class="avatar relay">MP</div>
+        <div class="contact-id">
+          <span class="contact-name">Maya Patel</span>
+          <span class="contact-title">Head of Creator Partnerships</span>
+        </div>
+      </div>
+      <span class="contact-co co-relay">Relay</span>
+      <div class="contact-lines">
+        <div class="line"><span class="icon">✉</span><a href="mailto:maya@relayinfluence.com">maya@relayinfluence.com</a></div>
+        <div class="line"><span class="icon">☎</span><a href="tel:+12125550105">(212) 555-0105</a></div>
+      </div>
+      <div class="contact-meta">
+        <span class="specialty">Creator Network · Activations · Tiktok</span>
+        <div class="contact-actions"><button>Edit</button><button>Unpin</button></div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="contact-card" data-co="flyer" data-pinned="0" data-search="danny lopez flyer creative production director shoots video">
+      <div class="contact-top">
+        <div class="avatar flyer">DL</div>
+        <div class="contact-id">
+          <span class="contact-name">Danny Lopez</span>
+          <span class="contact-title">Production Director</span>
+        </div>
+      </div>
+      <span class="contact-co co-flyer">Flyer</span>
+      <div class="contact-lines">
+        <div class="line"><span class="icon">✉</span><a href="mailto:danny@flyerweb.com">danny@flyerweb.com</a></div>
+        <div class="line"><span class="icon">☎</span><a href="tel:+12125550106">(212) 555-0106</a></div>
+      </div>
+      <div class="contact-meta">
+        <span class="specialty">Shoots · Editorial · Edit Suite</span>
+        <div class="contact-actions"><button>Edit</button><button>Pin</button></div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="contact-card" data-co="flyer" data-pinned="0" data-search="taylor brooks flyer web developer animation motion">
+      <div class="contact-top">
+        <div class="avatar flyer">TB</div>
+        <div class="contact-id">
+          <span class="contact-name">Taylor Brooks</span>
+          <span class="contact-title">Lead Developer / Motion</span>
+        </div>
+      </div>
+      <span class="contact-co co-flyer">Flyer</span>
+      <div class="contact-lines">
+        <div class="line"><span class="icon">✉</span><a href="mailto:taylor@flyerweb.com">taylor@flyerweb.com</a></div>
+        <div class="line"><span class="icon">☎</span><a href="tel:+12125550107">(212) 555-0107</a></div>
+      </div>
+      <div class="contact-meta">
+        <span class="specialty">Web · Animation · Merch PM</span>
+        <div class="contact-actions"><button>Edit</button><button>Pin</button></div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="contact-card" data-co="forest" data-pinned="0" data-search="sam ortiz forest social media manager content">
+      <div class="contact-top">
+        <div class="avatar forest">SO</div>
+        <div class="contact-id">
+          <span class="contact-name">Sam Ortiz</span>
+          <span class="contact-title">Social Lead</span>
+        </div>
+      </div>
+      <span class="contact-co co-forest">Forest</span>
+      <div class="contact-lines">
+        <div class="line"><span class="icon">✉</span><a href="mailto:sam@forestsocial.com">sam@forestsocial.com</a></div>
+        <div class="line"><span class="icon">☎</span><a href="tel:+12125550108">(212) 555-0108</a></div>
+      </div>
+      <div class="contact-meta">
+        <span class="specialty">IG · TikTok · Paid Social</span>
+        <div class="contact-actions"><button>Edit</button><button>Pin</button></div>
+      </div>
+    </div>
+
+    <div class="empty hidden" id="empty">No contacts match these filters.</div>
+  </div>
+</main>
+
+<script>
+const HASH = 'a67fd79dd6ca5da8c1587997fd30c4ea1e6e401b76243dc4e41011e76c8c1527';
+async function sha256(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+const gate = document.getElementById('gate');
+const form = document.getElementById('gate-form');
+const pw = document.getElementById('gate-pw');
+const err = document.getElementById('gate-err');
+if (sessionStorage.getItem('tsv_admin') === '1') gate.classList.add('hidden');
+else setTimeout(() => pw.focus(), 50);
+form.addEventListener('submit', async e => {
+  e.preventDefault(); err.textContent = '';
+  const h = await sha256(pw.value);
+  if (h === HASH) { sessionStorage.setItem('tsv_admin', '1'); gate.classList.add('hidden'); }
+  else { err.textContent = 'Incorrect password.'; pw.value = ''; pw.focus(); }
+});
+
+const chips = document.querySelectorAll('.chip');
+const search = document.getElementById('search');
+const cards = document.querySelectorAll('.contact-card');
+const empty = document.getElementById('empty');
+let activeFilter = 'all';
+
+function applyFilter() {
+  const q = search.value.trim().toLowerCase();
+  let shown = 0;
+  cards.forEach(c => {
+    const matchesFilter = activeFilter === 'all'
+      || (activeFilter === 'pinned' && c.dataset.pinned === '1')
+      || c.dataset.co === activeFilter;
+    const text = (c.dataset.search + ' ' + c.querySelector('.contact-name').textContent + ' ' + c.querySelector('.contact-title').textContent).toLowerCase();
+    const matchesSearch = !q || text.includes(q);
+    const show = matchesFilter && matchesSearch;
+    c.style.display = show ? '' : 'none';
+    if (show) shown++;
+  });
+  empty.classList.toggle('hidden', shown > 0);
+}
+chips.forEach(c => c.addEventListener('click', () => {
+  chips.forEach(x => x.classList.remove('active'));
+  c.classList.add('active');
+  activeFilter = c.dataset.filter;
+  applyFilter();
+}));
+search.addEventListener('input', applyFilter);
+</script>
+
+</body>
+</html>
