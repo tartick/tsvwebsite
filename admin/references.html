@@ -75,8 +75,11 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
 
 .thumb { aspect-ratio: 16/10; background: linear-gradient(135deg, var(--gray-100), var(--gray-200)); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .thumb .ph { font-weight: 700; font-size: 36px; letter-spacing: -0.02em; color: var(--gray-300); text-align: center; padding: 0 12px; line-height: 1; }
-.thumb .type-badge { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,0,0,0.85); color: var(--white); padding: 4px 8px; border-radius: 2px; }
+.thumb .shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; opacity: 0; transition: opacity 0.3s; z-index: 1; }
+.thumb .shot.loaded { opacity: 1; }
+.thumb .type-badge { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; background: rgba(0,0,0,0.85); color: var(--white); padding: 4px 8px; border-radius: 2px; z-index: 2; }
 .thumb .type-badge.link { background: rgba(253, 185, 19, 0.95); color: var(--black); }
+.thumb .host { position: absolute; bottom: 8px; left: 10px; font-size: 10px; font-family: 'SF Mono', Menlo, monospace; color: rgba(255,255,255,0.92); background: rgba(0,0,0,0.55); padding: 2px 7px; border-radius: 2px; letter-spacing: 0.02em; z-index: 2; }
 
 .ref-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
 .ref-title { font-size: 14px; font-weight: 600; line-height: 1.35; }
@@ -174,6 +177,8 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
     <div class="ref-card" data-type="link" data-co="11oc" data-search="cats jellicle ball key art logo broadway">
       <div class="thumb" style="background: linear-gradient(135deg, #1a1a1a, #FDB913);">
         <div class="ph" style="color: var(--white);">CATS</div>
+        <img class="shot" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fcatsthejelicleball.com?w=600&h=375" loading="lazy" alt="" onload="this.classList.add('loaded')" onerror="this.remove()">
+        <span class="host">catsthejelicleball.com</span>
         <span class="type-badge link">Link</span>
       </div>
       <div class="ref-body">
@@ -195,6 +200,8 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
     <div class="ref-card" data-type="link" data-co="11oc" data-search="proof broadway poster key art branding">
       <div class="thumb" style="background: linear-gradient(135deg, #0a2540, #4a90e2);">
         <div class="ph" style="color: var(--white);">PROOF</div>
+        <img class="shot" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fproofbroadway.com?w=600&h=375" loading="lazy" alt="" onload="this.classList.add('loaded')" onerror="this.remove()">
+        <span class="host">proofbroadway.com</span>
         <span class="type-badge link">Link</span>
       </div>
       <div class="ref-body">
@@ -236,6 +243,8 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
     <div class="ref-card" data-type="link" data-co="11oc" data-search="drama desk awards branding identity">
       <div class="thumb" style="background: linear-gradient(135deg, #2d0e1f, #c4264e);">
         <div class="ph" style="color: var(--white); font-size: 26px;">DRAMA<br>DESK</div>
+        <img class="shot" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fdramadesks.com?w=600&h=375" loading="lazy" alt="" onload="this.classList.add('loaded')" onerror="this.remove()">
+        <span class="host">dramadesks.com</span>
         <span class="type-badge link">Link</span>
       </div>
       <div class="ref-body">
@@ -277,6 +286,8 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
     <div class="ref-card" data-type="link" data-co="flyer" data-search="cats jellicle ball animation reel video">
       <div class="thumb" style="background: linear-gradient(135deg, #0e2410, #2a8a3a);">
         <div class="ph" style="color: var(--white); font-size: 26px;">REEL</div>
+        <img class="shot" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fvimeo.com%2F11oclock?w=600&h=375" loading="lazy" alt="" onload="this.classList.add('loaded')" onerror="this.remove()">
+        <span class="host">vimeo.com/11oclock</span>
         <span class="type-badge link">Link</span>
       </div>
       <div class="ref-body">
@@ -298,6 +309,8 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
     <div class="ref-card" data-type="link" data-co="flyer" data-search="proof broadway website mobile development">
       <div class="thumb" style="background: linear-gradient(135deg, #0a2540, #6b8aa8);">
         <div class="ph" style="color: var(--white); font-size: 24px;">SITE</div>
+        <img class="shot" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fproofbroadway.com?w=600&h=375" loading="lazy" alt="" onload="this.classList.add('loaded')" onerror="this.remove()">
+        <span class="host">proofbroadway.com</span>
         <span class="type-badge link">Link</span>
       </div>
       <div class="ref-body">
@@ -338,6 +351,8 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
     <div class="ref-card" data-type="link" data-co="flyer" data-search="cats merchandise tote shop retail">
       <div class="thumb" style="background: linear-gradient(135deg, #2a1f08, #d4a93a);">
         <div class="ph" style="color: var(--white);">SHOP</div>
+        <img class="shot" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fcatsthejelicleball.com%2Fshop?w=600&h=375" loading="lazy" alt="" onload="this.classList.add('loaded')" onerror="this.remove()">
+        <span class="host">catsthejelicleball.com/shop</span>
         <span class="type-badge link">Link</span>
       </div>
       <div class="ref-body">
@@ -379,6 +394,8 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
     <div class="ref-card" data-type="link" data-co="flyer" data-search="drama desk awards animation broadcast">
       <div class="thumb" style="background: linear-gradient(135deg, #2d0e1f, #6b3046);">
         <div class="ph" style="color: var(--white); font-size: 20px;">BROADCAST</div>
+        <img class="shot" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fdramadesks.com%2Fbroadcast?w=600&h=375" loading="lazy" alt="" onload="this.classList.add('loaded')" onerror="this.remove()">
+        <span class="host">dramadesks.com/broadcast</span>
         <span class="type-badge link">Link</span>
       </div>
       <div class="ref-body">
@@ -419,6 +436,8 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
     <div class="ref-card" data-type="link" data-co="relay" data-search="cats creator tiktok influencer post">
       <div class="thumb" style="background: linear-gradient(135deg, #1a1a1a, #999);">
         <div class="ph" style="color: var(--yellow); font-size: 22px;">TikTok</div>
+        <img class="shot" src="https://s.wordpress.com/mshots/v1/https%3A%2F%2Fwww.tiktok.com%2F%40catsthejelicleball?w=600&h=375" loading="lazy" alt="" onload="this.classList.add('loaded')" onerror="this.remove()">
+        <span class="host">tiktok.com/@catsthejelicleball</span>
         <span class="type-badge link">Link</span>
       </div>
       <div class="ref-body">
