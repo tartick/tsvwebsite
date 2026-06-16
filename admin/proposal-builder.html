@@ -520,6 +520,20 @@
     }
     .contact-chip-x:hover { color: var(--danger); }
 
+    /* Featured Companies picker */
+    .co-picker { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .co-chip {
+      background: #fff; border: 1px solid var(--line);
+      padding: 8px 14px; font-family: inherit; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.02em; color: var(--ink); cursor: pointer; border-radius: 100px;
+      transition: all 0.12s;
+    }
+    .co-chip:hover { border-color: var(--ink); }
+    .co-chip.selected { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .co-chip.pinned { background: #FDB913; color: var(--ink); border-color: #FDB913; cursor: default; }
+    .co-picker-count { display: block; font-size: 11px; color: var(--muted); margin-top: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .co-picker-count.warning { color: #b88200; }
+
     /* Contract status radios */
     .contract-status { display: flex; flex-wrap: wrap; gap: 18px; padding: 4px 0; }
     .contract-radio { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; user-select: none; }
@@ -688,6 +702,19 @@
           <button type="button" class="btn-inline">Generate</button>
         </div>
         <span class="field-help">Shown here once. Client uses this to unlock the proposal.</span>
+      </div>
+      <div class="field full">
+        <span class="field-label">Featured Companies</span>
+        <span class="field-help">Which companies appear in the "Marketing by The Season" block on this proposal. The Season is always featured; pick 2–4 others for the lineup.</span>
+        <div class="co-picker">
+          <button type="button" class="co-chip selected pinned" data-co="tsv">★ The Season</button>
+          <button type="button" class="co-chip selected" data-co="11oc">11 O'Clock</button>
+          <button type="button" class="co-chip selected" data-co="relay">Relay</button>
+          <button type="button" class="co-chip selected" data-co="flyer">Flyer</button>
+          <button type="button" class="co-chip" data-co="marathon">Marathon Digital</button>
+          <button type="button" class="co-chip" data-co="forest">Forest</button>
+        </div>
+        <span class="co-picker-count" id="co-count">4 selected · 0 over the typical max</span>
       </div>
       <label class="field">
         <span class="field-label">Internal Tag (optional)</span>
@@ -1032,6 +1059,26 @@
   function openPreview() {
     window.open('/p/letters-to-the-president', '_blank');
   }
+
+  // Featured Companies picker — toggle selection (pinned chips can't toggle)
+  const coCount = document.getElementById('co-count');
+  function updateCoCount() {
+    const n = document.querySelectorAll('.co-chip.selected').length;
+    let msg = `${n} selected`;
+    if (n < 3) msg += ' · light lineup, consider adding one more';
+    else if (n > 5) msg += ' · over the typical 3–5 range';
+    else msg += ' · in range';
+    coCount.textContent = msg;
+    coCount.classList.toggle('warning', n < 3 || n > 5);
+  }
+  document.querySelectorAll('.co-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      if (chip.classList.contains('pinned')) return;
+      chip.classList.toggle('selected');
+      updateCoCount();
+    });
+  });
+  updateCoCount();
 </script>
 
 </body>
