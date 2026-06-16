@@ -777,7 +777,7 @@
 <body>
 
 <!-- ════════════════════════════════════════════════════════
-     Password gate (sha256 of "preview" → see PASSWORD_HASH)
+     Password gate (sha256 of "tsv2026" → see PASSWORD_HASH)
      ════════════════════════════════════════════════════════ -->
 <div class="gate" id="gate">
   <img src="/assets/theseason-icon.png" class="gate-icon" alt="The Season">
@@ -1025,10 +1025,10 @@
 
 <script>
   // ──────────────────────────────────────────────────────────
-  // Password gate — sha256 of "preview"
+  // Password gate — sha256 of "tsv2026"
   // (Replace this hash per-proposal when generating from admin)
   // ──────────────────────────────────────────────────────────
-  const PASSWORD_HASH = '5975cf1bba432391c94667f5886225f69377c0aa8b9fa21fddfb21c89bcf9092';
+  const PASSWORD_HASH = 'a67fd79dd6ca5da8c1587997fd30c4ea1e6e401b76243dc4e41011e76c8c1527';
 
   async function sha256(text) {
     const buf = new TextEncoder().encode(text);
