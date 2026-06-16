@@ -9,6 +9,13 @@ anything — if a step fails, the mock pages still work as before.
 > prop_contacts, prop_companies, prop_events). Nothing here touches,
 > renames, or truncates any table you already have.
 
+> **Already ran the first (unprefixed) version?** Do the switch-to-prefixed
+> migration in this order in the SQL Editor:
+> 1. `db/schema.sql` — creates the `prop_*` tables
+> 2. `db/seed.sql` — seeds the `prop_*` catalog
+> 3. `db/cleanup-old-unprefixed.sql` — drops the old unprefixed tables
+>    (read its safety note first)
+
 ---
 
 ## 1. Use your existing Supabase project
