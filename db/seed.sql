@@ -2,12 +2,15 @@
 -- The Season — Proposal Tool seed data
 -- Run AFTER schema.sql. Populates the catalog from the mockups.
 -- Re-running clears + reloads the three catalog tables (not proposals).
+--
+-- SAFE on a reused project: only touches the prop_-prefixed tables
+-- created by schema.sql. Will not affect any other tables you have.
 -- ═══════════════════════════════════════════════════════════════
 
-truncate services, reference_items, contacts restart identity cascade;
+truncate prop_services, prop_references, prop_contacts restart identity cascade;
 
 -- ── Services ───────────────────────────────────────────────────
-insert into services (company_key, name, description, rate_amount, rate_unit, rate_note, is_default, sort) values
+insert into prop_services (company_key, name, description, rate_amount, rate_unit, rate_note, is_default, sort) values
   ('tsv',  'Marketing Direction', 'End-to-end strategy across campaign, brand, partnerships, and media. Acts as the show''s marketing lead, coordinating across all Season studios.', 15000, 'flat', null, true, 0),
 
   ('11oc', 'Logo & Key Art', 'Show identity package — logo, key art, color system, and the foundational campaign visual that everything else builds on.', 5000, 'flat', null, true, 0),
@@ -27,7 +30,7 @@ insert into services (company_key, name, description, rate_amount, rate_unit, ra
   ('marathon', 'Paid Social Boost', 'Strategy + execution for paid social — ad creative versioning, audience targeting, budget pacing. Media spend billed at cost.', 3500, 'monthly', '+ media', false, 1);
 
 -- ── Reference library ──────────────────────────────────────────
-insert into reference_items (type, title, client, url, company_key, tags, page_count, sort) values
+insert into prop_references (type, title, client, url, company_key, tags, page_count, sort) values
   ('link', 'CATS: The Jellicle Ball — show site',    'PAC NYC · 2024',        'https://catsthejelicleball.com',            '11oc', '{Key Art,Website}', null, 0),
   ('link', 'Proof on Broadway — campaign site',      'Roundabout · 2025',     'https://proofbroadway.com',                 '11oc', '{Key Art,Logo}',    null, 1),
   ('pdf',  'Mr. Leather 1976 — Brand Standards',     'Hartshorn Studios · 2025','/assets/refs/mr-leather-brand-standards.pdf','11oc','{Branding}',       14,   2),
@@ -49,7 +52,7 @@ insert into reference_items (type, title, client, url, company_key, tags, page_c
 -- ── Team contacts ──────────────────────────────────────────────
 -- NOTE: phone numbers + some emails are placeholders — edit in the
 -- Contacts admin page once real details are confirmed.
-insert into contacts (name, title, company_key, email, phone, specialty, is_pinned, sort) values
+insert into prop_contacts (name, title, company_key, email, phone, specialty, is_pinned, sort) values
   ('Steven Tartick', 'Founder & Marketing Director', 'tsv',      'steven@theseason.nyc',     '(212) 555-0101', 'Strategy · Producing · Pricing', true,  0),
   ('Emma Chen',      'Associate Producer',           'tsv',      'emma@theseason.nyc',       '(212) 555-0102', 'Operations · Scheduling · Contracts', false, 1),
   ('Alex Rivera',    'Creative Director',            '11oc',     'alex@11oclock.com',        '(212) 555-0103', 'Logo · Key Art · Brand Strategy', true,  2),

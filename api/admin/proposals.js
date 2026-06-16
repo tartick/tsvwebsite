@@ -24,13 +24,13 @@ module.exports = async function handler(req, res) {
       }
       const slug = req.query.slug;
       if (slug) {
-        const rows = await select('proposals', `slug=eq.${encodeURIComponent(slug)}&select=*`);
+        const rows = await select('prop_proposals', `slug=eq.${encodeURIComponent(slug)}&select=*`);
         if (!rows.length) return res.status(404).json({ error: 'Not found' });
         return res.status(200).json(rows[0]);
       }
       // List view: lightweight columns, newest first
       const rows = await select(
-        'proposals',
+        'prop_proposals',
         'select=id,slug,client_name,show_subtitle,hero_date,status,password_plain,services,' +
         'featured_companies,contract_status,updated_at&order=updated_at.desc'
       );
@@ -48,7 +48,7 @@ module.exports = async function handler(req, res) {
       }
       if (p.password_plain) p.password_hash = await sha256(p.password_plain);
       delete p.adminPw;
-      const rows = await insert('proposals', p);
+      const rows = await insert('prop_proposals', p);
       return res.status(200).json(rows[0]);
     }
 
@@ -59,7 +59,7 @@ module.exports = async function handler(req, res) {
       if (!id || !patch) return res.status(400).json({ error: 'id and patch are required' });
       // Re-hash if the plaintext password changed
       if (patch.password_plain) patch.password_hash = await sha256(patch.password_plain);
-      const rows = await update('proposals', `id=eq.${id}`, patch);
+      const rows = await update('prop_proposals', `id=eq.${id}`, patch);
       if (!rows.length) return res.status(404).json({ error: 'Not found' });
       return res.status(200).json(rows[0]);
     }
@@ -68,7 +68,7 @@ module.exports = async function handler(req, res) {
     if (req.method === 'DELETE') {
       if (!isAdmin(body.adminPw)) return res.status(401).json({ error: 'Unauthorized' });
       if (!body.id) return res.status(400).json({ error: 'id is required' });
-      await remove('proposals', `id=eq.${body.id}`);
+      await remove('prop_proposals', `id=eq.${body.id}`);
       return res.status(200).json({ ok: true });
     }
 

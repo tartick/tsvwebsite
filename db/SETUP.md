@@ -4,14 +4,18 @@ The code for the Supabase backend is written and committed. To light it
 up, do these steps once. Takes ~10 minutes. You can't be locked out of
 anything — if a step fails, the mock pages still work as before.
 
+> **Reusing an existing project is safe.** Every table this tool creates
+> is prefixed `prop_` (prop_proposals, prop_services, prop_references,
+> prop_contacts, prop_companies, prop_events). Nothing here touches,
+> renames, or truncates any table you already have.
+
 ---
 
-## 1. Create the Supabase project
+## 1. Use your existing Supabase project
 
-1. Go to **supabase.com → New project**. Name it `theseason-proposals`.
-2. Pick a region close to you (US East). Set a strong database password
-   (you won't need it for this — Supabase stores it).
-3. Wait ~2 min for it to provision.
+You're reusing a project — skip creating a new one. Just open it in the
+Supabase dashboard. (The `prop_` prefix keeps this tool's tables isolated
+from whatever else lives in that project.)
 
 ## 2. Run the schema + seed
 
@@ -20,8 +24,8 @@ anything — if a step fails, the mock pages still work as before.
    Should say "Success. No rows returned."
 3. New query again. Paste **`db/seed.sql`**, click **Run**. This loads
    the 13 services, 14 references, and 8 contacts from the mockups.
-4. Spot-check: **Table Editor → proposals/services/contacts** — you
-   should see the seeded catalog (proposals will be empty; that's right).
+4. Spot-check: **Table Editor → prop_services / prop_contacts** — you
+   should see the seeded catalog (prop_proposals will be empty; right).
 
 ## 3. Grab your keys
 

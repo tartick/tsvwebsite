@@ -9,10 +9,10 @@
 const { select, insert, update, remove, isAdmin } = require('../../lib/supabase');
 
 const TABLES = {
-  services:   'services',
-  references: 'reference_items',
-  contacts:   'contacts',
-  companies:  'companies',
+  services:   'prop_services',
+  references: 'prop_references',
+  contacts:   'prop_contacts',
+  companies:  'prop_companies',
 };
 
 module.exports = async function handler(req, res) {
@@ -33,7 +33,7 @@ module.exports = async function handler(req, res) {
     const body = req.body || {};
     if (!isAdmin(body.adminPw)) return res.status(401).json({ error: 'Unauthorized' });
     const table = TABLES[body.type];
-    if (!table || table === 'companies') {
+    if (!table || body.type === 'companies') {
       return res.status(400).json({ error: 'Unknown or read-only type' });
     }
 

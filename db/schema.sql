@@ -3,14 +3,17 @@
 -- Run this in the Supabase SQL Editor (one-time setup).
 -- Safe to re-run: uses IF NOT EXISTS / ON CONFLICT throughout.
 --
+-- REUSED-PROJECT SAFE: every table is prefixed `prop_` so this tool
+-- cannot collide with or touch any existing tables in your project.
+--
 -- Security model: ALL access goes through Vercel serverless functions
 -- using the Supabase SECRET key (which bypasses RLS). RLS is enabled
 -- with NO public policies, so the publishable/anon key can read nothing.
--- The browser never touches Supabase directly.
+-- The browser never talks to Supabase directly.
 -- ═══════════════════════════════════════════════════════════════
 
 -- ── Companies (seeded catalog; rarely changes) ─────────────────
-create table if not exists companies (
+create table if not exists prop_companies (
   key         text primary key,          -- tsv | 11oc | relay | flyer | marathon | forest
   name        text not null,
   category    text,                       -- e.g. "Brand Studio"
@@ -18,7 +21,7 @@ create table if not exists companies (
   sort        int default 0
 );
 
-insert into companies (key, name, category, is_core, sort) values
+insert into prop_companies (key, name, category, is_core, sort) values
   ('tsv',      'The Season',        'Producing & Marketing Direction', true,  0),
   ('11oc',     '11 O''Clock Studio','Brand Studio',                     true,  1),
   ('relay',    'Relay',             'Creator Network',                  true,  2),
@@ -30,9 +33,9 @@ on conflict (key) do update set
   is_core = excluded.is_core, sort = excluded.sort;
 
 -- ── Service catalog ────────────────────────────────────────────
-create table if not exists services (
+create table if not exists prop_services (
   id           uuid primary key default gen_random_uuid(),
-  company_key  text references companies(key),
+  company_key  text references prop_companies(key),
   name         text not null,
   description  text,
   rate_amount  int,                       -- in whole dollars
@@ -44,13 +47,13 @@ create table if not exists services (
 );
 
 -- ── Reference library (PDFs + external links) ──────────────────
-create table if not exists reference_items (
+create table if not exists prop_references (
   id           uuid primary key default gen_random_uuid(),
   type         text not null default 'link',   -- link | pdf
   title        text not null,
   client       text,                            -- "PAC NYC · 2024"
   url          text,                            -- link target OR /assets/refs/x.pdf
-  company_key  text references companies(key),
+  company_key  text references prop_companies(key),
   tags         text[] default '{}',             -- ['Key Art','Website']
   page_count   int,                             -- for PDFs
   sort         int default 0,
@@ -58,11 +61,11 @@ create table if not exists reference_items (
 );
 
 -- ── Team contacts (for the "I Have Questions" modal) ───────────
-create table if not exists contacts (
+create table if not exists prop_contacts (
   id           uuid primary key default gen_random_uuid(),
   name         text not null,
   title        text,
-  company_key  text references companies(key),
+  company_key  text references prop_companies(key),
   email        text,
   phone        text,
   specialty    text,
@@ -72,7 +75,7 @@ create table if not exists contacts (
 );
 
 -- ── Proposals (document-style: nested content in JSONB) ────────
-create table if not exists proposals (
+create table if not exists prop_proposals (
   id                 uuid primary key default gen_random_uuid(),
   slug               text unique not null,
   client_name        text not null,
@@ -80,7 +83,7 @@ create table if not exists proposals (
   hero_date          text,                       -- display string, e.g. "June 2026"
   status             text not null default 'draft',
                      -- draft | sent | questions | accepted | contract-sent | contracted
-  password_hash      text,                       -- sha256(plaintext); plaintext never stored
+  password_hash      text,                       -- sha256(plaintext); plaintext never stored in hash form
   password_plain     text,                       -- shown only in admin list (server-gated)
   opening_note       text,
   featured_companies text[] default '{tsv}',     -- company keys in the collective block
@@ -100,40 +103,40 @@ create table if not exists proposals (
   updated_at         timestamptz default now()
 );
 
-create index if not exists proposals_status_idx on proposals(status);
-create index if not exists proposals_updated_idx on proposals(updated_at desc);
+create index if not exists prop_proposals_status_idx  on prop_proposals(status);
+create index if not exists prop_proposals_updated_idx on prop_proposals(updated_at desc);
 
 -- ── Client action log (Accept / Questions) ─────────────────────
 -- Mirrors what also gets emailed + appended to the Google Sheet,
 -- so the admin has an in-app record too.
-create table if not exists proposal_events (
+create table if not exists prop_events (
   id           uuid primary key default gen_random_uuid(),
-  proposal_id  uuid references proposals(id) on delete cascade,
+  proposal_id  uuid references prop_proposals(id) on delete cascade,
   type         text not null,                    -- accept | questions
   message      text,                             -- client's feedback (questions)
   created_at   timestamptz default now()
 );
 
-create index if not exists events_proposal_idx on proposal_events(proposal_id, created_at desc);
+create index if not exists prop_events_proposal_idx on prop_events(proposal_id, created_at desc);
 
 -- ── auto-update updated_at on proposals ────────────────────────
-create or replace function touch_updated_at() returns trigger as $$
+create or replace function prop_touch_updated_at() returns trigger as $$
 begin
   new.updated_at = now();
   return new;
 end;
 $$ language plpgsql;
 
-drop trigger if exists proposals_touch on proposals;
-create trigger proposals_touch before update on proposals
-  for each row execute function touch_updated_at();
+drop trigger if exists prop_proposals_touch on prop_proposals;
+create trigger prop_proposals_touch before update on prop_proposals
+  for each row execute function prop_touch_updated_at();
 
 -- ── Lock everything down: RLS on, no public policies ───────────
 -- The secret key (server-side) bypasses RLS. The publishable/anon
 -- key gets nothing. The browser never connects directly anyway.
-alter table companies        enable row level security;
-alter table services         enable row level security;
-alter table reference_items  enable row level security;
-alter table contacts         enable row level security;
-alter table proposals        enable row level security;
-alter table proposal_events  enable row level security;
+alter table prop_companies  enable row level security;
+alter table prop_services   enable row level security;
+alter table prop_references enable row level security;
+alter table prop_contacts   enable row level security;
+alter table prop_proposals  enable row level security;
+alter table prop_events     enable row level security;
