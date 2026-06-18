@@ -150,275 +150,92 @@ main { max-width: 1240px; margin: 0 auto; padding: 36px 28px 80px; }
     <div class="search">
       <input type="text" id="search" placeholder="Search by service, deliverable, or keyword…">
     </div>
-    <div class="chips" id="filter-chips">
-      <button class="chip active" data-filter="all">All <span class="count">13</span></button>
-      <button class="chip" data-filter="tsv">The Season <span class="count">1</span></button>
-      <button class="chip" data-filter="11oc">11 O'Clock <span class="count">3</span></button>
-      <button class="chip" data-filter="relay">Relay <span class="count">2</span></button>
-      <button class="chip" data-filter="flyer">Flyer <span class="count">5</span></button>
-      <button class="chip" data-filter="marathon">Marathon <span class="count">2</span></button>
-    </div>
+    <div class="chips" id="filter-chips"></div>
   </div>
 
-  <!-- The Season -->
-  <div class="co-group" data-co="tsv">
-    <div class="co-header">
-      <h2>The Season</h2>
-      <span class="cat">Producing & Marketing Direction</span>
-      <span class="count-badge">1 service</span>
-    </div>
-    <div class="svc-grid">
-      <div class="svc-card default-tag" data-search="marketing direction strategy producing">
-        <div class="svc-name">Marketing Direction</div>
-        <div class="svc-desc">End-to-end strategy across campaign, brand, partnerships, and media. Acts as the show's marketing lead, coordinating across all Season studios.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$15,000</div>
-          <span class="svc-uses">Used in 4 proposals</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 11 O'Clock -->
-  <div class="co-group" data-co="11oc">
-    <div class="co-header">
-      <h2>11 O'Clock Studio</h2>
-      <span class="cat">Brand Studio</span>
-      <span class="count-badge">3 services</span>
-    </div>
-    <div class="svc-grid">
-      <div class="svc-card default-tag" data-search="logo key art branding 11 o'clock">
-        <div class="svc-name">Logo & Key Art</div>
-        <div class="svc-desc">Show identity package — logo, key art, color system, and the foundational campaign visual that everything else builds on.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$5,000</div>
-          <span class="svc-uses">Used in 6 proposals</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-
-      <div class="svc-card" data-search="logo development branding standalone">
-        <div class="svc-name">Logo Development & Branding</div>
-        <div class="svc-desc">Brand-only engagement when key art is sourced elsewhere — logo, typography, color, and brand standards doc.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$5,000</div>
-          <span class="svc-uses">Used in 2 proposals</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-
-      <div class="svc-card" data-search="poster print campaign extension">
-        <div class="svc-name">Print & Poster Extension</div>
-        <div class="svc-desc">Adapt the key art system into poster, marquee, and out-of-home formats. Add-on to Logo & Key Art.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$3,500</div>
-          <span class="svc-uses">Used in 1 proposal</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Relay -->
-  <div class="co-group" data-co="relay">
-    <div class="co-header">
-      <h2>Relay</h2>
-      <span class="cat">Creator Network</span>
-      <span class="count-badge">2 services</span>
-    </div>
-    <div class="svc-grid">
-      <div class="svc-card default-tag" data-search="creator influencer activation network">
-        <div class="svc-name">Creator Activation</div>
-        <div class="svc-desc">Vetted creator collaborations — not ad reads, real partnerships. Includes brief, outreach, contracting, and post review.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$8,000</div>
-          <span class="svc-uses">Used in 3 proposals</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-
-      <div class="svc-card" data-search="influencer event invite night seat">
-        <div class="svc-name">Creator Night / Press Seats</div>
-        <div class="svc-desc">Curated invite list, RSVP management, and on-night coordination for creator screenings or press performances.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$4,500</div>
-          <span class="svc-uses">Used in 2 proposals</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Flyer -->
-  <div class="co-group" data-co="flyer">
-    <div class="co-header">
-      <h2>Flyer</h2>
-      <span class="cat">Creative Production</span>
-      <span class="count-badge">5 services</span>
-    </div>
-    <div class="svc-grid">
-      <div class="svc-card default-tag" data-search="creative production photo video shoot">
-        <div class="svc-name">Creative Production</div>
-        <div class="svc-desc">Shoot day(s) for stills and short-form video — production, direction, and edit. Output formatted for socials, paid, and web.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$2,500</div>
-          <span class="svc-uses">Used in 5 proposals</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-
-      <div class="svc-card default-tag" data-search="animation motion graphics package">
-        <div class="svc-name">Animation Package</div>
-        <div class="svc-desc">A library of animated key art moments — logo motion, social cutdowns, and reusable templates for the in-house team.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$10,000</div>
-          <span class="svc-uses">Used in 4 proposals</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-
-      <div class="svc-card" data-search="merchandise merch design tshirt tote">
-        <div class="svc-name">Merchandise Design</div>
-        <div class="svc-desc">Apparel, totes, posters, and small goods designed from the show's brand system. Includes vendor-ready files.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$7,500</div>
-          <span class="svc-uses">Used in 3 proposals</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-
-      <div class="svc-card" data-search="merchandise project management vendor fulfillment">
-        <div class="svc-name">Merchandise Project Management</div>
-        <div class="svc-desc">Vendor sourcing, sample review, production schedule, and fulfillment coordination. Pairs with Merch Design.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$2,500</div>
-          <span class="svc-uses">Used in 2 proposals</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-
-      <div class="svc-card default-tag" data-search="website development site build cms">
-        <div class="svc-name">Website Development</div>
-        <div class="svc-desc">Show website — custom design extending the key art system, mobile-first, CMS for the in-house team to update copy and dates.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$5,000</div>
-          <span class="svc-uses">Used in 4 proposals</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Marathon Digital -->
-  <div class="co-group" data-co="marathon">
-    <div class="co-header">
-      <h2>Marathon Digital</h2>
-      <span class="cat">Social &amp; Digital</span>
-      <span class="count-badge">2 services</span>
-    </div>
-    <div class="svc-grid">
-      <div class="svc-card" data-search="social media management organic marathon">
-        <div class="svc-name">Social Media Management</div>
-        <div class="svc-desc">Ongoing organic social — calendar, copy, light graphic design, posting, and community management across IG, TikTok, X.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$6,000<span style="font-size: 11px; color: var(--gray-500); font-weight: 400;">/mo</span></div>
-          <span class="svc-uses">Used in 1 proposal</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-
-      <div class="svc-card" data-search="paid media social ads boost marathon">
-        <div class="svc-name">Paid Social Boost</div>
-        <div class="svc-desc">Strategy + execution for paid social — ad creative versioning, audience targeting, budget pacing. Media spend billed at cost.</div>
-        <div class="svc-meta">
-          <div class="svc-rate"><span class="from">From</span>$3,500<span style="font-size: 11px; color: var(--gray-500); font-weight: 400;">/mo + media</span></div>
-          <span class="svc-uses">Used in 1 proposal</span>
-        </div>
-        <div class="svc-actions">
-          <button>Edit</button><button>Duplicate</button><button>View Uses</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
+<div id="groups-root"></div>
   <div class="empty hidden" id="empty">No services match these filters.</div>
 </main>
 
+<script src="/admin/admin-api.js"></script>
 <script>
-const HASH = 'a67fd79dd6ca5da8c1587997fd30c4ea1e6e401b76243dc4e41011e76c8c1527';
-async function sha256(s) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-const gate = document.getElementById('gate');
-const form = document.getElementById('gate-form');
-const pw = document.getElementById('gate-pw');
-const err = document.getElementById('gate-err');
-if (sessionStorage.getItem('tsv_admin') === '1') gate.classList.add('hidden');
-else setTimeout(() => pw.focus(), 50);
-form.addEventListener('submit', async e => {
-  e.preventDefault(); err.textContent = '';
-  const h = await sha256(pw.value);
-  if (h === HASH) { sessionStorage.setItem('tsv_admin', '1'); gate.classList.add('hidden'); }
-  else { err.textContent = 'Incorrect password.'; pw.value = ''; pw.focus(); }
-});
-
-const chips = document.querySelectorAll('.chip');
 const search = document.getElementById('search');
-const groups = document.querySelectorAll('.co-group');
 const empty = document.getElementById('empty');
-let activeFilter = 'all';
+const root = document.getElementById('groups-root');
+const chipsWrap = document.getElementById('filter-chips');
+let SERVICES = [], COMPANIES = [], activeFilter = 'all';
 
-function applyFilter() {
+initGate(load);
+
+async function load() {
+  try {
+    const [svc, cos] = await Promise.all([
+      apiGet('/api/admin/catalog?type=services'),
+      apiGet('/api/admin/catalog?type=companies'),
+    ]);
+    SERVICES = svc;
+    COMPANIES = cos.sort((a, b) => (a.sort || 0) - (b.sort || 0));
+    renderChips();
+    render();
+  } catch (e) {
+    root.innerHTML = `<div class="empty">Couldn't load services — ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+function renderChips() {
+  let html = `<button class="chip active" data-filter="all">All <span class="count">${SERVICES.length}</span></button>`;
+  COMPANIES.forEach(c => {
+    const n = SERVICES.filter(s => s.company_key === c.key).length;
+    if (!n) return;
+    const short = c.name.replace(' Studio', '').replace(' Digital', '');
+    html += `<button class="chip" data-filter="${c.key}">${escapeHtml(short)} <span class="count">${n}</span></button>`;
+  });
+  chipsWrap.innerHTML = html;
+  chipsWrap.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+    chipsWrap.querySelectorAll('.chip').forEach(x => x.classList.remove('active'));
+    c.classList.add('active');
+    activeFilter = c.dataset.filter;
+    render();
+  }));
+}
+
+function render() {
   const q = search.value.trim().toLowerCase();
   let totalShown = 0;
-  groups.forEach(g => {
-    const matchesCo = activeFilter === 'all' || g.dataset.co === activeFilter;
-    let groupShown = 0;
-    g.querySelectorAll('.svc-card').forEach(card => {
-      const text = (card.dataset.search + ' ' + card.querySelector('.svc-name').textContent + ' ' + card.querySelector('.svc-desc').textContent).toLowerCase();
-      const matchesSearch = !q || text.includes(q);
-      const show = matchesCo && matchesSearch;
-      card.style.display = show ? '' : 'none';
-      if (show) { groupShown++; totalShown++; }
-    });
-    g.classList.toggle('hidden', !matchesCo || groupShown === 0);
+  root.innerHTML = '';
+  COMPANIES.forEach(co => {
+    if (activeFilter !== 'all' && co.key !== activeFilter) return;
+    const items = SERVICES
+      .filter(s => s.company_key === co.key)
+      .filter(s => !q || `${s.name} ${s.description}`.toLowerCase().includes(q));
+    if (!items.length) return;
+    totalShown += items.length;
+    const cards = items.map(s => `
+      <div class="svc-card ${s.is_default ? 'default-tag' : ''}">
+        <div class="svc-name">${escapeHtml(s.name)}</div>
+        <div class="svc-desc">${escapeHtml(s.description)}</div>
+        <div class="svc-meta">
+          <div class="svc-rate"><span class="from">From</span>${escapeHtml(fmtRate(s.rate_amount, s.rate_unit, s.rate_note))}</div>
+        </div>
+        <div class="svc-actions">
+          <button data-edit="${s.id}">Edit</button>
+          <button data-dup="${s.id}">Duplicate</button>
+        </div>
+      </div>`).join('');
+    root.insertAdjacentHTML('beforeend', `
+      <div class="co-group" data-co="${co.key}">
+        <div class="co-header">
+          <h2>${escapeHtml(co.name)}</h2>
+          <span class="cat">${escapeHtml(co.category || '')}</span>
+          <span class="count-badge">${items.length} service${items.length === 1 ? '' : 's'}</span>
+        </div>
+        <div class="svc-grid">${cards}</div>
+      </div>`);
   });
   empty.classList.toggle('hidden', totalShown > 0);
 }
 
-chips.forEach(c => c.addEventListener('click', () => {
-  chips.forEach(x => x.classList.remove('active'));
-  c.classList.add('active');
-  activeFilter = c.dataset.filter;
-  applyFilter();
-}));
-search.addEventListener('input', applyFilter);
+search.addEventListener('input', render);
 </script>
 
 </body>
