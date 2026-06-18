@@ -5,6 +5,15 @@
 
 This is the canonical **1.0** release as of May 25, 2026.
 
+> **The proposal tool lives in a separate repo + Vercel project.** As of
+> June 2026 the password-protected client proposal builder/viewer was split
+> out into its own repo (`tartick/tsv-proposals`, local at
+> `~/Documents/Claude/tsv-proposals`) deployed to **proposal.theseason.nyc**.
+> This keeps the marketing site clean for homepage editors. Do NOT re-add
+> `admin/`, `api/proposal*`, `api/admin/`, `lib/`, `db/`, or `p/` here — that
+> all lives in `tsv-proposals` now. This repo is just the public marketing
+> site (plus the legacy `api/videos.js` video-admin flow).
+
 ## Deploy workflow
 Push to `main` = instant deploy. No build step. Always commit and push after every change.
 
