@@ -157,6 +157,8 @@
       transition: opacity 0.22s;
     }
     .project:hover { opacity: 0.5; }
+    .project.no-link { cursor: default; }
+    .project.no-link:hover { opacity: 1; }
     .project-left {
       display: flex; align-items: center;
       gap: 18px; flex-wrap: wrap;
@@ -253,6 +255,20 @@
         </div>
         <span class="project-arrow">→</span>
       </a>
+
+      <div class="project no-link">
+        <div class="project-left">
+          <span class="project-name">Spring Awakening</span>
+          <span class="project-tag">Marketing</span>
+        </div>
+      </div>
+
+      <div class="project no-link">
+        <div class="project-left">
+          <span class="project-name">Nantucket Performing Arts Center</span>
+          <span class="project-tag">Marketing</span>
+        </div>
+      </div>
 
       <a class="project" href="https://dramadesks.com" target="_blank" rel="noopener">
         <div class="project-left">
