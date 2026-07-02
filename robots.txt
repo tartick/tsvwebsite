@@ -1,0 +1,35 @@
+# The public marketing site is crawlable. The internal tools launcher is not.
+
+User-agent: *
+Disallow: /tools
+
+# Keep the internal tools page out of AI training / scanning specifically.
+User-agent: GPTBot
+Disallow: /tools
+
+User-agent: OAI-SearchBot
+Disallow: /tools
+
+User-agent: ChatGPT-User
+Disallow: /tools
+
+User-agent: ClaudeBot
+Disallow: /tools
+
+User-agent: Claude-Web
+Disallow: /tools
+
+User-agent: anthropic-ai
+Disallow: /tools
+
+User-agent: Google-Extended
+Disallow: /tools
+
+User-agent: CCBot
+Disallow: /tools
+
+User-agent: PerplexityBot
+Disallow: /tools
+
+User-agent: Bytespider
+Disallow: /tools

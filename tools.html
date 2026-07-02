@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Season — Internal Tools</title>
+
+  <!-- Keep this page out of all search + AI indexing/scanning -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      background: #000;
+      color: #fff;
+      font-family: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    body { min-height: 100vh; }
+
+    main {
+      max-width: 940px;
+      margin: 0 auto;
+      padding: clamp(72px, 12vh, 150px) 28px 120px;
+    }
+
+    /* ── Header ─────────────────────────────────────────────── */
+    .head { margin-bottom: 56px; }
+    .head img {
+      height: 26px; width: auto;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+      margin-bottom: 30px;
+    }
+    .eyebrow {
+      font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+      color: #FDB913; font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .head h1 {
+      font-size: clamp(30px, 5vw, 46px);
+      font-weight: 700; letter-spacing: -0.01em; line-height: 1.05;
+    }
+    .head p {
+      margin-top: 14px;
+      font-size: clamp(14px, 1.5vw, 16px);
+      color: rgba(255,255,255,0.55);
+      max-width: 520px; line-height: 1.5;
+    }
+
+    /* ── Tool grid ──────────────────────────────────────────── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .tool {
+      display: flex; align-items: center; gap: 18px;
+      padding: 24px 24px;
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 6px;
+      text-decoration: none; color: #fff;
+      background: rgba(255,255,255,0.015);
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+    .tool:hover {
+      border-color: rgba(253,185,19,0.55);
+      background: rgba(253,185,19,0.04);
+      transform: translateY(-2px);
+    }
+    .tool-mark {
+      flex-shrink: 0;
+      width: 46px; height: 46px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      background: rgba(253,185,19,0.12);
+      color: #FDB913;
+      font-weight: 700; font-size: 19px;
+      letter-spacing: 0.01em;
+    }
+    .tool-body { min-width: 0; flex: 1; }
+    .tool-name {
+      font-size: 17px; font-weight: 600; letter-spacing: 0.01em;
+      display: flex; align-items: center; gap: 9px;
+    }
+    .tool-desc {
+      font-size: 13px; color: rgba(255,255,255,0.5);
+      margin-top: 3px;
+    }
+    .tool-host {
+      font-size: 12px; color: rgba(255,255,255,0.38);
+      margin-top: 7px;
+      font-variant-numeric: tabular-nums;
+    }
+    .tool-arrow {
+      flex-shrink: 0;
+      color: rgba(253,185,19,0.5);
+      font-size: 15px;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .tool:hover .tool-arrow { color: #FDB913; transform: translateX(3px); }
+
+    /* ── Footer ─────────────────────────────────────────────── */
+    footer {
+      margin-top: 56px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px; color: rgba(255,255,255,0.4);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+    }
+    footer a { color: rgba(255,255,255,0.55); text-decoration: none; }
+    footer a:hover { color: #FDB913; }
+
+    @media (max-width: 680px) {
+      .grid { grid-template-columns: 1fr; }
+      .tool { padding: 20px; gap: 15px; }
+      main { padding-top: 64px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="head">
+      <img src="/assets/theseason-wordmark.png" alt="The Season">
+      <div class="eyebrow">Internal · Team Only</div>
+      <h1>Tools</h1>
+      <p>Quick access to The Season's internal tools. Each tool has its own login.</p>
+    </div>
+
+    <div class="grid">
+
+      <a class="tool" href="https://tea.theseason.nyc" target="_blank" rel="noopener noreferrer">
+        <div class="tool-mark">T</div>
+        <div class="tool-body">
+          <div class="tool-name">Tea</div>
+          <div class="tool-desc">Project tracker</div>
+          <div class="tool-host">tea.theseason.nyc</div>
+        </div>
+        <span class="tool-arrow">↗</span>
+      </a>
+
+      <a class="tool" href="https://presenter.theseason.nyc" target="_blank" rel="noopener noreferrer">
+        <div class="tool-mark">P</div>
+        <div class="tool-body">
+          <div class="tool-name">Presenter</div>
+          <div class="tool-desc">Presentation builder</div>
+          <div class="tool-host">presenter.theseason.nyc</div>
+        </div>
+        <span class="tool-arrow">↗</span>
+      </a>
+
+      <a class="tool" href="https://proposal.theseason.nyc" target="_blank" rel="noopener noreferrer">
+        <div class="tool-mark">Pr</div>
+        <div class="tool-body">
+          <div class="tool-name">Proposals</div>
+          <div class="tool-desc">Client proposal builder</div>
+          <div class="tool-host">proposal.theseason.nyc</div>
+        </div>
+        <span class="tool-arrow">↗</span>
+      </a>
+
+      <a class="tool" href="https://coverage.theseason.nyc" target="_blank" rel="noopener noreferrer">
+        <div class="tool-mark">S</div>
+        <div class="tool-body">
+          <div class="tool-name">Script Reader</div>
+          <div class="tool-desc">Script coverage &amp; reader notes</div>
+          <div class="tool-host">coverage.theseason.nyc</div>
+        </div>
+        <span class="tool-arrow">↗</span>
+      </a>
+
+      <a class="tool" href="https://dashadmin.theseason.nyc" target="_blank" rel="noopener noreferrer">
+        <div class="tool-mark">D</div>
+        <div class="tool-body">
+          <div class="tool-name">Dashboard Manager</div>
+          <div class="tool-desc">Dashboard administration</div>
+          <div class="tool-host">dashadmin.theseason.nyc</div>
+        </div>
+        <span class="tool-arrow">↗</span>
+      </a>
+
+    </div>
+
+    <footer>
+      <span>The Season · internal use only</span>
+      <a href="https://www.theseason.nyc" target="_blank" rel="noopener">theseason.nyc ↗</a>
+    </footer>
+  </main>
+</body>
+</html>
