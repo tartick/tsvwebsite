@@ -14,6 +14,15 @@ This is the canonical **1.0** release as of May 25, 2026.
 > all lives in `tsv-proposals` now. This repo is just the public marketing
 > site (plus the legacy `api/videos.js` video-admin flow).
 
+## Surveys live on this domain but not in this repo
+`theseason.nyc/<slug>` (for example `/npac-2026-survey`) is a survey served by a
+separate app (`tartick/surveys`, Vercel project `surveys`). The `rewrites` in
+`vercel.json` forward three things to it: any single-segment path this site has
+no page for, `/_next/*` (that app's assets), and `/api/surveys/*` (its submit
+endpoint). Real pages here always win, because Vercel checks files before
+rewrites. Do NOT remove those rewrites, and do not add a page or folder here
+named `_next` or `api/surveys`.
+
 ## Deploy workflow
 Push to `main` = instant deploy. No build step. Always commit and push after every change.
 
